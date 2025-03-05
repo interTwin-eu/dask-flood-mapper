@@ -37,7 +37,7 @@ pipenv install
 
 Checkout the [documentation](https://pipenv.pypa.io/en/latest/) for more help with installing pipenv and reconstructing the development environment.
 
-### Linting and outputs
+### Linting and formatting
 
 The pre-commit hooks can be used to check whether you contribution follows the standards as adhered to in this project. Install and activate the `pre-commit` hooks, like so:
 
