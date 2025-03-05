@@ -25,7 +25,7 @@ It is also possible to remote process the data at EODC with the added benefit th
 
 ## Contributing
 
-Interested in contributing to this project.
+Interested in contributing to this project. Check the contributing guidelines for more information on how to contribute.
 
 ### Environment management
 
@@ -37,7 +37,14 @@ pipenv install
 
 Checkout the [documentation](https://pipenv.pypa.io/en/latest/) for more help with installing pipenv and reconstructing the development environment.
 
-### Linter
+### Linting and outputs
+
+The pre-commit hooks can be used to check whether you contribution follows the standards as adhered to in this project. Install and activate the `pre-commit` hooks, like so:
+
+```bash
+# pipenv install pre-commit
+pre-commit install
+```
 
 Before each commiting, Ruff is actioned. To run Ruff without commiting, run:
 
@@ -48,6 +55,7 @@ pre-commit run --all-files
 or
 
 ```bash
+# pipenv install ruff
 ruff check --fix --output-format concise
 ```
 
@@ -55,6 +63,13 @@ To fix the format, Ruff also offers this option with the command:
 
 ```bash
 ruff format
+```
+
+To check whether the output of the notebook cells is removed one can do the following:
+
+```bash
+# pipenv install nbstripout
+find . -name '*.ipynb' -exec nbstripout {} +
 ```
 
 ## Credits

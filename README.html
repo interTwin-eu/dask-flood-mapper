@@ -348,7 +348,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#development">Development</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributing">Contributing</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-management">Environment management</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linter">Linter</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linting-and-outputs">Linting and outputs</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#credits">Credits</a></li>
@@ -389,7 +389,7 @@ document.write(`
 </section>
 <section id="contributing">
 <h2>Contributing<a class="headerlink" href="#contributing" title="Link to this heading">#</a></h2>
-<p>Interested in contributing to this project.</p>
+<p>Interested in contributing to this project. Check the contributing guidelines for more information on how to contribute.</p>
 <section id="environment-management">
 <h3>Environment management<a class="headerlink" href="#environment-management" title="Link to this heading">#</a></h3>
 <p>For convenience one can use <code class="docutils literal notranslate"><span class="pre">pipenv</span></code> and the <code class="docutils literal notranslate"><span class="pre">Pipfile.lock</span></code> to deterministically install all packages used during development.</p>
@@ -398,18 +398,29 @@ document.write(`
 </div>
 <p>Checkout the <a class="reference external" href="https://pipenv.pypa.io/en/latest/">documentation</a> for more help with installing pipenv and reconstructing the development environment.</p>
 </section>
-<section id="linter">
-<h3>Linter<a class="headerlink" href="#linter" title="Link to this heading">#</a></h3>
+<section id="linting-and-outputs">
+<h3>Linting and outputs<a class="headerlink" href="#linting-and-outputs" title="Link to this heading">#</a></h3>
+<p>The pre-commit hooks can be used to check whether you contribution follows the standards as adhered to in this project. Install and activate the <code class="docutils literal notranslate"><span class="pre">pre-commit</span></code> hooks, like so:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># pipenv install pre-commit</span>
+pre-commit<span class="w"> </span>install
+</pre></div>
+</div>
 <p>Before each commiting, Ruff is actioned. To run Ruff without commiting, run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
 </pre></div>
 </div>
 <p>or</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ruff<span class="w"> </span>check<span class="w"> </span>--fix<span class="w"> </span>--output-format<span class="w"> </span>concise
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># pipenv install ruff</span>
+ruff<span class="w"> </span>check<span class="w"> </span>--fix<span class="w"> </span>--output-format<span class="w"> </span>concise
 </pre></div>
 </div>
 <p>To fix the format, Ruff also offers this option with the command:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ruff<span class="w"> </span>format
+</pre></div>
+</div>
+<p>To check whether the output of the notebook cells is removed one can do the following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># pipenv install nbstripout</span>
+find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </span><span class="s1">&#39;*.ipynb&#39;</span><span class="w"> </span>-exec<span class="w"> </span>nbstripout<span class="w"> </span><span class="o">{}</span><span class="w"> </span>+
 </pre></div>
 </div>
 </section>
@@ -487,7 +498,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#development">Development</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributing">Contributing</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-management">Environment management</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linter">Linter</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linting-and-outputs">Linting and outputs</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#credits">Credits</a></li>
