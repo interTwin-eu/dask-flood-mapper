@@ -25,13 +25,37 @@ It is also possible to remote process the data at EODC with the added benefit th
 
 ## Contributing
 
-Interested in contributing to this project. For convenience one can use `pipenv` and the `Pipfile.lock` to deterministically install all packages used during development. 
+Interested in contributing to this project.
 
-```
+### Environment management
+
+For convenience one can use `pipenv` and the `Pipfile.lock` to deterministically install all packages used during development. 
+
+```bash
 pipenv install
 ```
 
 Checkout the [documentation](https://pipenv.pypa.io/en/latest/) for more help with installing pipenv and reconstructing the development environment.
+
+### Linter
+
+Before each commiting, Ruff is actioned. To run Ruff without commiting, run:
+
+```bash
+pre-commit run --all-files
+```
+
+or
+
+```bash
+ruff check --fix --output-format concise
+```
+
+To fix the format, Ruff also offers this option with the command:
+
+```bash
+ruff format
+```
 
 ## Credits
 

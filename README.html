@@ -346,7 +346,11 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#development">Development</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributing">Contributing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributing">Contributing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-management">Environment management</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linter">Linter</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#credits">Credits</a></li>
 </ul>
             </nav>
@@ -385,11 +389,30 @@ document.write(`
 </section>
 <section id="contributing">
 <h2>Contributing<a class="headerlink" href="#contributing" title="Link to this heading">#</a></h2>
-<p>Interested in contributing to this project. For convenience one can use <code class="docutils literal notranslate"><span class="pre">pipenv</span></code> and the <code class="docutils literal notranslate"><span class="pre">Pipfile.lock</span></code> to deterministically install all packages used during development.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pipenv</span> <span class="n">install</span>
+<p>Interested in contributing to this project.</p>
+<section id="environment-management">
+<h3>Environment management<a class="headerlink" href="#environment-management" title="Link to this heading">#</a></h3>
+<p>For convenience one can use <code class="docutils literal notranslate"><span class="pre">pipenv</span></code> and the <code class="docutils literal notranslate"><span class="pre">Pipfile.lock</span></code> to deterministically install all packages used during development.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pipenv<span class="w"> </span>install
 </pre></div>
 </div>
 <p>Checkout the <a class="reference external" href="https://pipenv.pypa.io/en/latest/">documentation</a> for more help with installing pipenv and reconstructing the development environment.</p>
+</section>
+<section id="linter">
+<h3>Linter<a class="headerlink" href="#linter" title="Link to this heading">#</a></h3>
+<p>Before each commiting, Ruff is actioned. To run Ruff without commiting, run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ruff<span class="w"> </span>check<span class="w"> </span>--fix<span class="w"> </span>--output-format<span class="w"> </span>concise
+</pre></div>
+</div>
+<p>To fix the format, Ruff also offers this option with the command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ruff<span class="w"> </span>format
+</pre></div>
+</div>
+</section>
 </section>
 <section id="credits">
 <h2>Credits<a class="headerlink" href="#credits" title="Link to this heading">#</a></h2>
@@ -462,7 +485,11 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#development">Development</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributing">Contributing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributing">Contributing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-management">Environment management</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linter">Linter</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#credits">Credits</a></li>
 </ul>
   </nav></div>
