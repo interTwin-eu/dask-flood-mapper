@@ -391,8 +391,8 @@ latitude, maximum longitude, maximum latitude</p>
 <section id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Link to this heading">#</a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">dask_flood_mapper</span><span class="w"> </span><span class="kn">import</span> <span class="n">flood</span>
-<span class="gp">&gt;&gt;&gt; </span>
-<span class="gp">&gt;&gt;&gt; </span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">time_range</span> <span class="o">=</span> <span class="s2">&quot;2022-10-11/2022-10-25&quot;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">bbox</span> <span class="o">=</span> <span class="p">[</span><span class="mf">12.3</span><span class="p">,</span> <span class="mf">54.3</span><span class="p">,</span> <span class="mf">13.1</span><span class="p">,</span> <span class="mf">54.6</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">flood</span><span class="o">.</span><span class="n">decision</span><span class="p">(</span><span class="n">bbox</span><span class="o">=</span><span class="n">bbox</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="n">time_range</span><span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
