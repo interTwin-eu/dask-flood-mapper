@@ -49,9 +49,12 @@ nbclient.exceptions.CellTimeoutError: A cell timed out while it was being execut
 The message was: Cell execution timed out.
 Here is a preview of the cell contents:
 -------------------
-hpar_dc = hpar_dc.sel(orbit=orbit_sig0)
-hpar_dc = hpar_dc.persist()
-wait(hpar_dc)
-hpar_dc
+sig0_dc = (
+    post_process_eodc_cube(sig0_dc, items_sig0, bands)
+    .rename_vars({"VV": "sig0"})
+    .assign_coords(orbit=("time", extract_orbit_names(items_sig0)))
+    .dropna(dim="time", how="all")
+    .sortby("time")
+)
 -------------------
 

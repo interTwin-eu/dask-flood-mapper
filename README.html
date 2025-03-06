@@ -353,6 +353,7 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#credits">Credits</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#literature">Literature</a></li>
 </ul>
             </nav>
         </div>
@@ -367,7 +368,7 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="dask-based-flood-mapping">
 <h1>Dask based Flood Mapping<a class="headerlink" href="#dask-based-flood-mapping" title="Link to this heading">#</a></h1>
 <p><img alt="CI" src="https://github.com/TUW-GEO/dask-flood-mapper/actions/workflows/pytest.yml/badge.svg" /></p>
-<p>Map floods with Sentinel-1 radar images. We replicate in this package the work of Bauer-Marschallinger et al. (2022) on the TU Wien Bayesian-based flood mapping algorithm. This implementation is entirely based on <code class="docutils literal notranslate"><span class="pre">Dask</span></code> and data access via <a class="reference external" href="https://stacspec.org/en">STAC</a>. The algorithm requires three pre-processed input datasets stored and accessible via STAC at the Earth Observation Data Centre For Water Resources Monitoring (EODC). It is foreseen that future implementations can also use data from other STAC catalogues. This notebook explains how microwave backscattering can be used to map the extent of a flood. This workflow forms the backbone of this package.</p>
+<p>Map floods with Sentinel-1 radar images. We replicate in this package the work of Bauer-Marschallinger et al. (2022)<sup>1</sup> on the TU Wien Bayesian-based flood mapping algorithm. This implementation is entirely based on <a class="reference external" href="https://www.dask.org/"><code class="docutils literal notranslate"><span class="pre">dask</span></code></a> and data access via <a class="reference external" href="https://stacspec.org/en">STAC</a> via <a class="reference external" href="https://odc-stac.readthedocs.io/en/latest/"><code class="docutils literal notranslate"><span class="pre">odc-stac</span></code></a>. The algorithm requires three pre-processed input datasets stored and accessible via STAC at the Earth Observation Data Centre For Water Resources Monitoring (EODC). It is foreseen that future implementations can also use data from other STAC catalogues. This notebook explains how microwave backscattering can be used to map the extent of a flood. This workflow forms the backbone of this package.</p>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
 <p>To install the package, do the following:</p>
@@ -377,12 +378,47 @@ document.write(`
 </section>
 <section id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<p>Storm Babet hit the Denmark and Northern coast of Germany at the 20th of October 2023 <a class="reference external" href="https://en.wikipedia.org/wiki/Storm_Babet">Wikipedia</a>. Here an area around Zingst at the Baltic coast of Northern Germany is selected as the study area.</p>
 <section id="local-processing">
 <h3>Local Processing<a class="headerlink" href="#local-processing" title="Link to this heading">#</a></h3>
+<p>Define the time range and geographic region in which the event occurred.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">time_range</span> <span class="o">=</span> <span class="s2">&quot;2022-10-11/2022-10-25&quot;</span>
+<span class="n">bbox</span> <span class="o">=</span> <span class="p">[</span><span class="mf">12.3</span><span class="p">,</span> <span class="mf">54.3</span><span class="p">,</span> <span class="mf">13.1</span><span class="p">,</span> <span class="mf">54.6</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Use the flood module and calculate the flood extent with the Bayesian decision method applied tp Sentinel-1 radar images. The object returned is a <a class="reference external" href="https://docs.xarray.dev/en/stable/"><code class="docutils literal notranslate"><span class="pre">xarray</span></code></a> with lazy loaded Dask arrays. To get the data in memory use the <code class="docutils literal notranslate"><span class="pre">compute</span></code> method on the returned object.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dask_flood_mapper</span><span class="w"> </span><span class="kn">import</span> <span class="n">flood</span>
+
+<span class="n">flood</span><span class="o">.</span><span class="n">decision</span><span class="p">(</span><span class="n">bbox</span><span class="o">=</span><span class="n">bbox</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="n">time_range</span><span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+</pre></div>
+</div>
 </section>
 <section id="distributed-processing">
 <h3>Distributed Processing<a class="headerlink" href="#distributed-processing" title="Link to this heading">#</a></h3>
-<p>It is also possible to remote process the data at EODC with the added benefit that we can then process close to the data source without requiring rate-limiting file transfers over the internet.</p>
+<p>It is also possible to remotely process the data at the EODC <a class="reference external" href="https://gateway.dask.org/">Dask Gateway</a> with the added benefit that we can then process close to the data source without requiring rate-limiting file transfers over the internet.</p>
+<p>For ease of usage of the Dask Gateway install the <a class="reference internal" href="#"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">eodc</span></code></span></a> package besides the <code class="docutils literal notranslate"><span class="pre">dask-gateway</span></code> package. Also, see the <a class="reference external" href="https://github.com/eodcgmbh/eodc-examples/blob/main/demos/dask.ipynb">EODC documentation</a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">dask</span><span class="o">-</span><span class="n">gateway</span> <span class="n">eodc</span>
+</pre></div>
+</div>
+<p>Connect to the gateway (this requires an EODC account).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">eodc.dask</span><span class="w"> </span><span class="kn">import</span> <span class="n">EODCDaskGateway</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rich.console</span><span class="w"> </span><span class="kn">import</span> <span class="n">Console</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rich.prompt</span><span class="w"> </span><span class="kn">import</span> <span class="n">Prompt</span>
+<span class="n">console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">()</span>
+<span class="n">your_username</span> <span class="o">=</span> <span class="n">Prompt</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;Enter your Username&quot;</span><span class="p">)</span>
+<span class="n">gateway</span> <span class="o">=</span> <span class="n">EODCDaskGateway</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">your_username</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Create a cluster.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cluster</span> <span class="o">=</span> <span class="n">gateway</span><span class="o">.</span><span class="n">new_cluster</span><span class="p">(</span><span class="n">cluster_options</span><span class="p">)</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">cluster</span><span class="o">.</span><span class="n">get_client</span><span class="p">()</span>
+<span class="n">cluster</span><span class="o">.</span><span class="n">adapt</span><span class="p">(</span><span class="n">minimum</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">maximum</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Map the flood the same way as we have done when processing locally.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">flood</span><span class="o">.</span><span class="n">decision</span><span class="p">(</span><span class="n">bbox</span><span class="o">=</span><span class="n">bbox</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="n">time_range</span><span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+</pre></div>
+</div>
 </section>
 </section>
 <section id="development">
@@ -436,6 +472,12 @@ find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </spa
 </section>
 <section id="credits">
 <h2>Credits<a class="headerlink" href="#credits" title="Link to this heading">#</a></h2>
+<p>Credits go to EODC ((<a class="reference external" href="https://eodc.eu">https://eodc.eu</a>)[<a class="reference external" href="https://eodc.eu">https://eodc.eu</a>]) for developing the infrastructure and the management of the data required for this workflow. This work has been supported as part of the interTwin project (<a class="reference external" href="https://www.intertwin.eu">https://www.intertwin.eu</a>). The interTwin project is funded by the European Union Horizon Europe Programme - Grant Agreement number 101058386.</p>
+<p>Views and opinions expressed are however those of the authors only and do not necessarily reflect those of the European Union Horizon Europe/Horizon 2020 Programmes. Neither the European Union nor the granting authorities can be held responsible for them.</p>
+</section>
+<section id="literature">
+<h2>Literature<a class="headerlink" href="#literature" title="Link to this heading">#</a></h2>
+<p>Bauer-Marschallinger, Bernhard, Senmao Cao, Mark Edwin Tupas, Florian Roth, Claudio Navacchi, Thomas Melzer, Vahid Freeman, and Wolfgang Wagner. â€œSatellite-Based Flood Mapping through Bayesian Inference from a Sentinel-1 SAR Datacube.â€ Remote Sensing 14, no. 15 (January 2022): 3673. <a class="reference external" href="https://doi.org/10.3390/rs14153673">https://doi.org/10.3390/rs14153673</a>.</p>
 </section>
 <div class="toctree-wrapper compound">
 </div>
@@ -512,6 +554,7 @@ find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </spa
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#credits">Credits</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#literature">Literature</a></li>
 </ul>
   </nav></div>
 
