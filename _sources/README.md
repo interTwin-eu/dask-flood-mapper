@@ -46,9 +46,7 @@ Connect to the gateway (this requires an EODC account).
 
 ```python
 from eodc.dask import EODCDaskGateway
-from rich.console import Console
 from rich.prompt import Prompt
-console = Console()
 your_username = Prompt.ask(prompt="Enter your Username")
 gateway = EODCDaskGateway(username=your_username)
 ```
@@ -129,10 +127,10 @@ find . -name '*.ipynb' -exec nbstripout {} +
 
 ## Credits
 
-Credits go to EODC ((https://eodc.eu)[https://eodc.eu]) for developing the infrastructure and the management of the data required for this workflow. This work has been supported as part of the interTwin project ([https://www.intertwin.eu](https://www.intertwin.eu)). The interTwin project is funded by the European Union Horizon Europe Programme - Grant Agreement number 101058386.
+Credits go to EODC ([https://eodc.eu](https://eodc.eu)) for developing the infrastructure and the management of the data required for this workflow. This work has been supported as part of the interTwin project ([https://www.intertwin.eu](https://www.intertwin.eu)). The interTwin project is funded by the European Union Horizon Europe Programme - Grant Agreement number 101058386.
 
 Views and opinions expressed are however those of the authors only and do not necessarily reflect those of the European Union Horizon Europe/Horizon 2020 Programmes. Neither the European Union nor the granting authorities can be held responsible for them.
 
 ## Literature
 
-Bauer-Marschallinger, Bernhard, Senmao Cao, Mark Edwin Tupas, Florian Roth, Claudio Navacchi, Thomas Melzer, Vahid Freeman, and Wolfgang Wagner. â€œSatellite-Based Flood Mapping through Bayesian Inference from a Sentinel-1 SAR Datacube.â€ Remote Sensing 14, no. 15 (January 2022): 3673. https://doi.org/10.3390/rs14153673.
+Bauer-Marschallinger, Bernhard, Senmao Cao, Mark Edwin Tupas, Florian Roth, Claudio Navacchi, Thomas Melzer, Vahid Freeman, and Wolfgang Wagner. â€œSatellite-Based Flood Mapping through Bayesian Inference from a Sentinel-1 SAR Datacube. Remote Sensing 14, no. 15 (January 2022): 3673. https://doi.org/10.3390/rs14153673.
