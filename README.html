@@ -348,6 +348,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#development">Development</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributing">Contributing</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-management">Environment management</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linting-and-formatting">Linting and formatting</a></li>
 </ul>
 </li>
@@ -397,6 +398,14 @@ document.write(`
 </pre></div>
 </div>
 <p>Checkout the <a class="reference external" href="https://pipenv.pypa.io/en/latest/">documentation</a> for more help with installing pipenv and reconstructing the development environment.</p>
+</section>
+<section id="testing">
+<h3>Testing<a class="headerlink" href="#testing" title="Link to this heading">#</a></h3>
+<p>Running the requires <code class="docutils literal notranslate"><span class="pre">pytest</span></code> and is executed as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># pipenv install pytest</span>
+pytest<span class="w"> </span>./tests/
+</pre></div>
+</div>
 </section>
 <section id="linting-and-formatting">
 <h3>Linting and formatting<a class="headerlink" href="#linting-and-formatting" title="Link to this heading">#</a></h3>
@@ -498,6 +507,7 @@ find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </spa
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#development">Development</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributing">Contributing</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-management">Environment management</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linting-and-formatting">Linting and formatting</a></li>
 </ul>
 </li>
