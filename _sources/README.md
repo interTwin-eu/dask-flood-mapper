@@ -38,8 +38,9 @@ It is also possible to remotely process the data at the EODC [Dask Gateway](http
 
 For ease of usage of the Dask Gateway install the [`eodc`]() package besides the `dask-gateway` package. Also, see the [EODC documentation](https://github.com/eodcgmbh/eodc-examples/blob/main/demos/dask.ipynb). 
 
-```
+```bash
 pip install dask-gateway eodc
+# or use pipenv sync -d
 ```
 
 Connect to the gateway (this requires an EODC account).

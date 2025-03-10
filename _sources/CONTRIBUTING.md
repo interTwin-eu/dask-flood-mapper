@@ -52,7 +52,7 @@ This section was adapted from [this guideline](https://gist.github.com/briandk/3
 For convenience one can use `pipenv` and the `Pipfile.lock` to deterministically install all packages used during development. 
 
 ```bash
-pipenv install
+pipenv sync -d
 ```
 
 Checkout the [documentation](https://pipenv.pypa.io/en/latest/) for more help with installing pipenv and reconstructing the development environment.

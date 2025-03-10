@@ -456,8 +456,7 @@ latitude, maximum longitude, maximum latitude</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="dask_flood_mapper.flood.probability">
 <span class="sig-prename descclassname"><span class="pre">dask_flood_mapper.flood.</span></span><span class="sig-name descname"><span class="pre">probability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bbox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datetime</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dask_flood_mapper.flood.probability" title="Link to this definition">#</a></dt>
-<dd><blockquote>
-<div><p>Bayesian Flood Probability</p>
+<dd><p>Bayesian Flood Probability</p>
 <p>Classify Sentinel-1 radar images by simple Bayes inference into a probability of flood,
 ranging from 0 (minimum probability of flood) to 1 (maximum probability of flood).
 Besides radar images, this algorithm relies on two other
@@ -466,6 +465,8 @@ Monitoring (EODC); harmonic parameters based on a fit on per land pixel
 timeseries and the projected incidence angle of the measurement. The latter
 two datasets are required to calculate the land and water likelihood
 distributions, respectively.</p>
+<section id="id1">
+<h2>Parameters<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
 <dl>
 <dt>bbox<span class="classifier">tuple of float or tuple of int</span></dt><dd><p>Geographic bounding box, consisting of minimum longitude, minimum
 latitude, maximum longitude, maximum latitude</p>
@@ -481,10 +482,19 @@ latitude, maximum longitude, maximum latitude</p>
 </div></blockquote>
 </dd>
 </dl>
+</section>
+<section id="id2">
+<h2>Returns<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
 <blockquote>
 <div><p>flood probability : xarray.DataArray ranging from 0 (0% estimation of flood) to 1 (100% estimation of flood)</p>
 </div></blockquote>
+</section>
+<section id="id3">
+<h2>See also<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
 <p>decision</p>
+</section>
+<section id="id4">
+<h2>Examples<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">dask_flood_mapper</span><span class="w"> </span><span class="kn">import</span> <span class="n">flood</span>
 <span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt;</span>
@@ -508,75 +518,45 @@ latitude, maximum longitude, maximum latitude</p>
 <span class="go">     2.65790544e-04, 5.72882888e-04, 4.91604904e-04],</span>
 <span class="go">    [3.26255229e-01, 3.24131583e-01, 3.31034180e-01, ...,</span>
 <span class="go">     1.42086512e-03, 5.99092039e-04, 3.18391829e-04]],</span>
+<span class="go">...</span>
+<span class="go">   [[           nan,            nan,            nan, ...,</span>
+<span class="go">                nan,            nan,            nan],</span>
+<span class="go">    [           nan,            nan,            nan, ...,</span>
+<span class="go">                nan,            nan,            nan],</span>
+<span class="go">    [           nan,            nan,            nan, ...,</span>
+<span class="go">                nan,            nan,            nan],</span>
+<span class="go">...</span>
+<span class="go">    [           nan,            nan,            nan, ...,</span>
+<span class="go">                nan,            nan,            nan],</span>
+<span class="go">    [           nan,            nan,            nan, ...,</span>
+<span class="go">                nan,            nan,            nan],</span>
+<span class="go">    [           nan,            nan,            nan, ...,</span>
+<span class="go">                nan,            nan,            nan]],</span>
+<span class="go">....</span>
+<span class="go">   [[3.73245925e-01, 3.48150842e-01, 3.51988605e-01, ...,</span>
+<span class="go">     4.23590506e-01, 4.06161145e-01, 4.00064362e-01],</span>
+<span class="go">    [3.75232243e-01, 3.30142918e-01, 3.09075590e-01, ...,</span>
+<span class="go">     3.78596082e-01, 3.95209483e-01, 3.92170382e-01],</span>
+<span class="go">    [3.30411323e-01, 3.30411323e-01, 4.13602532e-01, ...,</span>
+<span class="go">     3.89603260e-01, 4.04806821e-01, 4.92500567e-01],</span>
+<span class="go">    ...,</span>
+<span class="go">    [4.82000282e-01, 4.95535115e-01, 4.80515991e-01, ...,</span>
+<span class="go">     1.02485531e-02, 3.87479773e-03, 4.40659361e-03],</span>
+<span class="go">    [5.10606062e-01, 5.15671724e-01, 4.71831786e-01, ...,</span>
+<span class="go">     3.71247499e-04, 2.30112900e-04, 2.16098949e-04],</span>
+<span class="go">    [5.17821688e-01, 5.59295596e-01, 5.43262041e-01, ...,</span>
+<span class="go">     3.05140177e-03, 5.17321966e-04, 2.79084525e-04]]])</span>
+<span class="go">Coordinates:</span>
+<span class="go">* x            (x) float64 22kB 12.3 12.3 12.3 12.3 ... 13.1 13.1 13.1 13.1</span>
+<span class="go">* y            (y) float64 8kB 54.6 54.6 54.6 54.6 ... 54.3 54.3 54.3 54.3</span>
+<span class="go">* time         (time) datetime64[ns] 64B 2022-10-11T05:25:01 ... 2022-10-23...</span>
+<span class="go">    spatial_ref  int64 8B 0</span>
+<span class="go">Attributes:</span>
+<span class="go">    _FillValue:  nan</span>
+<span class="gp">&gt;&gt;&gt;</span>
 </pre></div>
 </div>
-<blockquote>
-<div><dl>
-<dt>[[           nan,            nan,            nan, …,</dt><dd><blockquote>
-<div><p>nan,            nan,            nan],</p>
-</div></blockquote>
-<dl class="simple">
-<dt>[           nan,            nan,            nan, …,</dt><dd><p>nan,            nan,            nan],</p>
-</dd>
-<dt>[           nan,            nan,            nan, …,</dt><dd><p>nan,            nan,            nan],</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</div></blockquote>
-</div></blockquote>
-<dl>
-<dt>…</dt><dd><blockquote>
-<div><blockquote>
-<div><dl class="simple">
-<dt>[           nan,            nan,            nan, …,</dt><dd><p>nan,            nan,            nan],</p>
-</dd>
-<dt>[           nan,            nan,            nan, …,</dt><dd><p>nan,            nan,            nan],</p>
-</dd>
-<dt>[           nan,            nan,            nan, …,</dt><dd><p>nan,            nan,            nan]],</p>
-</dd>
-</dl>
-</div></blockquote>
-<dl>
-<dt>[[3.73245925e-01, 3.48150842e-01, 3.51988605e-01, …,</dt><dd><blockquote>
-<div><p>4.23590506e-01, 4.06161145e-01, 4.00064362e-01],</p>
-</div></blockquote>
-<dl class="simple">
-<dt>[3.75232243e-01, 3.30142918e-01, 3.09075590e-01, …,</dt><dd><p>3.78596082e-01, 3.95209483e-01, 3.92170382e-01],</p>
-</dd>
-<dt>[3.30411323e-01, 3.30411323e-01, 4.13602532e-01, …,</dt><dd><p>3.89603260e-01, 4.04806821e-01, 4.92500567e-01],</p>
-</dd>
-</dl>
-<p>…,
-[4.82000282e-01, 4.95535115e-01, 4.80515991e-01, …,</p>
-<blockquote>
-<div><p>1.02485531e-02, 3.87479773e-03, 4.40659361e-03],</p>
-</div></blockquote>
-<dl class="simple">
-<dt>[5.10606062e-01, 5.15671724e-01, 4.71831786e-01, …,</dt><dd><p>3.71247499e-04, 2.30112900e-04, 2.16098949e-04],</p>
-</dd>
-<dt>[5.17821688e-01, 5.59295596e-01, 5.43262041e-01, …,</dt><dd><p>3.05140177e-03, 5.17321966e-04, 2.79084525e-04]]])</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</div></blockquote>
-<p>Coordinates:
-* x            (x) float64 22kB 12.3 12.3 12.3 12.3 … 13.1 13.1 13.1 13.1
-* y            (y) float64 8kB 54.6 54.6 54.6 54.6 … 54.3 54.3 54.3 54.3
-* time         (time) datetime64[ns] 64B 2022-10-11T05:25:01 … 2022-10-23…</p>
-<blockquote>
-<div><p>spatial_ref  int64 8B 0</p>
-</div></blockquote>
-<dl class="simple">
-<dt>Attributes:</dt><dd><p>_FillValue:  nan</p>
-</dd>
-</dl>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt;</span>
-</pre></div>
-</div>
-</dd>
-</dl>
+</section>
 </dd></dl>
 
 </section>

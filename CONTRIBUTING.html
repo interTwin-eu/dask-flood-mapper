@@ -424,7 +424,7 @@ document.write(`
 <section id="environment-management">
 <h2>Environment management<a class="headerlink" href="#environment-management" title="Link to this heading">#</a></h2>
 <p>For convenience one can use <code class="docutils literal notranslate"><span class="pre">pipenv</span></code> and the <code class="docutils literal notranslate"><span class="pre">Pipfile.lock</span></code> to deterministically install all packages used during development.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pipenv<span class="w"> </span>install
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pipenv<span class="w"> </span>sync<span class="w"> </span>-d
 </pre></div>
 </div>
 <p>Checkout the <a class="reference external" href="https://pipenv.pypa.io/en/latest/">documentation</a> for more help with installing pipenv and reconstructing the development environment.</p>

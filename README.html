@@ -392,7 +392,8 @@ document.write(`
 <h3>Distributed Processing<a class="headerlink" href="#distributed-processing" title="Link to this heading">#</a></h3>
 <p>It is also possible to remotely process the data at the EODC <a class="reference external" href="https://gateway.dask.org/">Dask Gateway</a> with the added benefit that we can then process close to the data source without requiring rate-limiting file transfers over the internet.</p>
 <p>For ease of usage of the Dask Gateway install the <a class="reference internal" href="#"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">eodc</span></code></span></a> package besides the <code class="docutils literal notranslate"><span class="pre">dask-gateway</span></code> package. Also, see the <a class="reference external" href="https://github.com/eodcgmbh/eodc-examples/blob/main/demos/dask.ipynb">EODC documentation</a>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">dask</span><span class="o">-</span><span class="n">gateway</span> <span class="n">eodc</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>dask-gateway<span class="w"> </span>eodc
+<span class="c1"># or use pipenv sync -d</span>
 </pre></div>
 </div>
 <p>Connect to the gateway (this requires an EODC account).</p>
