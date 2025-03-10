@@ -65,65 +65,9 @@ Map the flood the same way as we have done when processing locally.
 flood.decision(bbox=bbox, datetime=time_range).compute()
 ```
 
-## Development
+## Contributing Guidelines
 
-## Contributing
-
-Interested in contributing to this project. Check the contributing guidelines for more information on how to contribute.
-
-### Environment management
-
-For convenience one can use `pipenv` and the `Pipfile.lock` to deterministically install all packages used during development. 
-
-```bash
-pipenv install
-```
-
-Checkout the [documentation](https://pipenv.pypa.io/en/latest/) for more help with installing pipenv and reconstructing the development environment.
-
-### Testing
-
-Running the requires `pytest` and is executed as follows:
-
-```bash
-# pipenv install pytest
-pytest ./tests/
-```
-
-### Linting and formatting
-
-The pre-commit hooks can be used to check whether you contribution follows the standards as adhered to in this project. Install and activate the `pre-commit` hooks, like so:
-
-```bash
-# pipenv install pre-commit
-pre-commit install
-```
-
-Before each commiting, Ruff is actioned. To run Ruff without commiting, run:
-
-```bash
-pre-commit run --all-files
-```
-
-or
-
-```bash
-# pipenv install ruff
-ruff check --fix --output-format concise
-```
-
-To fix the format, Ruff also offers this option with the command:
-
-```bash
-ruff format
-```
-
-To check whether the output of the notebook cells is removed one can do the following:
-
-```bash
-# pipenv install nbstripout
-find . -name '*.ipynb' -exec nbstripout {} +
-```
+Please find the contributing guielines in the specific file [here](CONTRIBUTING.md).
 
 ## Credits
 
@@ -134,3 +78,7 @@ Views and opinions expressed are however those of the authors only and do not ne
 ## Literature
 
 1)  Bauer-Marschallinger, Bernhard, Senmao Cao, Mark Edwin Tupas, Florian Roth, Claudio Navacchi, Thomas Melzer, Vahid Freeman, and Wolfgang Wagner. â€œSatellite-Based Flood Mapping through Bayesian Inference from a Sentinel-1 SAR Datacube. Remote Sensing 14, no. 15 (January 2022): 3673. https://doi.org/10.3390/rs14153673.
+
+## License
+
+This repository is covered under the [MIT License](LICENSE.txt).
