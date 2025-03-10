@@ -313,7 +313,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -329,6 +331,25 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#connect-to-eodc-dask">Connect to EODC Dask</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster-configuration">Cluster Configuration</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#create-dask-cluster">Create Dask Cluster</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#initiate-a-client">Initiate a client</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#list-available-clusters">List available clusters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#connect-to-already-running-clusters">Connect to already running clusters</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dask-dashboard">Dask dashboard</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#remote-dask-flood-mapping">Remote Dask Flood Mapping</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -341,6 +362,128 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="remote-flood-mapping">
 <h1>Remote Flood Mapping<a class="headerlink" href="#remote-flood-mapping" title="Link to this heading">#</a></h1>
 <p>Besides processing of a flood’s extent on your own machine one can also offload the processing graph to the EODC Dask Gateway.</p>
+<p>This notebook is based on the tutorial to connect to EODC Dask available at <a class="reference external" href="https://github.com/eodcgmbh/eodc-examples/blob/main/demos/dask.ipynb">this link</a>.</p>
+<p>More information about EODC Dask Gateway can be found <a class="reference external" href="https://docs.eodc.eu/services/dask.html">here</a>.</p>
+<section id="connect-to-eodc-dask">
+<h2>Connect to EODC Dask<a class="headerlink" href="#connect-to-eodc-dask" title="Link to this heading">#</a></h2>
+<p>Autentication is required through an username and password that should be requested to EODC.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">eodc.dask</span><span class="w"> </span><span class="kn">import</span> <span class="n">EODCDaskGateway</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rich.console</span><span class="w"> </span><span class="kn">import</span> <span class="n">Console</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rich.prompt</span><span class="w"> </span><span class="kn">import</span> <span class="n">Prompt</span>
+<span class="n">console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">()</span>
+<span class="n">your_username</span> <span class="o">=</span> <span class="n">Prompt</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;Enter your Username&quot;</span><span class="p">)</span>
+<span class="n">gateway</span> <span class="o">=</span> <span class="n">EODCDaskGateway</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">your_username</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="kn">from</span><span class="w"> </span><span class="nn">eodc.dask</span><span class="w"> </span><span class="kn">import</span> <span class="n">EODCDaskGateway</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">from</span><span class="w"> </span><span class="nn">rich.console</span><span class="w"> </span><span class="kn">import</span> <span class="n">Console</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">from</span><span class="w"> </span><span class="nn">rich.prompt</span><span class="w"> </span><span class="kn">import</span> <span class="n">Prompt</span>
+
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;eodc&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<section id="cluster-configuration">
+<h3>Cluster Configuration<a class="headerlink" href="#cluster-configuration" title="Link to this heading">#</a></h3>
+<p>It is possible to change the default configuration to optimize your specifications at the cell below.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cluster_options</span> <span class="o">=</span> <span class="n">gateway</span><span class="o">.</span><span class="n">cluster_options</span><span class="p">()</span>
+<span class="n">cluster_options</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="create-dask-cluster">
+<h3>Create Dask Cluster<a class="headerlink" href="#create-dask-cluster" title="Link to this heading">#</a></h3>
+<section id="initiate-a-client">
+<h4>Initiate a client<a class="headerlink" href="#initiate-a-client" title="Link to this heading">#</a></h4>
+<p>In order to create a Dask cluster, it is first necessary to initiate the client.</p>
+<div class="alert alert-block alert-info">
+<b>Important:</b> Per default no worker is spawned, therefore please use the widget to add/scale Dask workers in other to enable compuations on the cluster.
+</div><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cluster</span> <span class="o">=</span> <span class="n">gateway</span><span class="o">.</span><span class="n">new_cluster</span><span class="p">(</span><span class="n">cluster_options</span><span class="p">)</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">cluster</span><span class="o">.</span><span class="n">get_client</span><span class="p">()</span>
+<span class="n">cluster</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Another way to spawn workers is trhough the cell below that sets two workers as starting point and enables up to 5 workers, if necessary.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cluster</span><span class="o">.</span><span class="n">adapt</span><span class="p">(</span><span class="n">minimum</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">maximum</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="list-available-clusters">
+<h4>List available clusters<a class="headerlink" href="#list-available-clusters" title="Link to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">gateway</span><span class="o">.</span><span class="n">list_clusters</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="connect-to-already-running-clusters">
+<h4>Connect to already running clusters<a class="headerlink" href="#connect-to-already-running-clusters" title="Link to this heading">#</a></h4>
+<p>Instead of restarting the whole process again, you can directly connect to cluster already running.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cluster</span> <span class="o">=</span> <span class="n">gateway</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">gateway</span><span class="o">.</span><span class="n">list_clusters</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+<span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="dask-dashboard">
+<h3>Dask dashboard<a class="headerlink" href="#dask-dashboard" title="Link to this heading">#</a></h3>
+<p>The following link displays the Dask Dashboard that can be used to monitor the execution of computations.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cluster</span><span class="o">.</span><span class="n">dashboard_link</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="remote-dask-flood-mapping">
+<h2>Remote Dask Flood Mapping<a class="headerlink" href="#remote-dask-flood-mapping" title="Link to this heading">#</a></h2>
+<p>Uisng the same example from the local dask setup, the event chosen is storm Babet which hit the Danish and Northern coast of Germany at the 20<sup>th</sup> of October 2023 <a class="reference external" href="https://en.wikipedia.org/wiki/Storm_Babet">Wikipedia</a>. We target an area around Zingst at the Baltic coast of Northern Germany.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dask_flood_mapper</span><span class="w"> </span><span class="kn">import</span> <span class="n">flood</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">time_range</span> <span class="o">=</span> <span class="s2">&quot;2022-10-11/2022-10-25&quot;</span>
+<span class="n">bbox</span> <span class="o">=</span> <span class="p">[</span><span class="mf">12.3</span><span class="p">,</span> <span class="mf">54.3</span><span class="p">,</span> <span class="mf">13.1</span><span class="p">,</span> <span class="mf">54.6</span><span class="p">]</span>
+<span class="n">fd</span> <span class="o">=</span> <span class="n">flood</span><span class="o">.</span><span class="n">probability</span><span class="p">(</span><span class="n">bbox</span><span class="o">=</span><span class="n">bbox</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="n">time_range</span><span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+<span class="n">fd</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -397,6 +540,32 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#connect-to-eodc-dask">Connect to EODC Dask</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster-configuration">Cluster Configuration</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#create-dask-cluster">Create Dask Cluster</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#initiate-a-client">Initiate a client</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#list-available-clusters">List available clusters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#connect-to-already-running-clusters">Connect to already running clusters</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dask-dashboard">Dask dashboard</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#remote-dask-flood-mapping">Remote Dask Flood Mapping</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
