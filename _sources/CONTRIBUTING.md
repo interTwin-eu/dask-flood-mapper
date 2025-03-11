@@ -1,4 +1,4 @@
-## Contributing
+# Contributing
 
 Thank you for the interest in contributing to this project! We accept contributions in the following areas:
 
@@ -7,11 +7,11 @@ Thank you for the interest in contributing to this project! We accept contributi
 * Submitting a fix
 * Proposing new features
 
-### Development with GitHub
+## Development with GitHub
 
 We use GitHub to host code, to track issues and feature requests, as well as accept pull requests.
 
-### Propose changes with Pull Requests
+## Propose changes with Pull Requests
 
 Pull Requests(PR) are the best way to propose changes to the codebase. Before issuing the PR, make sure that:
 
@@ -22,15 +22,15 @@ Pull Requests(PR) are the best way to propose changes to the codebase. Before is
 5. Make sure your code lints.
 6. Issue that pull request!
 
-### Contribution License
+## Contribution License
 
 Any contribution made will be under the same license that covers the project, the [MIT License](LICENSE.txt).
 
-### Report bugs using Github's issues
+## Report bugs using Github's issues
 
 We use GitHub issues to track public bugs. If you want to report a bug, please open a new issue.
 
-#### How to write issues
+### How to write issues
  
 Please report bugs with detail, background and sample code. Ideally the issue should have:
 
