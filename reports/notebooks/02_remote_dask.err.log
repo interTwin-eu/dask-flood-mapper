@@ -70,11 +70,11 @@ File [0;32m/opt/hostedtoolcache/Python/3.10.16/x64/lib/python3.10/site-packages
 [1;32m    210[0m [38;5;124;03m    """[39;00m
 [0;32m--> 211[0m     [38;5;28;01mreturn[39;00m [43mconsole[49m[38;5;241;43m.[39;49m[43minput[49m[43m([49m[43mprompt[49m[43m,[49m[43m [49m[43mpassword[49m[38;5;241;43m=[39;49m[43mpassword[49m[43m,[49m[43m [49m[43mstream[49m[38;5;241;43m=[39;49m[43mstream[49m[43m)[49m
 
-File [0;32m/opt/hostedtoolcache/Python/3.10.16/x64/lib/python3.10/site-packages/rich/console.py:2151[0m, in [0;36mConsole.input[0;34m(self, prompt, markup, emoji, password, stream)[0m
-[1;32m   2149[0m         result [38;5;241m=[39m stream[38;5;241m.[39mreadline()
-[1;32m   2150[0m     [38;5;28;01melse[39;00m:
-[0;32m-> 2151[0m         result [38;5;241m=[39m [38;5;28;43minput[39;49m[43m([49m[43m)[49m
-[1;32m   2152[0m [38;5;28;01mreturn[39;00m result
+File [0;32m/opt/hostedtoolcache/Python/3.10.16/x64/lib/python3.10/site-packages/rich/console.py:2165[0m, in [0;36mConsole.input[0;34m(self, prompt, markup, emoji, password, stream)[0m
+[1;32m   2163[0m         result [38;5;241m=[39m stream[38;5;241m.[39mreadline()
+[1;32m   2164[0m     [38;5;28;01melse[39;00m:
+[0;32m-> 2165[0m         result [38;5;241m=[39m [38;5;28;43minput[39;49m[43m([49m[43m)[49m
+[1;32m   2166[0m [38;5;28;01mreturn[39;00m result
 
 File [0;32m/opt/hostedtoolcache/Python/3.10.16/x64/lib/python3.10/site-packages/ipykernel/kernelbase.py:1281[0m, in [0;36mKernel.raw_input[0;34m(self, prompt)[0m
 [1;32m   1279[0m [38;5;28;01mif[39;00m [38;5;129;01mnot[39;00m [38;5;28mself[39m[38;5;241m.[39m_allow_stdin:
