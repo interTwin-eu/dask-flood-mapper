@@ -413,7 +413,10 @@ def make_full_datacube(shape, value):
     input_cube = xr.DataArray(
         data,
         dims=("y", "x"),
-        coords={"y": np.arange(shape[0]), "x": np.arange(shape[1])},
+        coords={
+            "y": np.arange(shape[0] * 20, step=20),
+            "x": np.arange(shape[1] * 20, step=20),
+        },
     ).rio.write_crs("EPSG:27704")
     return input_cube
 
@@ -421,24 +424,35 @@ def make_full_datacube(shape, value):
 def make_datacube(values, y, x):
     values_arr = np.array(values).astype(np.float32)
     return xr.DataArray(
-        values_arr, dims=("y", "x"), coords={"y": y, "x": x}
-    ).rio.write_crs("EPSG:27704")
+        values_arr,
+        dims=("latitude", "longitude"),
+        coords={"latitude": y, "longitude": x, "spatial_ref": 0},
+    )
 
 
 def test_that_equi7_can_be_reprojected():
-    input_cube = make_full_datacube((3, 3), 1)
-    output_cube = reproject_equi7grid(input_cube, [-30, 16, -29, 17])
+    input_cube = make_full_datacube((2, 2), 1)
+    output_cube = reproject_equi7grid(
+        input_cube,
+        [
+            -29.983565651546865,
+            16.100056529538815,
+            -29.982888093209002,
+            16.100734087876678,
+        ],
+    )
     assert_datacube_eq(
         output_cube,
         make_datacube(
             [
-                [np.nan, np.nan, 1.0, np.nan],
-                [np.nan, 1.0, 1.0, 1.0],
-                [1.0, 1.0, 1.0, 1.0],
-                [np.nan, 1.0, 1.0, np.nan],
+                [np.nan, np.nan, np.nan, np.nan, np.nan],
+                [np.nan, np.nan, 1.0, np.nan, np.nan],
+                [np.nan, 1.0, 1.0, 1.0, np.nan],
+                [np.nan, np.nan, 1.0, np.nan, np.nan],
+                [np.nan, np.nan, np.nan, np.nan, np.nan],
             ],
-            x=[-29.9, -29.9, -29.9, -29.9],
-            y=[16.1, 16.1, 16.1, 16.1],
+            x=[-29.9, -29.9, -29.9, -29.9, -29.9],
+            y=[16.1, 16.1, 16.1, 16.1, 16.1],
         ),
     )
 
