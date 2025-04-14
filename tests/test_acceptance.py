@@ -12,8 +12,10 @@ def assert_datacube_eq(actual, expected):
 def make_datacube(values, y, x, time):
     values_arr = np.array(values).astype(np.float32)
     return xr.DataArray(
-        values_arr, dims=("time", "y", "x"), coords={"time": time, "y": y, "x": x}
-    ).rio.write_crs("EPSG:4326")
+        values_arr,
+        dims=("time", "latitude", "longitude"),
+        coords={"time": time, "latitude": y, "longitude": x, "spatial_ref": 0},
+    )
 
 
 class TestFloodMapNorthernGermany2022:
@@ -34,13 +36,14 @@ class TestFloodMapNorthernGermany2022:
                     [
                         [np.nan, np.nan, np.nan, np.nan, np.nan],
                         [np.nan, np.nan, np.nan, np.nan, np.nan],
-                        [np.nan, np.nan, 0.0, np.nan, np.nan],
                         [np.nan, np.nan, 0.0, 0.0, np.nan],
+                        [np.nan, np.nan, np.nan, 0.0, np.nan],
+                        [np.nan, np.nan, np.nan, np.nan, np.nan],
                         [np.nan, np.nan, np.nan, np.nan, np.nan],
                     ]
                 ],
                 x=[13.0, 13.0, 13.0, 13.0, 13.0],
-                y=[54.0, 54.0, 54.0, 54.0, 54.0],
+                y=[54.0, 54.0, 54.0, 54.0, 54.0, 54.0],
                 time=[datetime.strptime(self.time_range, "%Y-%m-%dT%H:%M:%S")],
             ),
         )
