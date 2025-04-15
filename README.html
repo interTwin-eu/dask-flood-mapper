@@ -202,11 +202,16 @@
 <li class="toctree-l1"><a class="reference internal" href="notebooks/01_local_dask.html">Local Flood Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="notebooks/02_remote_dask.html">Remote Flood Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="notebooks/03_flood_map.html">Flood Mapping Explained</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/04_configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/04_validation.html">Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/05_configuration.html">Configuration</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="docs/api.html">API Reference</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Contributing</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="CONTRIBUTING.html">Contributing</a></li>
 </ul>
 
     </div>
@@ -456,7 +461,7 @@ document.write(`
 <section id="distributed-processing">
 <h3>Distributed Processing<a class="headerlink" href="#distributed-processing" title="Link to this heading">#</a></h3>
 <p>It is also possible to remotely process the data at the EODC <a class="reference external" href="https://gateway.dask.org/">Dask Gateway</a> with the added benefit that we can then process close to the data source without requiring rate-limiting file transfers over the internet.</p>
-<p>For ease of usage of the Dask Gateway install the <a class="reference internal" href="#"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">eodc</span></code></span></a> package besides the <code class="docutils literal notranslate"><span class="pre">dask-gateway</span></code> package. Also, see the <a class="reference external" href="https://github.com/eodcgmbh/eodc-examples/blob/main/demos/dask.ipynb">EODC documentation</a>.</p>
+<p>For ease of usage of the Dask Gateway install the <a class="reference external" href="https://pypi.org/project/eodc/"><code class="docutils literal notranslate"><span class="pre">eodc</span></code></a> package besides the <code class="docutils literal notranslate"><span class="pre">dask-gateway</span></code> package. Also, see the <a class="reference external" href="https://github.com/eodcgmbh/eodc-examples/blob/main/demos/dask.ipynb">EODC documentation</a>.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>dask-gateway<span class="w"> </span>eodc
 <span class="c1"># or use pipenv sync -d</span>
 </pre></div>
@@ -482,9 +487,9 @@ document.write(`
 <section id="user-interface">
 <h3>User Interface<a class="headerlink" href="#user-interface" title="Link to this heading">#</a></h3>
 <p>It is also possible to run the workflow in an user-friendly interface instead of the Jupyter notebooks, as shown below:</p>
-<p>![alt text](docs/images/Screenshot from 2025-04-03 13-56-05.png)</p>
+<p>[alt text](docs/images/Screenshot from 2025-04-03 13-56-05.png)</p>
 <p>Firstly, install the extra packages with:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="n">pip</span> <span class="n">install</span> <span class="s1">&#39;dask-flood-mapper[app]@git+https://github.com/TUW-GEO/dask-flood-mapper.git&#39;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="s1">&#39;dask-flood-mapper[app]@git+https://github.com/TUW-GEO/dask-flood-mapper.git&#39;</span>
 </pre></div>
 </div>
 <p>Then, to access it, simyply run the in terminal the command:</p>
@@ -513,6 +518,8 @@ document.write(`
 <h2>License<a class="headerlink" href="#license" title="Link to this heading">#</a></h2>
 <p>This repository is covered under the <a class="reference download internal" download="" href="_downloads/61e0bdf7e1b43c5c93d9488b22e04170/LICENSE.txt"><span class="xref download myst">MIT License</span></a>.</p>
 </section>
+<div class="toctree-wrapper compound">
+</div>
 <div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">

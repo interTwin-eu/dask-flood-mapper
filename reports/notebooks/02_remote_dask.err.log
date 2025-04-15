@@ -15,10 +15,6 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-from eodc.dask import EODCDaskGateway
-from rich.console import Console
-from rich.prompt import Prompt
-
 console = Console()
 your_username = Prompt.ask(prompt="Enter your Username")
 gateway = EODCDaskGateway(username=your_username)
@@ -27,11 +23,10 @@ gateway = EODCDaskGateway(username=your_username)
 
 [0;31m---------------------------------------------------------------------------[0m
 [0;31mStdinNotImplementedError[0m                  Traceback (most recent call last)
-Cell [0;32mIn[1], line 6[0m
-[1;32m      3[0m [38;5;28;01mfrom[39;00m[38;5;250m [39m[38;5;21;01mrich[39;00m[38;5;21;01m.[39;00m[38;5;21;01mprompt[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m Prompt
-[1;32m      5[0m console [38;5;241m=[39m Console()
-[0;32m----> 6[0m your_username [38;5;241m=[39m [43mPrompt[49m[38;5;241;43m.[39;49m[43mask[49m[43m([49m[43mprompt[49m[38;5;241;43m=[39;49m[38;5;124;43m"[39;49m[38;5;124;43mEnter your Username[39;49m[38;5;124;43m"[39;49m[43m)[49m
-[1;32m      7[0m gateway [38;5;241m=[39m EODCDaskGateway(username[38;5;241m=[39myour_username)
+Cell [0;32mIn[2], line 2[0m
+[1;32m      1[0m console [38;5;241m=[39m Console()
+[0;32m----> 2[0m your_username [38;5;241m=[39m [43mPrompt[49m[38;5;241;43m.[39;49m[43mask[49m[43m([49m[43mprompt[49m[38;5;241;43m=[39;49m[38;5;124;43m"[39;49m[38;5;124;43mEnter your Username[39;49m[38;5;124;43m"[39;49m[43m)[49m
+[1;32m      3[0m gateway [38;5;241m=[39m EODCDaskGateway(username[38;5;241m=[39myour_username)
 
 File [0;32m/opt/hostedtoolcache/Python/3.10.16/x64/lib/python3.10/site-packages/rich/prompt.py:149[0m, in [0;36mPromptBase.ask[0;34m(cls, prompt, console, password, choices, case_sensitive, show_default, show_choices, default, stream)[0m
 [1;32m    125[0m [38;5;250m[39m[38;5;124;03m"""Shortcut to construct and run a prompt loop and return the result.[39;00m
