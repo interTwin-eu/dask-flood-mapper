@@ -14,8 +14,6 @@ To install the package, do the following:
 pip install git+https://github.com/TUW-GEO/dask-flood-mapper
 ```
 
-
-
 ## Usage
 
 Storm Babet hit the Denmark and Northern coast of Germany at the 20th of October 2023 [Wikipedia](https://en.wikipedia.org/wiki/Storm_Babet). Here an area around Zingst at the Baltic coast of Northern Germany is selected as the study area.
@@ -74,13 +72,12 @@ flood.decision(bbox=bbox, datetime=time_range).compute()
 
 It is also possible to run the workflow in an user-friendly interface instead of the Jupyter notebooks, as shown below:
 
-
-![alt text](docs/images/Screenshot from 2025-04-03 13-56-05.png)
+[alt text](docs/images/Screenshot from 2025-04-03 13-56-05.png)
 
 Firstly, install the extra packages with:
 
 ```
- pip install 'dask-flood-mapper[app]@git+https://github.com/TUW-GEO/dask-flood-mapper.git'
+pip install 'dask-flood-mapper[app]@git+https://github.com/TUW-GEO/dask-flood-mapper.git'
 ```
 
 Then, to access it, simyply run the in terminal the command:
