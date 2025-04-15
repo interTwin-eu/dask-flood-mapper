@@ -72,12 +72,10 @@ flood.decision(bbox=bbox, datetime=time_range).compute()
 
 ### User Interface
 
-
-
 It is also possible to run the workflow in an user-friendly interface instead of the Jupyter notebooks, as shown below:
 
 
-![alt text](<docs/images/Screenshot from 2025-04-03 13-56-05.png>)
+![alt text](docs/images/Screenshot from 2025-04-03 13-56-05.png)
 
 Firstly, install the extra packages with:
 
