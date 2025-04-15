@@ -452,7 +452,7 @@ document.write(`
 <span class="ne">----&gt; </span><span class="mi">6</span> <span class="n">your_username</span> <span class="o">=</span> <span class="n">Prompt</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;Enter your Username&quot;</span><span class="p">)</span>
 <span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="n">gateway</span> <span class="o">=</span> <span class="n">EODCDaskGateway</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">your_username</span><span class="p">)</span>
 
-<span class="nn">File /opt/hostedtoolcache/Python/3.10.17/x64/lib/python3.10/site-packages/rich/prompt.py:149,</span> in <span class="ni">PromptBase.ask</span><span class="nt">(cls, prompt, console, password, choices, case_sensitive, show_default, show_choices, default, stream)</span>
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.16/x64/lib/python3.10/site-packages/rich/prompt.py:149,</span> in <span class="ni">PromptBase.ask</span><span class="nt">(cls, prompt, console, password, choices, case_sensitive, show_default, show_choices, default, stream)</span>
 <span class="g g-Whitespace">    </span><span class="mi">125</span><span class="w"> </span><span class="sd">&quot;&quot;&quot;Shortcut to construct and run a prompt loop and return the result.</span>
 <span class="g g-Whitespace">    </span><span class="mi">126</span><span class="sd"> </span>
 <span class="g g-Whitespace">    </span><span class="mi">127</span><span class="sd"> Example:</span>
@@ -467,14 +467,14 @@ document.write(`
 <span class="g g-Whitespace">    </span><span class="mi">148</span> <span class="p">)</span>
 <span class="ne">--&gt; </span><span class="mi">149</span> <span class="k">return</span> <span class="n">_prompt</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">default</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="n">stream</span><span class="p">)</span>
 
-<span class="nn">File /opt/hostedtoolcache/Python/3.10.17/x64/lib/python3.10/site-packages/rich/prompt.py:292,</span> in <span class="ni">PromptBase.__call__</span><span class="nt">(self, default, stream)</span>
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.16/x64/lib/python3.10/site-packages/rich/prompt.py:292,</span> in <span class="ni">PromptBase.__call__</span><span class="nt">(self, default, stream)</span>
 <span class="g g-Whitespace">    </span><span class="mi">290</span> <span class="bp">self</span><span class="o">.</span><span class="n">pre_prompt</span><span class="p">()</span>
 <span class="g g-Whitespace">    </span><span class="mi">291</span> <span class="n">prompt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_prompt</span><span class="p">(</span><span class="n">default</span><span class="p">)</span>
 <span class="ne">--&gt; </span><span class="mi">292</span> <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_input</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="n">stream</span><span class="p">)</span>
 <span class="g g-Whitespace">    </span><span class="mi">293</span> <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="n">default</span> <span class="o">!=</span> <span class="o">...</span><span class="p">:</span>
 <span class="g g-Whitespace">    </span><span class="mi">294</span>     <span class="k">return</span> <span class="n">default</span>
 
-<span class="nn">File /opt/hostedtoolcache/Python/3.10.17/x64/lib/python3.10/site-packages/rich/prompt.py:211,</span> in <span class="ni">PromptBase.get_input</span><span class="nt">(cls, console, prompt, password, stream)</span>
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.16/x64/lib/python3.10/site-packages/rich/prompt.py:211,</span> in <span class="ni">PromptBase.get_input</span><span class="nt">(cls, console, prompt, password, stream)</span>
 <span class="g g-Whitespace">    </span><span class="mi">193</span> <span class="nd">@classmethod</span>
 <span class="g g-Whitespace">    </span><span class="mi">194</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_input</span><span class="p">(</span>
 <span class="g g-Whitespace">    </span><span class="mi">195</span>     <span class="bp">cls</span><span class="p">,</span>
@@ -489,13 +489,13 @@ document.write(`
 <span class="g g-Whitespace">    </span><span class="mi">210</span><span class="sd">     &quot;&quot;&quot;</span>
 <span class="ne">--&gt; </span><span class="mi">211</span>     <span class="k">return</span> <span class="n">console</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="n">stream</span><span class="p">)</span>
 
-<span class="nn">File /opt/hostedtoolcache/Python/3.10.17/x64/lib/python3.10/site-packages/rich/console.py:2165,</span> in <span class="ni">Console.input</span><span class="nt">(self, prompt, markup, emoji, password, stream)</span>
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.16/x64/lib/python3.10/site-packages/rich/console.py:2165,</span> in <span class="ni">Console.input</span><span class="nt">(self, prompt, markup, emoji, password, stream)</span>
 <span class="g g-Whitespace">   </span><span class="mi">2163</span>         <span class="n">result</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
 <span class="g g-Whitespace">   </span><span class="mi">2164</span>     <span class="k">else</span><span class="p">:</span>
 <span class="ne">-&gt; </span><span class="mi">2165</span>         <span class="n">result</span> <span class="o">=</span> <span class="nb">input</span><span class="p">()</span>
 <span class="g g-Whitespace">   </span><span class="mi">2166</span> <span class="k">return</span> <span class="n">result</span>
 
-<span class="nn">File /opt/hostedtoolcache/Python/3.10.17/x64/lib/python3.10/site-packages/ipykernel/kernelbase.py:1281,</span> in <span class="ni">Kernel.raw_input</span><span class="nt">(self, prompt)</span>
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.16/x64/lib/python3.10/site-packages/ipykernel/kernelbase.py:1281,</span> in <span class="ni">Kernel.raw_input</span><span class="nt">(self, prompt)</span>
 <span class="g g-Whitespace">   </span><span class="mi">1279</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_allow_stdin</span><span class="p">:</span>
 <span class="g g-Whitespace">   </span><span class="mi">1280</span>     <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;raw_input was called, but this frontend does not support input requests.&quot;</span>
 <span class="ne">-&gt; </span><span class="mi">1281</span>     <span class="k">raise</span> <span class="n">StdinNotImplementedError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
