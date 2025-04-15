@@ -14,8 +14,10 @@ IMAGE_PATH = files("dask_flood_mapper").joinpath(IMAGE_FILE)
 USER_CACHE_DIR_ = Path(user_cache_dir("dask_flood_mapper"))
 print("§§§§§§ USER_CACHE_DIR: ", USER_CACHE_DIR_)
 
+
 def make_user_cache_path(user_cache_dir):
     return user_cache_dir / IMAGE_FILE
+
 
 if not USER_CACHE_DIR_.exists():
     USER_CACHE_DIR_.mkdir(parents=True)
@@ -25,8 +27,7 @@ print("§§§§§§§§ user cache path:", user_cache_path)
 template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "templates"))
 static_dir = USER_CACHE_DIR_
 app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
-CORS(app)  
-
+CORS(app)
 
 
 @app.route("/")
@@ -52,8 +53,8 @@ def check_flood_status():
         print("################### calculation done")
 
         fd_plot = fd.hvplot.image(
-            x="x",
-            y="y",
+            x="longitude",
+            y="latitude",
             rasterize=True,
             geo=True,
             tiles=True,
@@ -64,7 +65,7 @@ def check_flood_status():
             frame_height=400,
         )
         print("############### plot done")
-        img_path = user_cache_path 
+        img_path = user_cache_path
         pn.panel(fd_plot).save(img_path, embed=True)
 
         if os.path.exists(img_path):
@@ -81,9 +82,7 @@ def check_flood_status():
 
 @app.route("/cache/<path:filename>")
 def serve_cache_file(filename):
-   return send_from_directory(
-      USER_CACHE_DIR_, filename
-   )
+    return send_from_directory(USER_CACHE_DIR_, filename)
 
 
 if __name__ == "__main__":
