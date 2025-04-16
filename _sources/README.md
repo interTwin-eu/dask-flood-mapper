@@ -9,8 +9,8 @@ Map floods with Sentinel-1 radar images. We replicate in this package the work o
 
 To install the package, do the following:
 
-```
-pip install git+https://github.com/TUW-GEO/dask-flood-mapper
+```bash
+pip install dask-flood-mapper
 ```
 
 ## Usage
@@ -31,6 +31,7 @@ Use the flood module and calculate the flood extent with the Bayesian decision m
 ```python
 from dask_flood_mapper import flood
 
+
 flood.decision(bbox=bbox, datetime=time_range).compute()
 ```
 
@@ -42,7 +43,10 @@ For ease of usage of the Dask Gateway install the [`eodc`](https://pypi.org/proj
 
 ```bash
 pip install dask-gateway eodc
-# or use pipenv sync -d
+# or use pipenv
+# git clone https://github.com/TUW-GEO/dask-flood-mapper.git
+# cd dask-flood-mapper
+# pipenv sync -d
 ```
 
 However differences in versions client- and server-side can cause problems. Hence, the most convenient way to successively use the EODC Dask Gateway is Docker. To do this clone the GitHub repository and use the docker-compose.yml.
@@ -55,21 +59,35 @@ docker compose up
 
 Copy and paste the generated URL to launch Jupyter Lab in your browser. Here one can run the below code snippets or execute the [notebook](https://tuw-geo.github.io/dask-flood-mapper/notebooks/02_remote_dask.html) about remote processing.
 
+```python
+from eodc.dask import EODCDaskGateway
+from eodc import settings
+from rich.prompt import Prompt
+
+
+settings.DASK_URL = "http://dask.services.eodc.eu"
+settings.DASK_URL_TCP = "tcp://dask.services.eodc.eu:10000/"
+```
+
 Connect to the gateway (this requires an EODC account).
 
 ```python
-from eodc.dask import EODCDaskGateway
-from rich.prompt import Prompt
 your_username = Prompt.ask(prompt="Enter your Username")
 gateway = EODCDaskGateway(username=your_username)
 ```
 
 Create a cluster.
 
+<div class="alert alert-block alert-info">
+<b>Important:</b> Per default no worker is spawned, therefore please use the widget to add/scale Dask workers in order to enable computations on the cluster.
+</div>
+
 ```python
+cluster_options = gateway.cluster_options()
+cluster_options.image = "ghcr.io/eodcgmbh/cluster_image:2025.4.1"
 cluster = gateway.new_cluster(cluster_options)
 client = cluster.get_client()
-cluster.adapt(minimum=2, maximum=5)
+cluster
 ```
 
 Map the flood the same way as we have done when processing locally.
@@ -87,7 +105,7 @@ It is also possible to run the workflow in an user-friendly interface instead of
 Firstly, install the extra packages with:
 
 ```bash
-pip install 'dask-flood-mapper[app]@git+https://github.com/TUW-GEO/dask-flood-mapper.git'
+pip install 'dask-flood-mapper[app]
 ```
 
 Then, to access it, simplify run the in terminal the command:

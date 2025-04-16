@@ -437,7 +437,7 @@ document.write(`
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
 <p>To install the package, do the following:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">TUW</span><span class="o">-</span><span class="n">GEO</span><span class="o">/</span><span class="n">dask</span><span class="o">-</span><span class="n">flood</span><span class="o">-</span><span class="n">mapper</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>dask-flood-mapper
 </pre></div>
 </div>
 </section>
@@ -454,6 +454,7 @@ document.write(`
 <p>Use the flood module and calculate the flood extent with the Bayesian decision method applied tp Sentinel-1 radar images. The object returned is a <a class="reference external" href="https://docs.xarray.dev/en/stable/"><code class="docutils literal notranslate"><span class="pre">xarray</span></code></a> with lazy loaded Dask arrays. To get the data in memory use the <code class="docutils literal notranslate"><span class="pre">compute</span></code> method on the returned object.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dask_flood_mapper</span><span class="w"> </span><span class="kn">import</span> <span class="n">flood</span>
 
+
 <span class="n">flood</span><span class="o">.</span><span class="n">decision</span><span class="p">(</span><span class="n">bbox</span><span class="o">=</span><span class="n">bbox</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="n">time_range</span><span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -463,7 +464,10 @@ document.write(`
 <p>It is also possible to remotely process the data at the EODC <a class="reference external" href="https://gateway.dask.org/">Dask Gateway</a> with the added benefit that we can then process close to the data source without requiring rate-limiting file transfers over the internet.</p>
 <p>For ease of usage of the Dask Gateway install the <a class="reference external" href="https://pypi.org/project/eodc/"><code class="docutils literal notranslate"><span class="pre">eodc</span></code></a> package besides the <code class="docutils literal notranslate"><span class="pre">dask-gateway</span></code> package. Also, see the <a class="reference external" href="https://github.com/eodcgmbh/eodc-examples/blob/main/demos/dask.ipynb">EODC documentation</a>.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>dask-gateway<span class="w"> </span>eodc
-<span class="c1"># or use pipenv sync -d</span>
+<span class="c1"># or use pipenv</span>
+<span class="c1"># git clone https://github.com/TUW-GEO/dask-flood-mapper.git</span>
+<span class="c1"># cd dask-flood-mapper</span>
+<span class="c1"># pipenv sync -d</span>
 </pre></div>
 </div>
 <p>However differences in versions client- and server-side can cause problems. Hence, the most convenient way to successively use the EODC Dask Gateway is Docker. To do this clone the GitHub repository and use the docker-compose.yml.</p>
@@ -473,17 +477,29 @@ docker<span class="w"> </span>compose<span class="w"> </span>up
 </pre></div>
 </div>
 <p>Copy and paste the generated URL to launch Jupyter Lab in your browser. Here one can run the below code snippets or execute the <a class="reference external" href="https://tuw-geo.github.io/dask-flood-mapper/notebooks/02_remote_dask.html">notebook</a> about remote processing.</p>
-<p>Connect to the gateway (this requires an EODC account).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">eodc.dask</span><span class="w"> </span><span class="kn">import</span> <span class="n">EODCDaskGateway</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eodc</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">rich.prompt</span><span class="w"> </span><span class="kn">import</span> <span class="n">Prompt</span>
-<span class="n">your_username</span> <span class="o">=</span> <span class="n">Prompt</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;Enter your Username&quot;</span><span class="p">)</span>
+
+
+<span class="n">settings</span><span class="o">.</span><span class="n">DASK_URL</span> <span class="o">=</span> <span class="s2">&quot;http://dask.services.eodc.eu&quot;</span>
+<span class="n">settings</span><span class="o">.</span><span class="n">DASK_URL_TCP</span> <span class="o">=</span> <span class="s2">&quot;tcp://dask.services.eodc.eu:10000/&quot;</span>
+</pre></div>
+</div>
+<p>Connect to the gateway (this requires an EODC account).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">your_username</span> <span class="o">=</span> <span class="n">Prompt</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;Enter your Username&quot;</span><span class="p">)</span>
 <span class="n">gateway</span> <span class="o">=</span> <span class="n">EODCDaskGateway</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">your_username</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Create a cluster.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cluster</span> <span class="o">=</span> <span class="n">gateway</span><span class="o">.</span><span class="n">new_cluster</span><span class="p">(</span><span class="n">cluster_options</span><span class="p">)</span>
+<div class="alert alert-block alert-info">
+<b>Important:</b> Per default no worker is spawned, therefore please use the widget to add/scale Dask workers in order to enable computations on the cluster.
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cluster_options</span> <span class="o">=</span> <span class="n">gateway</span><span class="o">.</span><span class="n">cluster_options</span><span class="p">()</span>
+<span class="n">cluster_options</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="s2">&quot;ghcr.io/eodcgmbh/cluster_image:2025.4.1&quot;</span>
+<span class="n">cluster</span> <span class="o">=</span> <span class="n">gateway</span><span class="o">.</span><span class="n">new_cluster</span><span class="p">(</span><span class="n">cluster_options</span><span class="p">)</span>
 <span class="n">client</span> <span class="o">=</span> <span class="n">cluster</span><span class="o">.</span><span class="n">get_client</span><span class="p">()</span>
-<span class="n">cluster</span><span class="o">.</span><span class="n">adapt</span><span class="p">(</span><span class="n">minimum</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">maximum</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">cluster</span>
 </pre></div>
 </div>
 <p>Map the flood the same way as we have done when processing locally.</p>
@@ -496,7 +512,7 @@ docker<span class="w"> </span>compose<span class="w"> </span>up
 <p>It is also possible to run the workflow in an user-friendly interface instead of the Jupyter notebooks, as shown below:</p>
 <p><img alt="screenshot" src="_images/screenshot_floodmap_gui.png" /></p>
 <p>Firstly, install the extra packages with:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;dask-flood-mapper[app]@git+https://github.com/TUW-GEO/dask-flood-mapper.git&#39;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="err">&#39;</span>dask-flood-mapper<span class="o">[</span>app<span class="o">]</span>
 </pre></div>
 </div>
 <p>Then, to access it, simplify run the in terminal the command:</p>
