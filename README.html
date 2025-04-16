@@ -474,7 +474,7 @@ document.write(`
 </pre></div>
 </div>
 <p>Create a cluster.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cluster</span> <span class="o">=</span> <span class="n">gateway</span><span class="o">.</span><span class="n">new_cluster</span><span class="p">(</span><span class="n">cluster_options</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cluster</span> <span class="o">=</span> <span class="n">gateway</span><span class="o">.</span><span class="n">new_cluster</span><span class="p">(</span><span class="n">cluster_options</span><span class="p">)</span>
 <span class="n">client</span> <span class="o">=</span> <span class="n">cluster</span><span class="o">.</span><span class="n">get_client</span><span class="p">()</span>
 <span class="n">cluster</span><span class="o">.</span><span class="n">adapt</span><span class="p">(</span><span class="n">minimum</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">maximum</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
@@ -487,12 +487,12 @@ document.write(`
 <section id="user-interface">
 <h3>User Interface<a class="headerlink" href="#user-interface" title="Link to this heading">#</a></h3>
 <p>It is also possible to run the workflow in an user-friendly interface instead of the Jupyter notebooks, as shown below:</p>
-<p>[alt text](docs/images/Screenshot from 2025-04-03 13-56-05.png)</p>
+<p><img alt="screenshot" src="_images/screenshot_floodmap_gui.png" /></p>
 <p>Firstly, install the extra packages with:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="s1">&#39;dask-flood-mapper[app]@git+https://github.com/TUW-GEO/dask-flood-mapper.git&#39;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;dask-flood-mapper[app]@git+https://github.com/TUW-GEO/dask-flood-mapper.git&#39;</span>
 </pre></div>
 </div>
-<p>Then, to access it, simyply run the in terminal the command:</p>
+<p>Then, to access it, simplify run the in terminal the command:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>floodmap
 </pre></div>
 </div>
@@ -501,7 +501,7 @@ document.write(`
 </section>
 <section id="contributing-guidelines">
 <h2>Contributing Guidelines<a class="headerlink" href="#contributing-guidelines" title="Link to this heading">#</a></h2>
-<p>Please find the contributing guielines in the specific file <a class="reference internal" href="CONTRIBUTING.html"><span class="std std-doc">here</span></a>.</p>
+<p>Please find the contributing guidelines in the specific file <a class="reference internal" href="CONTRIBUTING.html"><span class="std std-doc">CONTRIBUTING.md</span></a>.</p>
 </section>
 <section id="credits">
 <h2>Credits<a class="headerlink" href="#credits" title="Link to this heading">#</a></h2>
@@ -511,7 +511,7 @@ document.write(`
 <section id="literature">
 <h2>Literature<a class="headerlink" href="#literature" title="Link to this heading">#</a></h2>
 <ol class="arabic simple">
-<li><p>Bauer-Marschallinger, Bernhard, Senmao Cao, Mark Edwin Tupas, Florian Roth, Claudio Navacchi, Thomas Melzer, Vahid Freeman, and Wolfgang Wagner. â€œSatellite-Based Flood Mapping through Bayesian Inference from a Sentinel-1 SAR Datacube. Remote Sensing 14, no. 15 (January 2022): 3673. <a class="reference external" href="https://doi.org/10.3390/rs14153673">https://doi.org/10.3390/rs14153673</a>.</p></li>
+<li><p>Bauer-Marschallinger, Bernhard, Senmao Cao, Mark Edwin Tupas, Florian Roth, Claudio Navacchi, Thomas Melzer, Vahid Freeman, and Wolfgang Wagner.Satellite-Based Flood Mapping through Bayesian Inference from a Sentinel-1 SAR Datacube. Remote Sensing 14, no. 15 (January 2022): 3673. <a class="reference external" href="https://doi.org/10.3390/rs14153673">https://doi.org/10.3390/rs14153673</a>.</p></li>
 </ol>
 </section>
 <section id="license">
