@@ -4,9 +4,9 @@ verify_ssl = true
 name = "pip_conf_index_global"
 
 [packages]
-odc-stac = "^0.3.10"
+odc-stac = "==0.3.*"
 dask = {version = "<=2024.5.2", extras = ["distributed"]}
-rioxarray = "^0.17.0"
+rioxarray = "==0.17.*"
 appdirs = "*"
 
 [dev-packages]
@@ -14,7 +14,7 @@ eodc = ">=2025.3.2"
 pytest = "*"
 pytest-cov = "*"
 jupyter-book = "*"
-dask-gateway = "^2023.8.0"
+dask-gateway = ">=2023.8.0"
 pre-commit = "*"
 ruff = "*"
 nbstripout = "*"
@@ -24,6 +24,8 @@ geoviews = "*"
 matplotlib = "*"
 jupyter-bokeh = "*"
 rich = "*"
+build = "*"
+twine = "*"
 
 [requires]
 python_version = "3.10"
