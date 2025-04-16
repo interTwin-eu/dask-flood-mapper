@@ -4,20 +4,17 @@ verify_ssl = true
 name = "pip_conf_index_global"
 
 [packages]
-numpy = "<2"
-odc-stac = "*"
-dask = {version = "==2025.2.0", extras = ["distributed"]}
-rioxarray = "*"
-dask-flood-mapper = {file = ".", editable = true}
+odc-stac = "^0.3.10"
+dask = {version = "<=2024.5.2", extras = ["distributed"]}
+rioxarray = "^0.17.0"
 appdirs = "*"
-odc-geo = "*"
 
 [dev-packages]
-eodc = "*"
+eodc = ">=2025.3.2"
 pytest = "*"
 pytest-cov = "*"
 jupyter-book = "*"
-dask-gateway = "*"
+dask-gateway = "^2023.8.0"
 pre-commit = "*"
 ruff = "*"
 nbstripout = "*"

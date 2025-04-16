@@ -1,0 +1,23 @@
+services:
+  client:
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM ghcr.io/eodcgmbh/cluster_image:2025.4.1
+        USER ubuntu
+        RUN pip install jupyter
+        COPY --chown=1000:1000 . /app/dask_flood_mapper
+        WORKDIR /app/dask_flood_mapper
+        RUN pip install .[docs]
+    stdin_open: true
+    tty: true
+    network_mode: "host"
+    command:
+      [
+        "jupyter",
+        "lab",
+        "--ip=0.0.0.0",
+        "--port=8888",
+        "--no-browser",
+        "--allow-root",
+      ]
