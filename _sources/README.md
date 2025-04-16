@@ -45,6 +45,16 @@ pip install dask-gateway eodc
 # or use pipenv sync -d
 ```
 
+However differences in versions client- and server-side can cause problems. Hence, the most convenient way to successively use the EODC Dask Gateway is Docker. To do this clone the GitHub repository and use the docker-compose.yml.
+
+```bash
+git clone https://github.com/TUW-GEO/dask-flood-mapper.git
+cd dask-flood-mapper
+docker compose up
+```
+
+Copy and paste the generated URL to launch Jupyter Lab in your browser. Here one can run the below code snippets or execute the [notebook](https://tuw-geo.github.io/dask-flood-mapper/notebooks/02_remote_dask.html) about remote processing.
+
 Connect to the gateway (this requires an EODC account).
 
 ```python
@@ -72,7 +82,7 @@ flood.decision(bbox=bbox, datetime=time_range).compute()
 
 It is also possible to run the workflow in an user-friendly interface instead of the Jupyter notebooks, as shown below:
 
-![screenshot](docs/images/Screenshot from 2025-04-03 13-56-05.png)
+![screenshot](docs/images/screenshot_floodmap_gui.png)
 
 Firstly, install the extra packages with:
 

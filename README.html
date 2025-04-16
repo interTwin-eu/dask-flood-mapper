@@ -466,6 +466,13 @@ document.write(`
 <span class="c1"># or use pipenv sync -d</span>
 </pre></div>
 </div>
+<p>However differences in versions client- and server-side can cause problems. Hence, the most convenient way to successively use the EODC Dask Gateway is Docker. To do this clone the GitHub repository and use the docker-compose.yml.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/TUW-GEO/dask-flood-mapper.git
+<span class="nb">cd</span><span class="w"> </span>dask-flood-mapper
+docker<span class="w"> </span>compose<span class="w"> </span>up
+</pre></div>
+</div>
+<p>Copy and paste the generated URL to launch Jupyter Lab in your browser. Here one can run the below code snippets or execute the <a class="reference external" href="https://tuw-geo.github.io/dask-flood-mapper/notebooks/02_remote_dask.html">notebook</a> about remote processing.</p>
 <p>Connect to the gateway (this requires an EODC account).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">eodc.dask</span><span class="w"> </span><span class="kn">import</span> <span class="n">EODCDaskGateway</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">rich.prompt</span><span class="w"> </span><span class="kn">import</span> <span class="n">Prompt</span>
@@ -487,7 +494,7 @@ document.write(`
 <section id="user-interface">
 <h3>User Interface<a class="headerlink" href="#user-interface" title="Link to this heading">#</a></h3>
 <p>It is also possible to run the workflow in an user-friendly interface instead of the Jupyter notebooks, as shown below:</p>
-<p>![screenshot](docs/images/Screenshot from 2025-04-03 13-56-05.png)</p>
+<p><img alt="screenshot" src="_images/screenshot_floodmap_gui.png" /></p>
 <p>Firstly, install the extra packages with:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;dask-flood-mapper[app]@git+https://github.com/TUW-GEO/dask-flood-mapper.git&#39;</span>
 </pre></div>
