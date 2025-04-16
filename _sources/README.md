@@ -79,7 +79,7 @@ gateway = EODCDaskGateway(username=your_username)
 Create a cluster.
 
 <div class="alert alert-block alert-info">
-<b>Important:</b> Per default no worker is spawned, therefore please use the widget to add/scale Dask workers in order to enable computations on the cluster.
+<b>Important:</b> Per default no worker is spawned, therefore please use the widget to add/scale Dask workers in other to enable computations on the cluster.
 </div>
 
 ```python
