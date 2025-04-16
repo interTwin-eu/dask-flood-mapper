@@ -56,7 +56,7 @@ gateway = EODCDaskGateway(username=your_username)
 
 Create a cluster.
 
-```
+```python
 cluster = gateway.new_cluster(cluster_options)
 client = cluster.get_client()
 cluster.adapt(minimum=2, maximum=5)
@@ -72,11 +72,11 @@ flood.decision(bbox=bbox, datetime=time_range).compute()
 
 It is also possible to run the workflow in an user-friendly interface instead of the Jupyter notebooks, as shown below:
 
-[alt text](docs/images/Screenshot from 2025-04-03 13-56-05.png)
+![screenshot](docs/images/Screenshot from 2025-04-03 13-56-05.png)
 
 Firstly, install the extra packages with:
 
-```
+```bash
 pip install 'dask-flood-mapper[app]@git+https://github.com/TUW-GEO/dask-flood-mapper.git'
 ```
 
@@ -90,7 +90,7 @@ It will open the GUI in the web browser.
 
 ## Contributing Guidelines
 
-Please find the contributing guielines in the specific file [here](CONTRIBUTING.md).
+Please find the contributing guidelines in the specific file [here](CONTRIBUTING.md).
 
 ## Credits
 
