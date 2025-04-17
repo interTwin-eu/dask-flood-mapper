@@ -15,23 +15,72 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-import hvplot.xarray  # noqa
-from dask_flood_mapper import flood
-from eodc import settings
-from eodc.dask import EODCDaskGateway
-from rich.console import Console
-from rich.prompt import Prompt
+console = Console()
+your_username = Prompt.ask(prompt="Enter your Username")
+gateway = EODCDaskGateway(username=your_username)
 ------------------
 
 
 [0;31m---------------------------------------------------------------------------[0m
-[0;31mModuleNotFoundError[0m                       Traceback (most recent call last)
-Cell [0;32mIn[1], line 3[0m
-[1;32m      1[0m [38;5;28;01mimport[39;00m[38;5;250m [39m[38;5;21;01mhvplot[39;00m[38;5;21;01m.[39;00m[38;5;21;01mxarray[39;00m  [38;5;66;03m# noqa[39;00m
-[1;32m      2[0m [38;5;28;01mfrom[39;00m[38;5;250m [39m[38;5;21;01mdask_flood_mapper[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m flood
-[0;32m----> 3[0m [38;5;28;01mfrom[39;00m[38;5;250m [39m[38;5;21;01meodc[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m settings
-[1;32m      4[0m [38;5;28;01mfrom[39;00m[38;5;250m [39m[38;5;21;01meodc[39;00m[38;5;21;01m.[39;00m[38;5;21;01mdask[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m EODCDaskGateway
-[1;32m      5[0m [38;5;28;01mfrom[39;00m[38;5;250m [39m[38;5;21;01mrich[39;00m[38;5;21;01m.[39;00m[38;5;21;01mconsole[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m Console
+[0;31mStdinNotImplementedError[0m                  Traceback (most recent call last)
+Cell [0;32mIn[3], line 2[0m
+[1;32m      1[0m console [38;5;241m=[39m Console()
+[0;32m----> 2[0m your_username [38;5;241m=[39m [43mPrompt[49m[38;5;241;43m.[39;49m[43mask[49m[43m([49m[43mprompt[49m[38;5;241;43m=[39;49m[38;5;124;43m"[39;49m[38;5;124;43mEnter your Username[39;49m[38;5;124;43m"[39;49m[43m)[49m
+[1;32m      3[0m gateway [38;5;241m=[39m EODCDaskGateway(username[38;5;241m=[39myour_username)
 
-[0;31mModuleNotFoundError[0m: No module named 'eodc'
+File [0;32m/opt/hostedtoolcache/Python/3.10.17/x64/lib/python3.10/site-packages/rich/prompt.py:149[0m, in [0;36mPromptBase.ask[0;34m(cls, prompt, console, password, choices, case_sensitive, show_default, show_choices, default, stream)[0m
+[1;32m    125[0m [38;5;250m[39m[38;5;124;03m"""Shortcut to construct and run a prompt loop and return the result.[39;00m
+[1;32m    126[0m 
+[1;32m    127[0m [38;5;124;03mExample:[39;00m
+[0;32m   (...)[0m
+[1;32m    138[0m [38;5;124;03m    stream (TextIO, optional): Optional text file open for reading to get input. Defaults to None.[39;00m
+[1;32m    139[0m [38;5;124;03m"""[39;00m
+[1;32m    140[0m _prompt [38;5;241m=[39m [38;5;28mcls[39m(
+[1;32m    141[0m     prompt,
+[1;32m    142[0m     console[38;5;241m=[39mconsole,
+[0;32m   (...)[0m
+[1;32m    147[0m     show_choices[38;5;241m=[39mshow_choices,
+[1;32m    148[0m )
+[0;32m--> 149[0m [38;5;28;01mreturn[39;00m [43m_prompt[49m[43m([49m[43mdefault[49m[38;5;241;43m=[39;49m[43mdefault[49m[43m,[49m[43m [49m[43mstream[49m[38;5;241;43m=[39;49m[43mstream[49m[43m)[49m
+
+File [0;32m/opt/hostedtoolcache/Python/3.10.17/x64/lib/python3.10/site-packages/rich/prompt.py:292[0m, in [0;36mPromptBase.__call__[0;34m(self, default, stream)[0m
+[1;32m    290[0m [38;5;28mself[39m[38;5;241m.[39mpre_prompt()
+[1;32m    291[0m prompt [38;5;241m=[39m [38;5;28mself[39m[38;5;241m.[39mmake_prompt(default)
+[0;32m--> 292[0m value [38;5;241m=[39m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mget_input[49m[43m([49m[38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mconsole[49m[43m,[49m[43m [49m[43mprompt[49m[43m,[49m[43m [49m[38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mpassword[49m[43m,[49m[43m [49m[43mstream[49m[38;5;241;43m=[39;49m[43mstream[49m[43m)[49m
+[1;32m    293[0m [38;5;28;01mif[39;00m value [38;5;241m==[39m [38;5;124m"[39m[38;5;124m"[39m [38;5;129;01mand[39;00m default [38;5;241m!=[39m [38;5;241m.[39m[38;5;241m.[39m[38;5;241m.[39m:
+[1;32m    294[0m     [38;5;28;01mreturn[39;00m default
+
+File [0;32m/opt/hostedtoolcache/Python/3.10.17/x64/lib/python3.10/site-packages/rich/prompt.py:211[0m, in [0;36mPromptBase.get_input[0;34m(cls, console, prompt, password, stream)[0m
+[1;32m    193[0m [38;5;129m@classmethod[39m
+[1;32m    194[0m [38;5;28;01mdef[39;00m[38;5;250m [39m[38;5;21mget_input[39m(
+[1;32m    195[0m     [38;5;28mcls[39m,
+[0;32m   (...)[0m
+[1;32m    199[0m     stream: Optional[TextIO] [38;5;241m=[39m [38;5;28;01mNone[39;00m,
+[1;32m    200[0m ) [38;5;241m-[39m[38;5;241m>[39m [38;5;28mstr[39m:
+[1;32m    201[0m [38;5;250m    [39m[38;5;124;03m"""Get input from user.[39;00m
+[1;32m    202[0m 
+[1;32m    203[0m [38;5;124;03m    Args:[39;00m
+[0;32m   (...)[0m
+[1;32m    209[0m [38;5;124;03m        str: String from user.[39;00m
+[1;32m    210[0m [38;5;124;03m    """[39;00m
+[0;32m--> 211[0m     [38;5;28;01mreturn[39;00m [43mconsole[49m[38;5;241;43m.[39;49m[43minput[49m[43m([49m[43mprompt[49m[43m,[49m[43m [49m[43mpassword[49m[38;5;241;43m=[39;49m[43mpassword[49m[43m,[49m[43m [49m[43mstream[49m[38;5;241;43m=[39;49m[43mstream[49m[43m)[49m
+
+File [0;32m/opt/hostedtoolcache/Python/3.10.17/x64/lib/python3.10/site-packages/rich/console.py:2165[0m, in [0;36mConsole.input[0;34m(self, prompt, markup, emoji, password, stream)[0m
+[1;32m   2163[0m         result [38;5;241m=[39m stream[38;5;241m.[39mreadline()
+[1;32m   2164[0m     [38;5;28;01melse[39;00m:
+[0;32m-> 2165[0m         result [38;5;241m=[39m [38;5;28;43minput[39;49m[43m([49m[43m)[49m
+[1;32m   2166[0m [38;5;28;01mreturn[39;00m result
+
+File [0;32m/opt/hostedtoolcache/Python/3.10.17/x64/lib/python3.10/site-packages/ipykernel/kernelbase.py:1281[0m, in [0;36mKernel.raw_input[0;34m(self, prompt)[0m
+[1;32m   1279[0m [38;5;28;01mif[39;00m [38;5;129;01mnot[39;00m [38;5;28mself[39m[38;5;241m.[39m_allow_stdin:
+[1;32m   1280[0m     msg [38;5;241m=[39m [38;5;124m"[39m[38;5;124mraw_input was called, but this frontend does not support input requests.[39m[38;5;124m"[39m
+[0;32m-> 1281[0m     [38;5;28;01mraise[39;00m StdinNotImplementedError(msg)
+[1;32m   1282[0m [38;5;28;01mreturn[39;00m [38;5;28mself[39m[38;5;241m.[39m_input_request(
+[1;32m   1283[0m     [38;5;28mstr[39m(prompt),
+[1;32m   1284[0m     [38;5;28mself[39m[38;5;241m.[39m_parent_ident[[38;5;124m"[39m[38;5;124mshell[39m[38;5;124m"[39m],
+[1;32m   1285[0m     [38;5;28mself[39m[38;5;241m.[39mget_parent([38;5;124m"[39m[38;5;124mshell[39m[38;5;124m"[39m),
+[1;32m   1286[0m     password[38;5;241m=[39m[38;5;28;01mFalse[39;00m,
+[1;32m   1287[0m )
+
+[0;31mStdinNotImplementedError[0m: raw_input was called, but this frontend does not support input requests.
 
