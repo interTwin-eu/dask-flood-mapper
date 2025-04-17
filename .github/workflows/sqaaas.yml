@@ -18,8 +18,8 @@ jobs:
         with:
           name: pytest-step
           tool: pytest
-          test_path: /app/dask_flood_mapper/tests
-          container: ghcr.io/intertwin-eu/dask-flood-mapper:latest
+          test_path: ./tests
+          # container: ghcr.io/intertwin-eu/dask-flood-mapper:latest
       - name: Print out payload
         run: cat pytest-step.json
       - name: SQAaaS assessment with unit testing (QC.Uni) step
