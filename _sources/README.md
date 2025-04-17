@@ -117,9 +117,24 @@ floodmap
 
 It will open the GUI in the web browser.
 
+## Authors
+
+[Martin Schobben](https://github.com/martinschobben),
+[Thais Beham](https://github.com/thaisbeham)
+
+### Contributors
+
+<a href="https://github.com/interTwin-eu/dask-flood-mapper/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=interTwin-eu/dask-flood-mapper" />
+</a>
+
 ## Contributing Guidelines
 
 Please find the contributing guidelines in the specific file [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Automated Delivery
+
+This repository holds container images to be used for running Dask based flood mapping on the EODC Dask Gateway. Use the url "ghcr.io/eodcgmbh/cluster_image:latest" to specify the image.
 
 ## Credits
 

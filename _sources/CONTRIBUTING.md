@@ -2,10 +2,10 @@
 
 Thank you for the interest in contributing to this project! We accept contributions in the following areas:
 
-* Reporting a bug
-* Discussing the current state of the code
-* Submitting a fix
-* Proposing new features
+- Reporting a bug
+- Discussing the current state of the code
+- Submitting a fix
+- Proposing new features
 
 ## Development with GitHub
 
@@ -31,25 +31,26 @@ Any contribution made will be under the same license that covers the project, th
 We use GitHub issues to track public bugs. If you want to report a bug, please open a new issue.
 
 ### How to write issues
- 
+
 Please report bugs with detail, background and sample code. Ideally the issue should have:
 
-* A quick summary and/or background
-* Steps to reproduce
-    * Be specific!
-    * Give sample code, if possible
-* What you expected would happen
-* What actually happens
-* Notes (possibly including why you think this might be happening, or things that you tried and didn't work)
+- A quick summary and/or background
+- Steps to reproduce
+  - Be specific!
+  - Give sample code, if possible
+- What you expected would happen
+- What actually happens
+- Notes (possibly including why you think this might be happening, or things that you tried and didn't work)
 
 ## Reference
+
 This section was adapted from [this guideline](https://gist.github.com/briandk/3d2e8b3ec8daf5a27a62).
 
-## Development 
+## Development
 
 ### Environment management
 
-For convenience one can use `pipenv` and the `Pipfile.lock` to deterministically install all packages used during development. 
+For convenience one can use `pipenv` and the `Pipfile.lock` to deterministically install all packages used during development.
 
 ```bash
 pipenv sync -d
