@@ -19,7 +19,7 @@ jobs:
       - name: Install dependencies
         run: python -m pip install --upgrade pip setuptools wheel
       - name: Install python package
-        run: pip install -e .[docs]
+        run: pip install -e .[all]
       - name: Build documentation
         run: jupyter-book build .
       - name: Deploy to GitHub Pages
