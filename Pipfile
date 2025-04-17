@@ -26,6 +26,7 @@ jupyter-bokeh = "*"
 rich = "*"
 build = "*"
 twine = "*"
+pytest-json-report = "*"
 
 [requires]
 python_version = "3.10"
