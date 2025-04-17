@@ -19,7 +19,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ghcr.io/eodcgmbh/cluster_image
+            ghcr.io/intertwin-eu/dask-flood-mapper
           tags: |
             type=semver,pattern={{raw}}
       - name: Checkout repository
