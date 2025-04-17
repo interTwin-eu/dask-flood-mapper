@@ -1,8 +1,11 @@
 # Dask based Flood Mapping
 
-![CI](https://github.com/TUW-GEO/dask-flood-mapper/actions/workflows/pytest.yml/badge.svg)
+![CI](https://github.com/interTwin-eu/dask-flood-mapper/actions/workflows/pytest.yml/badge.svg)
 [![DOI](https://zenodo.org/badge/859296745.svg)](https://doi.org/10.5281/zenodo.15004960)
 ![pypi](https://img.shields.io/pypi/v/dask_flood_mapper.svg)
+[![GitHub Super-Linter](https://github.com/interTwin-eu/dask-flood-mapper/actions/workflows/lint.yml/badge.svg)](https://github.com/marketplace/actions/super-linter)
+[![GitHub Super-Linter](https://github.com/interTwin-eu/dask-flood-mapper/actions/workflows/check-links.yml/badge.svg)](https://github.com/marketplace/actions/markdown-link-check)
+[![SQAaaS source code](https://github.com/EOSC-synergy/dask-flood-mapper.assess.sqaaas/raw/main/.badge/status_shields.svg)](https://sqaaas.eosc-synergy.eu/#/full-assessment/report/https://raw.githubusercontent.com/eosc-synergy/dask-flood-mapper.assess.sqaaas/main/.report/assessment_output.json)
 
 Map floods with Sentinel-1 radar images. We replicate in this package the work of Bauer-Marschallinger et al. (2022)<sup>1</sup> on the TU Wien Bayesian-based flood mapping algorithm. This implementation is entirely based on [`dask`](https://www.dask.org/) and data access via [STAC](https://stacspec.org/en) with [`odc-stac`](https://odc-stac.readthedocs.io/en/latest/). The algorithm requires three pre-processed input datasets stored and accessible via STAC at the Earth Observation Data Centre For Water Resources Monitoring (EODC). It is foreseen that future implementations can also use data from other STAC catalogues. This notebook explains how microwave backscattering can be used to map the extent of a flood. The workflow detailed in this [notebook](https://tuw-geo.github.io/dask-flood-mapper/notebooks/03_flood_map.html) forms the backbone of this package. For a short overview of the Bayesian decision method for flood mapping see this [ProjectPythia book](https://projectpythia.org/eo-datascience-cookbook/notebooks/tutorials/floodmapping.html).
 
@@ -134,7 +137,7 @@ Please find the contributing guidelines in the specific file [CONTRIBUTING.md](C
 
 ## Automated Delivery
 
-This repository holds container images to be used for running Dask based flood mapping on the EODC Dask Gateway. Use the url "ghcr.io/eodcgmbh/cluster_image:latest" to specify the image.
+This repository holds container images to be used for running Dask based flood mapping on the EODC Dask Gateway. Use the url "ghcr.io/intertwin-eu/dask-flood-mapper:latest" to specify the image.
 
 ## Credits
 
