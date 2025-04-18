@@ -102,7 +102,7 @@ flood.decision(bbox=bbox, datetime=time_range).compute()
 
 ### User Interface
 
-It is also possible to run the workflow in an user-friendly interface instead of the Jupyter notebooks, as shown below:
+It is also possible to run the workflow in an user-friendly interface, as shown below:
 
 ![screenshot](docs/images/screenshot_floodmap_gui.png)
 
@@ -137,7 +137,11 @@ Please find the contributing guidelines in the specific file [CONTRIBUTING.md](C
 
 ## Automated Delivery
 
-This repository holds container images to be used for running Dask based flood mapping on the EODC Dask Gateway. Use the url "ghcr.io/intertwin-eu/dask-flood-mapper:latest" to specify the image.
+This repository holds a container image to be used for running Dask based flood mapping on the EODC Dask Gateway. Use the url `ghcr.io/intertwin-eu/dask-flood-mapper:latest` to specify the image.
+
+```bash
+docker pull ghcr.io/intertwin-eu/dask-flood-mapper:latest
+```
 
 ## Credits
 

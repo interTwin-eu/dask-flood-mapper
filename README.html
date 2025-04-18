@@ -518,7 +518,7 @@ docker<span class="w"> </span>compose<span class="w"> </span>up
 </section>
 <section id="user-interface">
 <h3>User Interface<a class="headerlink" href="#user-interface" title="Link to this heading">#</a></h3>
-<p>It is also possible to run the workflow in an user-friendly interface instead of the Jupyter notebooks, as shown below:</p>
+<p>It is also possible to run the workflow in an user-friendly interface, as shown below:</p>
 <p><img alt="screenshot" src="_images/screenshot_floodmap_gui.png" /></p>
 <p>Firstly, install the extra packages with:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="err">&#39;</span>dask-flood-mapper<span class="o">[</span>app<span class="o">]</span>
@@ -548,7 +548,10 @@ docker<span class="w"> </span>compose<span class="w"> </span>up
 </section>
 <section id="automated-delivery">
 <h2>Automated Delivery<a class="headerlink" href="#automated-delivery" title="Link to this heading">#</a></h2>
-<p>This repository holds container images to be used for running Dask based flood mapping on the EODC Dask Gateway. Use the url “<a class="reference external" href="http://ghcr.io/intertwin-eu/dask-flood-mapper:latest">ghcr.io/intertwin-eu/dask-flood-mapper:latest</a>” to specify the image.</p>
+<p>This repository holds a container image to be used for running Dask based flood mapping on the EODC Dask Gateway. Use the url <code class="docutils literal notranslate"><span class="pre">ghcr.io/intertwin-eu/dask-flood-mapper:latest</span></code> to specify the image.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>pull<span class="w"> </span>ghcr.io/intertwin-eu/dask-flood-mapper:latest
+</pre></div>
+</div>
 </section>
 <section id="credits">
 <h2>Credits<a class="headerlink" href="#credits" title="Link to this heading">#</a></h2>
