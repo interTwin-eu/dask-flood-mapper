@@ -1,25 +1,25 @@
 from dask_flood_mapper.calculation import (
-    calc_water_likelihood,
-    harmonic_expected_backscatter,
     bayesian_flood_decision,
     bayesian_flood_probability,
+    calc_water_likelihood,
     calculate_flood_dc,
+    harmonic_expected_backscatter,
     remove_speckles,
 )
 from dask_flood_mapper.catalog import (
+    config,
     initialize_catalog,
     initialize_search,
     search_parameters,
 )
 from dask_flood_mapper.processing import (
+    BANDS_HPAR,
     post_processing,
     prepare_dc,
-    process_sig0_dc,
     process_datacube,
+    process_sig0_dc,
     reproject_equi7grid,
-    BANDS_HPAR,
 )
-from dask_flood_mapper.catalog import config
 
 # import parameters from config.yaml file
 crs = config["base"]["crs"]
@@ -138,13 +138,13 @@ def probability(bbox, datetime):
     """
     Bayesian Flood Probability
 
-    Classify Sentinel-1 radar images by simple Bayes inference into a probability of flood,
-    ranging from 0 (minimum probability of flood) to 1 (maximum probability of flood).
-    Besides radar images, this algorithm relies on two other
-    datasets stored at the Earth Observation Data Centre For Water Resources
-    Monitoring (EODC); harmonic parameters based on a fit on per land pixel
-    timeseries and the projected incidence angle of the measurement. The latter
-    two datasets are required to calculate the land and water likelihood
+    Classify Sentinel-1 radar images by simple Bayes inference into a
+    probability of flood,ranging from 0 (minimum probability of flood) to 1
+    (maximum probability of flood).Besides radar images, this algorithm relies
+    on two other datasets stored at the Earth Observation Data Centre For Water
+    Resources Monitoring (EODC); harmonic parameters based on a fit on per land
+    pixel timeseries and the projected incidence angle of the measurement. The
+    latter two datasets are required to calculate the land and water likelihood
     distributions, respectively.
 
     Parameters
@@ -162,7 +162,8 @@ def probability(bbox, datetime):
 
     Returns
     -------
-        flood probability : xarray.DataArray ranging from 0 (0% estimation of flood) to 1 (100% estimation of flood)
+        flood probability : xarray.DataArray ranging from 0 (0% estimation of
+        flood) to 1 (100% estimation of flood)
 
     See also
     --------

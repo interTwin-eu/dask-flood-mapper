@@ -1,11 +1,9 @@
-import xarray as xr
 import numpy as np
-from odc import stac as odc_stac
 import rioxarray  # noqa
-from odc.geo.xr import ODCExtensionDa
-
+import xarray as xr
 from dask_flood_mapper.catalog import config
-
+from odc import stac as odc_stac
+from odc.geo.xr import ODCExtensionDa
 
 # import parameters from config.yaml file
 crs = config["base"]["crs"]

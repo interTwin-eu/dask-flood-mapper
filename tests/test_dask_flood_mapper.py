@@ -1,33 +1,30 @@
-import pytest
-import xarray as xr
-import numpy as np
-from unittest.mock import MagicMock, patch
-import pandas as pd
-import dask.array as da
-import rioxarray  # noqa
 import tempfile
 from pathlib import Path
+from unittest.mock import MagicMock, patch
 
+import dask.array as da
+import numpy as np
+import pandas as pd
+import pytest
+import rioxarray  # noqa
+import xarray as xr
+from dask_flood_mapper.calculation import (
+    bayesian_flood_decision,
+    calc_water_likelihood,
+    calculate_flood_dc,
+    harmonic_expected_backscatter,
+    remove_speckles,
+)
 from dask_flood_mapper.processing import (
     extract_orbit_names,
     post_process_eodc_cube,
     post_process_eodc_cube_,
     post_processing,
-    reproject_equi7grid,
-    process_sig0_dc,
     process_datacube,
+    process_sig0_dc,
+    reproject_equi7grid,
 )
-from dask_flood_mapper.calculation import (
-    calc_water_likelihood,
-    harmonic_expected_backscatter,
-    bayesian_flood_decision,
-    calculate_flood_dc,
-    remove_speckles,
-)
-from dask_flood_mapper.stac_config import (
-    load_config,
-    set_user_config,
-)
+from dask_flood_mapper.stac_config import load_config, set_user_config
 
 
 class MockItemOrbit:
@@ -86,7 +83,8 @@ def dataset():
 
 @pytest.fixture
 def mock_hpar_dataset():
-    # Create a mock dataset with 'time', and the necessary variables for harmonic backscatter computation
+    # Create a mock dataset with 'time', and the necessary variables for
+    # harmonic backscatter computation
     time = pd.date_range(
         "2022-01-01", periods=365, freq="D"
     )  # Create a time range for 1 year
@@ -312,9 +310,9 @@ def test_process_sig0_dc(
 
     sig0_dc, orbit_sig0 = process_sig0_dc(mock_data, mock_items_orbits, "VV")
 
-    assert isinstance(sig0_dc, xr.Dataset), (
-        "Returned object should be an xarray Dataset"
-    )
+    assert isinstance(
+        sig0_dc, xr.Dataset
+    ), "Returned object should be an xarray Dataset"
     assert "sig0" in sig0_dc, "Variable should be renamed to 'sig0'"
     assert "orbit" in sig0_dc.coords, "Orbit coordinate should be present"
     assert len(sig0_dc.time) == 2, "Duplicate times should be averaged"
@@ -323,9 +321,9 @@ def test_process_sig0_dc(
     np.testing.assert_array_equal(orbit_sig0, expected_orbits)
 
     assert sig0_dc.chunks, "Dataset should be persisted (chunked with Dask)"
-    assert any(isinstance(v.data, da.Array) for v in sig0_dc.data_vars.values()), (
-        "Dataset should be persisted (not computed)"
-    )
+    assert any(
+        isinstance(v.data, da.Array) for v in sig0_dc.data_vars.values()
+    ), "Dataset should be persisted (not computed)"
 
 
 @patch("dask_flood_mapper.processing.post_process_eodc_cube")
@@ -350,19 +348,19 @@ def test_process_datacube(
     ), "Dataset should be chunked"
 
     assert result.chunks, "Dataset should be persisted (chunked with Dask)"
-    assert any(isinstance(v.data, da.Array) for v in result.data_vars.values()), (
-        "Dataset should be persisted (not computed)"
-    )
-    assert any(isinstance(v.data, da.Array) for v in result.data_vars.values()), (
-        "Dataset should be persisted (not computed)"
-    )
+    assert any(
+        isinstance(v.data, da.Array) for v in result.data_vars.values()
+    ), "Dataset should be persisted (not computed)"
+    assert any(
+        isinstance(v.data, da.Array) for v in result.data_vars.values()
+    ), "Dataset should be persisted (not computed)"
     assert any(
         hasattr(v.data, "chunks") and v.data.chunks is not None
         for v in result.data_vars.values()
     ), "Dataset should be chunked"
-    assert orbit_sig0 in result.orbit.values, (
-        f"Dataset should contain orbit '{orbit_sig0}' only"
-    )
+    assert (
+        orbit_sig0 in result.orbit.values
+    ), f"Dataset should contain orbit '{orbit_sig0}' only"
 
     mock_post_process.assert_called_once_with(mock_data, mock_items_orbits, bands)
     mock_extract_orbit_names.assert_called_once_with(mock_items_orbits)
@@ -373,9 +371,9 @@ def test_calculate_flood_dc(mock_data_cubes):
     sig0_dc, plia_dc, hpar_dc = mock_data_cubes
     result = calculate_flood_dc(sig0_dc, plia_dc, hpar_dc)
 
-    assert all(var in result.data_vars for var in ["sig0", "plia", "hpar"]), (
-        "All variables should be present after merging"
-    )
+    assert all(
+        var in result.data_vars for var in ["sig0", "plia", "hpar"]
+    ), "All variables should be present after merging"
 
     assert "time" in result.dims, "Orbit dimension should be renamed to 'time'"
     assert "orbit" not in result.dims, "Orbit dimension should be removed"
@@ -386,9 +384,9 @@ def test_calculate_flood_dc(mock_data_cubes):
     ), "All-NaN values in 'sig0' should be removed"
 
     assert result.chunks, "Dataset should be persisted (chunked with Dask)"
-    assert any(isinstance(v.data, da.Array) for v in result.data_vars.values()), (
-        "Dataset should be persisted (not computed)"
-    )
+    assert any(
+        isinstance(v.data, da.Array) for v in result.data_vars.values()
+    ), "Dataset should be persisted (not computed)"
 
 
 def test_remove_speckles(mock_data_cubes):
@@ -399,9 +397,9 @@ def test_remove_speckles(mock_data_cubes):
     assert result.sizes["y"] == sig0_dc.sizes["y"], "y size should remain the same"
     assert result.sizes["x"] == sig0_dc.sizes["x"], "x size should remain the same"
     assert result.chunks, "Dataset should be persisted (chunked with Dask)"
-    assert any(isinstance(v.data, da.Array) for v in result.data_vars.values()), (
-        "Dataset should be persisted (not computed)"
-    )
+    assert any(
+        isinstance(v.data, da.Array) for v in result.data_vars.values()
+    ), "Dataset should be persisted (not computed)"
 
 
 def assert_datacube_eq(actual, expected):

@@ -1,8 +1,9 @@
-import xarray as xr
-from dask_flood_mapper import flood
+from datetime import datetime
+
 import numpy as np
 import rioxarray  # noqa
-from datetime import datetime
+import xarray as xr
+from dask_flood_mapper import flood
 
 
 def assert_datacube_eq(actual, expected):

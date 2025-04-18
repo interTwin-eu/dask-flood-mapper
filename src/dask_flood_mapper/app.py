@@ -1,13 +1,13 @@
-from flask import Flask, request, jsonify, send_from_directory, render_template
-from flask_cors import CORS
-from dask_flood_mapper import flood
-import hvplot.xarray  # noqa
 import os
-import panel as pn
 from importlib.resources import files
-from appdirs import user_cache_dir
 from pathlib import Path
 
+import hvplot.xarray  # noqa
+import panel as pn
+from appdirs import user_cache_dir
+from dask_flood_mapper import flood
+from flask import Flask, jsonify, render_template, request, send_from_directory
+from flask_cors import CORS
 
 IMAGE_FILE = "flood_map.html"
 IMAGE_PATH = files("dask_flood_mapper").joinpath(IMAGE_FILE)

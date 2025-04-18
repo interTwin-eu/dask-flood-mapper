@@ -27,6 +27,8 @@ rich = "*"
 build = "*"
 twine = "*"
 pytest-json-report = "*"
+pymarkdown = "*"
+jupyter = "*"
 
 [requires]
 python_version = "3.10"

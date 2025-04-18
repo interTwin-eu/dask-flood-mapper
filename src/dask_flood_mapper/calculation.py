@@ -1,10 +1,12 @@
-import xarray as xr
 import numpy as np
+import xarray as xr
 
 
 def calculate_flood_dc(sig0_dc, plia_dc, hpar_dc):
-    """Merge four data cubes and apply processing steps to clean and filter the dataset.
-    wcover_dc is optional."""
+    """
+    Merge four data cubes and apply processing steps to clean and filter the dataset.
+    wcover_dc is optional.
+    """
     flood_dc = xr.merge([sig0_dc, plia_dc, hpar_dc])
     flood_dc = (
         flood_dc.reset_index("orbit", drop=True)
@@ -16,7 +18,10 @@ def calculate_flood_dc(sig0_dc, plia_dc, hpar_dc):
 
 
 def remove_speckles(flood_output, window_size=5):
-    """Apply a rolling median filter to smooth the dataset spatially over longitude and latitude."""
+    """
+    Apply a rolling median filter to smooth the dataset spatially over longitude
+    and latitude.
+    """
     flood_output = (
         flood_output.rolling({"x": window_size, "y": window_size}, center=True)
         .median(skipna=True)

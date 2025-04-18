@@ -1,8 +1,9 @@
-from importlib.resources import files
-from appdirs import user_config_dir
-from pathlib import Path
 import shutil
+from importlib.resources import files
+from pathlib import Path
+
 import yaml
+from appdirs import user_config_dir
 
 CONFIG_FILE = "config.yaml"
 CONFIG_PATH = files("dask_flood_mapper").joinpath(CONFIG_FILE)

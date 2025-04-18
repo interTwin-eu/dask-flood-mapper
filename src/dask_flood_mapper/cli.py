@@ -1,5 +1,6 @@
-import webbrowser
 import threading
+import webbrowser
+
 from dask_flood_mapper.app import app
 
 
@@ -9,7 +10,7 @@ def open_browser():
 
 def main():
     threading.Timer(1.5, open_browser).start()
-    app.run(debug= False)
+    app.run(debug=False)
 
 
 print("🧭 Flask template folder:", app.template_folder)
