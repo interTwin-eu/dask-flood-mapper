@@ -137,7 +137,7 @@ Please find the contributing guidelines in the specific file [CONTRIBUTING.md](C
 
 ## Automated Delivery
 
-This repository holds a container image to be used for running Dask based flood mapping on the EODC Dask Gateway. Use the url `ghcr.io/intertwin-eu/dask-flood-mapper:latest` to specify the image.
+This repository holds a container image to be used for running Dask based flood mapping on the EODC Dask Gateway. Use the URL `ghcr.io/intertwin-eu/dask-flood-mapper:latest` to specify the image.
 
 ```bash
 docker pull ghcr.io/intertwin-eu/dask-flood-mapper:latest
