@@ -11,7 +11,7 @@
 	<path id="Hintergrund" fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" d="M260.071,112.147l0.016-89.458
 		c0-7.509,6.09-13.618,13.575-13.618h181.433c7.477,0,13.56,6.109,13.56,13.618l0.047,89.458"/>
 	<g id="Erde">
-		
+
 			<circle id="Umkreis_1_" fill="#006699" stroke="#FFFFFF" stroke-width="3" stroke-miterlimit="2" cx="364.472" cy="109.509" r="102.926"/>
 		<path id="Meridian1_1_" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-miterlimit="2" d="M316.077,18.655
 			c3.113,0.951,6.335,4.646,8.263,6.963c3.261,3.91,6.343,7.893,9.257,12.098c6.357,9.184,12.538,18.614,18.222,28.231
@@ -52,7 +52,7 @@
 						h33.592v16.82c0,8.521-2.535,15.192-7.534,19.829C324.203,138.375,317.295,140.684,308.58,140.684z"/>
 				</g>
 				<g>
-					<polygon fill="#006699" points="339.118,139.566 339.118,68.965 389.566,68.965 389.566,87.803 359.969,87.803 359.969,94.381 
+					<polygon fill="#006699" points="339.118,139.566 339.118,68.965 389.566,68.965 389.566,87.803 359.969,87.803 359.969,94.381
 						385.057,94.381 385.057,112.753 359.969,112.753 359.969,120.729 389.566,120.729 389.566,139.566 					"/>
 				</g>
 				<g>
@@ -101,13 +101,13 @@
 <g id="Schrift_ENG" display="none">
 	<text transform="matrix(1 0 0 1 497.9956 173.8145)" display="inline"><tspan x="0" y="0" fill="#666666" font-family="'TUHeadline-Bold'" font-size="31">RESEARCH GROUPS</tspan><tspan x="0" y="33" fill="#666666" font-family="'TUHeadline-Bold'" font-size="31">PHOTOGRAMMETRY &amp; REMOTE SENSING</tspan></text>
 	<text id="DEPARTMENT_FÜR_GEODÄSIE_UND_GEOINFORMATION" transform="matrix(1 0 0 1 497.9956 88.8145)" display="inline"><tspan x="0" y="0" fill="#666666" font-family="'TUHeadline-Bold'" font-size="31">DEPARTMENT FOR GEODESY</tspan><tspan x="0" y="33" fill="#666666" font-family="'TUHeadline-Bold'" font-size="31">AND GEOINFORMATION</tspan></text>
-	
+
 		<text transform="matrix(1 0 0 1 497.9956 39.8145)" display="inline" fill="#666666" font-family="'TUHeadline-Bold'" font-size="31">VIENNA UNIVERSITY OF TECHNOLOGY</text>
 </g>
 <g id="Schrift_DEU_copy" display="none">
 	<text transform="matrix(1 0 0 1 497.9956 173.8145)" display="inline"><tspan x="0" y="0" fill="#666666" font-family="'TUHeadline-Bold'" font-size="31">FORSCHUNGSGRUPPEN</tspan><tspan x="0" y="33" fill="#666666" font-family="'TUHeadline-Bold'" font-size="31">PHOTOGRAMMETRIE &amp; FERNERKUNDUNG</tspan></text>
 	<text transform="matrix(1 0 0 1 497.9956 88.8145)" display="inline"><tspan x="0" y="0" fill="#666666" font-family="'TUHeadline-Bold'" font-size="31">DEPARTMENT FÜR GEODÄSIE</tspan><tspan x="0" y="33" fill="#666666" font-family="'TUHeadline-Bold'" font-size="31">UND GEOINFORMATION</tspan></text>
-	
+
 		<text transform="matrix(1 0 0 1 497.9956 39.8145)" display="inline" fill="#666666" font-family="'TUHeadline-Bold'" font-size="31">TECHNISCHE UNIVERSITÄT WIEN</text>
 </g>
 <g id="TU_Wien_Logo">

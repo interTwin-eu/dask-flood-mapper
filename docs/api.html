@@ -526,13 +526,13 @@ latitude, maximum longitude, maximum latitude</p>
 <dt class="sig sig-object py" id="dask_flood_mapper.flood.probability">
 <span class="sig-prename descclassname"><span class="pre">dask_flood_mapper.flood.</span></span><span class="sig-name descname"><span class="pre">probability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bbox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datetime</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dask_flood_mapper.flood.probability" title="Link to this definition">#</a></dt>
 <dd><p>Bayesian Flood Probability</p>
-<p>Classify Sentinel-1 radar images by simple Bayes inference into a probability of flood,
-ranging from 0 (minimum probability of flood) to 1 (maximum probability of flood).
-Besides radar images, this algorithm relies on two other
-datasets stored at the Earth Observation Data Centre For Water Resources
-Monitoring (EODC); harmonic parameters based on a fit on per land pixel
-timeseries and the projected incidence angle of the measurement. The latter
-two datasets are required to calculate the land and water likelihood
+<p>Classify Sentinel-1 radar images by simple Bayes inference into a
+probability of flood,ranging from 0 (minimum probability of flood) to 1
+(maximum probability of flood).Besides radar images, this algorithm relies
+on two other datasets stored at the Earth Observation Data Centre For Water
+Resources Monitoring (EODC); harmonic parameters based on a fit on per land
+pixel timeseries and the projected incidence angle of the measurement. The
+latter two datasets are required to calculate the land and water likelihood
 distributions, respectively.</p>
 <section id="id1">
 <h2>Parameters<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
@@ -555,7 +555,8 @@ latitude, maximum longitude, maximum latitude</p>
 <section id="id2">
 <h2>Returns<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>flood probability : xarray.DataArray ranging from 0 (0% estimation of flood) to 1 (100% estimation of flood)</p>
+<div><p>flood probability : xarray.DataArray ranging from 0 (0% estimation of
+flood) to 1 (100% estimation of flood)</p>
 </div></blockquote>
 </section>
 <section id="id3">

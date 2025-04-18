@@ -430,7 +430,8 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="contributing">
 <h1>Contributing<a class="headerlink" href="#contributing" title="Link to this heading">#</a></h1>
-<p>Thank you for the interest in contributing to this project! We accept contributions in the following areas:</p>
+<p>Thank you for the interest in contributing to this project! We accept
+contributions in the following areas:</p>
 <ul class="simple">
 <li><p>Reporting a bug</p></li>
 <li><p>Discussing the current state of the code</p></li>
@@ -439,11 +440,13 @@ document.write(`
 </ul>
 <section id="development-with-github">
 <h2>Development with GitHub<a class="headerlink" href="#development-with-github" title="Link to this heading">#</a></h2>
-<p>We use GitHub to host code, to track issues and feature requests, as well as accept pull requests.</p>
+<p>We use GitHub to host code, to track issues and feature requests, as well as
+accept pull requests.</p>
 </section>
 <section id="propose-changes-with-pull-requests">
 <h2>Propose changes with Pull Requests<a class="headerlink" href="#propose-changes-with-pull-requests" title="Link to this heading">#</a></h2>
-<p>Pull Requests(PR) are the best way to propose changes to the codebase. Before issuing the PR, make sure that:</p>
+<p>Pull Requests(PR) are the best way to propose changes to the codebase. Before
+issuing the PR, make sure that:</p>
 <ol class="arabic simple">
 <li><p>Fork the repository and create your branch from main.</p></li>
 <li><p>If you have added code that should be tested, add tests.</p></li>
@@ -455,14 +458,17 @@ document.write(`
 </section>
 <section id="contribution-license">
 <h2>Contribution License<a class="headerlink" href="#contribution-license" title="Link to this heading">#</a></h2>
-<p>Any contribution made will be under the same license that covers the project, the <a class="reference download internal" download="" href="_downloads/61e0bdf7e1b43c5c93d9488b22e04170/LICENSE.txt"><span class="xref download myst">MIT License</span></a>.</p>
+<p>Any contribution made will be under the same license that covers the project,
+the <a class="reference download internal" download="" href="_downloads/61e0bdf7e1b43c5c93d9488b22e04170/LICENSE.txt"><span class="xref download myst">MIT License</span></a>.</p>
 </section>
 <section id="report-bugs-using-github-s-issues">
 <h2>Report bugs using Github’s issues<a class="headerlink" href="#report-bugs-using-github-s-issues" title="Link to this heading">#</a></h2>
-<p>We use GitHub issues to track public bugs. If you want to report a bug, please open a new issue.</p>
+<p>We use GitHub issues to track public bugs. If you want to report a bug, please
+open a new issue.</p>
 <section id="how-to-write-issues">
 <h3>How to write issues<a class="headerlink" href="#how-to-write-issues" title="Link to this heading">#</a></h3>
-<p>Please report bugs with detail, background and sample code. Ideally the issue should have:</p>
+<p>Please report bugs with detail, background and sample code. Ideally the issue
+should have:</p>
 <ul class="simple">
 <li><p>A quick summary and/or background</p></li>
 <li><p>Steps to reproduce</p>
@@ -473,23 +479,27 @@ document.write(`
 </li>
 <li><p>What you expected would happen</p></li>
 <li><p>What actually happens</p></li>
-<li><p>Notes (possibly including why you think this might be happening, or things that you tried and didn’t work)</p></li>
+<li><p>Notes (possibly including why you think this might be happening, or things
+that you tried and didn’t work)</p></li>
 </ul>
 </section>
 </section>
 <section id="reference">
 <h2>Reference<a class="headerlink" href="#reference" title="Link to this heading">#</a></h2>
-<p>This section was adapted from <a class="reference external" href="https://gist.github.com/briandk/3d2e8b3ec8daf5a27a62">this guideline</a>.</p>
+<p>This section was adapted from
+<a class="reference external" href="https://gist.github.com/briandk/3d2e8b3ec8daf5a27a62">this guideline</a>.</p>
 </section>
 <section id="development">
 <h2>Development<a class="headerlink" href="#development" title="Link to this heading">#</a></h2>
 <section id="environment-management">
 <h3>Environment management<a class="headerlink" href="#environment-management" title="Link to this heading">#</a></h3>
-<p>For convenience one can use <code class="docutils literal notranslate"><span class="pre">pipenv</span></code> and the <code class="docutils literal notranslate"><span class="pre">Pipfile.lock</span></code> to deterministically install all packages used during development.</p>
+<p>For convenience one can use <code class="docutils literal notranslate"><span class="pre">pipenv</span></code> and the <code class="docutils literal notranslate"><span class="pre">Pipfile.lock</span></code> to deterministically
+install all packages used during development.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pipenv<span class="w"> </span>sync<span class="w"> </span>-d
 </pre></div>
 </div>
-<p>Checkout the <a class="reference external" href="https://pipenv.pypa.io/en/latest/">documentation</a> for more help with installing pipenv and reconstructing the development environment.</p>
+<p>Checkout the <a class="reference external" href="https://pipenv.pypa.io/en/latest/">documentation</a> for more help
+with installing pipenv and reconstructing the development environment.</p>
 </section>
 <section id="testing">
 <h3>Testing<a class="headerlink" href="#testing" title="Link to this heading">#</a></h3>
@@ -501,7 +511,9 @@ pytest<span class="w"> </span>./tests/
 </section>
 <section id="linting-and-formatting">
 <h3>Linting and formatting<a class="headerlink" href="#linting-and-formatting" title="Link to this heading">#</a></h3>
-<p>The pre-commit hooks can be used to check whether you contribution follows the standards as adhered to in this project. Install and activate the <code class="docutils literal notranslate"><span class="pre">pre-commit</span></code> hooks, like so:</p>
+<p>The pre-commit hooks can be used to check whether you contribution follows the
+standards as adhered to in this project. Install and activate the <code class="docutils literal notranslate"><span class="pre">pre-commit</span></code>
+hooks, like so:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># pipenv install pre-commit</span>
 pre-commit<span class="w"> </span>install
 </pre></div>
@@ -519,7 +531,8 @@ ruff<span class="w"> </span>check<span class="w"> </span>--fix<span class="w"> <
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ruff<span class="w"> </span>format
 </pre></div>
 </div>
-<p>To check whether the output of the notebook cells is removed one can do the following:</p>
+<p>To check whether the output of the notebook cells is removed one can do the
+following:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># pipenv install nbstripout</span>
 find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </span><span class="s1">&#39;*.ipynb&#39;</span><span class="w"> </span>-exec<span class="w"> </span>nbstripout<span class="w"> </span><span class="o">{}</span><span class="w"> </span>+
 </pre></div>

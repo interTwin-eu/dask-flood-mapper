@@ -442,7 +442,21 @@ document.write(`
 <a class="reference external" href="https://github.com/marketplace/actions/super-linter"><img alt="GitHub Super-Linter" src="https://github.com/interTwin-eu/dask-flood-mapper/actions/workflows/lint.yml/badge.svg" /></a>
 <a class="reference external" href="https://github.com/marketplace/actions/markdown-link-check"><img alt="GitHub Super-Linter" src="https://github.com/interTwin-eu/dask-flood-mapper/actions/workflows/check-links.yml/badge.svg" /></a>
 <a class="reference external" href="https://sqaaas.eosc-synergy.eu/#/full-assessment/report/https://raw.githubusercontent.com/eosc-synergy/dask-flood-mapper.assess.sqaaas/main/.report/assessment_output.json"><img alt="SQAaaS source code" src="https://github.com/EOSC-synergy/dask-flood-mapper.assess.sqaaas/raw/main/.badge/status_shields.svg" /></a></p>
-<p>Map floods with Sentinel-1 radar images. We replicate in this package the work of Bauer-Marschallinger et al. (2022)<sup>1</sup> on the TU Wien Bayesian-based flood mapping algorithm. This implementation is entirely based on <a class="reference external" href="https://www.dask.org/"><code class="docutils literal notranslate"><span class="pre">dask</span></code></a> and data access via <a class="reference external" href="https://stacspec.org/en">STAC</a> with <a class="reference external" href="https://odc-stac.readthedocs.io/en/latest/"><code class="docutils literal notranslate"><span class="pre">odc-stac</span></code></a>. The algorithm requires three pre-processed input datasets stored and accessible via STAC at the Earth Observation Data Centre For Water Resources Monitoring (EODC). It is foreseen that future implementations can also use data from other STAC catalogues. This notebook explains how microwave backscattering can be used to map the extent of a flood. The workflow detailed in this <a class="reference external" href="https://tuw-geo.github.io/dask-flood-mapper/notebooks/03_flood_map.html">notebook</a> forms the backbone of this package. For a short overview of the Bayesian decision method for flood mapping see this <a class="reference external" href="https://projectpythia.org/eo-datascience-cookbook/notebooks/tutorials/floodmapping.html">ProjectPythia book</a>.</p>
+<p>Map floods with Sentinel-1 radar images. We replicate in this package the work
+of Bauer-Marschallinger et al. (2022)&lt;sup&gt;1</sup> on the TU Wien Bayesian-based
+flood mapping algorithm. This implementation is entirely based on
+<a class="reference external" href="https://www.dask.org/"><code class="docutils literal notranslate"><span class="pre">dask</span></code></a> and data access via
+<a class="reference external" href="https://stacspec.org/en">STAC</a> with
+<a class="reference external" href="https://odc-stac.readthedocs.io/en/latest/"><code class="docutils literal notranslate"><span class="pre">odc-stac</span></code></a>. The algorithm requires
+three pre-processed input datasets stored and accessible via STAC at the Earth
+Observation Data Centre For Water Resources Monitoring (EODC). It is foreseen
+that future implementations can also use data from other STAC catalogues. This
+notebook explains how microwave backscattering can be used to map the extent of
+a flood. The workflow detailed in this
+<a class="reference external" href="https://tuw-geo.github.io/dask-flood-mapper/notebooks/03_flood_map.html">notebook</a>
+forms the backbone of this package. For a short overview of the Bayesian decision
+method for flood mapping see this
+<a class="reference external" href="https://projectpythia.org/eo-datascience-cookbook/notebooks/tutorials/floodmapping.html">ProjectPythia book</a>.</p>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
 <p>To install the package, do the following:</p>
@@ -452,7 +466,9 @@ document.write(`
 </section>
 <section id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<p>Storm Babet hit the Denmark and Northern coast of Germany at the 20th of October 2023 <a class="reference external" href="https://en.wikipedia.org/wiki/Storm_Babet">Wikipedia</a>. Here an area around Zingst at the Baltic coast of Northern Germany is selected as the study area.</p>
+<p>Storm Babet hit the Denmark and Northern coast of Germany at the 20th of October
+2023 <a class="reference external" href="https://en.wikipedia.org/wiki/Storm_Babet">Wikipedia</a>. Here an area around
+Zingst at the Baltic coast of Northern Germany is selected as the study area.</p>
 <section id="local-processing">
 <h3>Local Processing<a class="headerlink" href="#local-processing" title="Link to this heading">#</a></h3>
 <p>Define the time range and geographic region in which the event occurred.</p>
@@ -460,7 +476,10 @@ document.write(`
 <span class="n">bbox</span> <span class="o">=</span> <span class="p">[</span><span class="mf">12.3</span><span class="p">,</span> <span class="mf">54.3</span><span class="p">,</span> <span class="mf">13.1</span><span class="p">,</span> <span class="mf">54.6</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>Use the flood module and calculate the flood extent with the Bayesian decision method applied tp Sentinel-1 radar images. The object returned is a <a class="reference external" href="https://docs.xarray.dev/en/stable/"><code class="docutils literal notranslate"><span class="pre">xarray</span></code></a> with lazy loaded Dask arrays. To get the data in memory use the <code class="docutils literal notranslate"><span class="pre">compute</span></code> method on the returned object.</p>
+<p>Use the flood module and calculate the flood extent with the Bayesian decision
+method applied tp Sentinel-1 radar images. The object returned is a
+<a class="reference external" href="https://docs.xarray.dev/en/stable/"><code class="docutils literal notranslate"><span class="pre">xarray</span></code></a> with lazy loaded Dask arrays. To
+get the data in memory use the <code class="docutils literal notranslate"><span class="pre">compute</span></code> method on the returned object.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dask_flood_mapper</span><span class="w"> </span><span class="kn">import</span> <span class="n">flood</span>
 
 
@@ -470,8 +489,14 @@ document.write(`
 </section>
 <section id="distributed-processing">
 <h3>Distributed Processing<a class="headerlink" href="#distributed-processing" title="Link to this heading">#</a></h3>
-<p>It is also possible to remotely process the data at the EODC <a class="reference external" href="https://gateway.dask.org/">Dask Gateway</a> with the added benefit that we can then process close to the data source without requiring rate-limiting file transfers over the internet.</p>
-<p>For ease of usage of the Dask Gateway install the <a class="reference external" href="https://pypi.org/project/eodc/"><code class="docutils literal notranslate"><span class="pre">eodc</span></code></a> package besides the <code class="docutils literal notranslate"><span class="pre">dask-gateway</span></code> package. Also, see the <a class="reference external" href="https://github.com/eodcgmbh/eodc-examples/blob/main/demos/dask.ipynb">EODC documentation</a>.</p>
+<p>It is also possible to remotely process the data at the EODC
+<a class="reference external" href="https://gateway.dask.org/">Dask Gateway</a> with the added benefit that we can
+then process close to the data source without requiring rate-limiting file
+transfers over the internet.</p>
+<p>For ease of usage of the Dask Gateway install the
+<a class="reference external" href="https://pypi.org/project/eodc/"><code class="docutils literal notranslate"><span class="pre">eodc</span></code></a> package besides the <code class="docutils literal notranslate"><span class="pre">dask-gateway</span></code>
+package. Also, see the
+<a class="reference external" href="https://github.com/eodcgmbh/eodc-examples/blob/main/demos/dask.ipynb">EODC documentation</a>.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>dask-gateway<span class="w"> </span>eodc
 <span class="c1"># or use pipenv</span>
 <span class="c1"># git clone https://github.com/TUW-GEO/dask-flood-mapper.git</span>
@@ -479,13 +504,18 @@ document.write(`
 <span class="c1"># pipenv sync -d</span>
 </pre></div>
 </div>
-<p>However differences in versions client- and server-side can cause problems. Hence, the most convenient way to successively use the EODC Dask Gateway is Docker. To do this clone the GitHub repository and use the docker-compose.yml.</p>
+<p>However differences in versions client- and server-side can cause problems.
+Hence, the most convenient way to successively use the EODC Dask Gateway is
+Docker. To do this clone the GitHub repository and use the docker-compose.yml.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/TUW-GEO/dask-flood-mapper.git
 <span class="nb">cd</span><span class="w"> </span>dask-flood-mapper
 docker<span class="w"> </span>compose<span class="w"> </span>up
 </pre></div>
 </div>
-<p>Copy and paste the generated URL to launch Jupyter Lab in your browser. Here one can run the below code snippets or execute the <a class="reference external" href="https://tuw-geo.github.io/dask-flood-mapper/notebooks/02_remote_dask.html">notebook</a> about remote processing.</p>
+<p>Copy and paste the generated URL to launch Jupyter Lab in your browser. Here one
+can run the below code snippets or execute the
+<a class="reference external" href="https://tuw-geo.github.io/dask-flood-mapper/notebooks/02_remote_dask.html">notebook</a>
+about remote processing.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">eodc.dask</span><span class="w"> </span><span class="kn">import</span> <span class="n">EODCDaskGateway</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">eodc</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">rich.prompt</span><span class="w"> </span><span class="kn">import</span> <span class="n">Prompt</span>
@@ -501,9 +531,9 @@ docker<span class="w"> </span>compose<span class="w"> </span>up
 </pre></div>
 </div>
 <p>Create a cluster.</p>
-<div class="alert alert-block alert-info">
-<b>Important:</b> Per default no worker is spawned, therefore please use the widget to add/scale Dask workers in order to enable computations on the cluster.
-</div>
+<p>[!CAUTION]
+Per default no worker is spawned, therefore please use the widget to add/scale
+Dask workers in order to enable computations on the cluster.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cluster_options</span> <span class="o">=</span> <span class="n">gateway</span><span class="o">.</span><span class="n">cluster_options</span><span class="p">()</span>
 <span class="n">cluster_options</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="s2">&quot;ghcr.io/eodcgmbh/cluster_image:2025.4.1&quot;</span>
 <span class="n">cluster</span> <span class="o">=</span> <span class="n">gateway</span><span class="o">.</span><span class="n">new_cluster</span><span class="p">(</span><span class="n">cluster_options</span><span class="p">)</span>
@@ -518,7 +548,8 @@ docker<span class="w"> </span>compose<span class="w"> </span>up
 </section>
 <section id="user-interface">
 <h3>User Interface<a class="headerlink" href="#user-interface" title="Link to this heading">#</a></h3>
-<p>It is also possible to run the workflow in an user-friendly interface, as shown below:</p>
+<p>It is also possible to run the workflow in an user-friendly interface, as shown
+below:</p>
 <p><img alt="screenshot" src="_images/screenshot_floodmap_gui.png" /></p>
 <p>Firstly, install the extra packages with:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="err">&#39;</span>dask-flood-mapper<span class="o">[</span>app<span class="o">]</span>
@@ -537,31 +568,43 @@ docker<span class="w"> </span>compose<span class="w"> </span>up
 <a class="reference external" href="https://github.com/thaisbeham">Thais Beham</a></p>
 <section id="contributors">
 <h3>Contributors<a class="headerlink" href="#contributors" title="Link to this heading">#</a></h3>
-<a href="https://github.com/interTwin-eu/dask-flood-mapper/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=interTwin-eu/dask-flood-mapper" />
-</a>
+<p><img alt="https://github.com/interTwin-eu/dask-flood-mapper/graphs/contributors" src="https://contrib.rocks/image?repo=interTwin-eu/dask-flood-mapper" /></p>
 </section>
 </section>
 <section id="contributing-guidelines">
 <h2>Contributing Guidelines<a class="headerlink" href="#contributing-guidelines" title="Link to this heading">#</a></h2>
-<p>Please find the contributing guidelines in the specific file <a class="reference internal" href="CONTRIBUTING.html"><span class="std std-doc">CONTRIBUTING.md</span></a>.</p>
+<p>Please find the contributing guidelines in the specific file
+<a class="reference internal" href="CONTRIBUTING.html"><span class="std std-doc">CONTRIBUTING.md</span></a>.</p>
 </section>
 <section id="automated-delivery">
 <h2>Automated Delivery<a class="headerlink" href="#automated-delivery" title="Link to this heading">#</a></h2>
-<p>This repository holds a container image to be used for running Dask based flood mapping on the EODC Dask Gateway. Use the URL <code class="docutils literal notranslate"><span class="pre">ghcr.io/intertwin-eu/dask-flood-mapper:latest</span></code> to specify the image.</p>
+<p>This repository holds a container image to be used for running Dask based flood
+mapping on the EODC Dask Gateway. Use the URL
+<code class="docutils literal notranslate"><span class="pre">ghcr.io/intertwin-eu/dask-flood-mapper:latest</span></code> to specify the image.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>pull<span class="w"> </span>ghcr.io/intertwin-eu/dask-flood-mapper:latest
 </pre></div>
 </div>
 </section>
 <section id="credits">
 <h2>Credits<a class="headerlink" href="#credits" title="Link to this heading">#</a></h2>
-<p>Credits go to EODC (<a class="reference external" href="https://eodc.eu">https://eodc.eu</a>) for developing the infrastructure and the management of the data required for this workflow. This work has been supported as part of the interTwin project (<a class="reference external" href="https://www.intertwin.eu">https://www.intertwin.eu</a>). The interTwin project is funded by the European Union Horizon Europe Programme - Grant Agreement number 101058386.</p>
-<p>Views and opinions expressed are however those of the authors only and do not necessarily reflect those of the European Union Horizon Europe/Horizon 2020 Programmes. Neither the European Union nor the granting authorities can be held responsible for them.</p>
+<p>Credits go to EODC (<a class="reference external" href="https://eodc.eu">https://eodc.eu</a>) for developing the
+infrastructure and the management of the data required for this workflow. This
+work has been supported as part of the interTwin project
+(<a class="reference external" href="https://www.intertwin.eu">https://www.intertwin.eu</a>). The interTwin project is
+funded by the European Union Horizon Europe Programme - Grant Agreement number 101058386.</p>
+<p>Views and opinions expressed are however those of the authors only and do not
+necessarily reflect those of the European Union Horizon Europe/Horizon 2020
+Programmes. Neither the European Union nor the granting authorities can be held
+responsible for them.</p>
 </section>
 <section id="literature">
 <h2>Literature<a class="headerlink" href="#literature" title="Link to this heading">#</a></h2>
 <ol class="arabic simple">
-<li><p>Bauer-Marschallinger, Bernhard, Senmao Cao, Mark Edwin Tupas, Florian Roth, Claudio Navacchi, Thomas Melzer, Vahid Freeman, and Wolfgang Wagner.Satellite-Based Flood Mapping through Bayesian Inference from a Sentinel-1 SAR Datacube. Remote Sensing 14, no. 15 (January 2022): 3673. <a class="reference external" href="https://doi.org/10.3390/rs14153673">https://doi.org/10.3390/rs14153673</a>.</p></li>
+<li><p>Bauer-Marschallinger, Bernhard, Senmao Cao, Mark Edwin Tupas, Florian Roth,
+Claudio Navacchi, Thomas Melzer, Vahid Freeman, and Wolfgang Wagner.
+Satellite-Based Flood Mapping through Bayesian Inference from a Sentinel-1 SAR
+Datacube. Remote Sensing 14, no. 15 (January 2022): 3673.
+<a class="reference external" href="https://doi.org/10.3390/rs14153673">https://doi.org/10.3390/rs14153673</a>.</p></li>
 </ol>
 </section>
 <section id="license">
