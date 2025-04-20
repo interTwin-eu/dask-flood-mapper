@@ -188,6 +188,10 @@ necessarily reflect those of the European Union Horizon Europe/Horizon 2020
 Programmes. Neither the European Union nor the granting authorities can be held
 responsible for them.
 
+## License
+
+This repository is covered under the [MIT License](LICENSE.txt).
+
 ## Literature
 
 [^1]:
@@ -196,7 +200,3 @@ responsible for them.
     Satellite-Based Flood Mapping through Bayesian Inference from a Sentinel-1
     SAR Datacube. Remote Sensing 14, no. 15 (January 2022): 3673.
     [https://doi.org/10.3390/rs14153673](https://doi.org/10.3390/rs14153673).
-
-## License
-
-This repository is covered under the [MIT License](LICENSE.txt).
