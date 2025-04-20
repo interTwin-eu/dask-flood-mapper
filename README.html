@@ -421,8 +421,8 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributing-guidelines">Contributing Guidelines</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#automated-delivery">Automated Delivery</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#credits">Credits</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#literature">Literature</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#license">License</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#literature">Literature</a></li>
 </ul>
             </nav>
         </div>
@@ -443,7 +443,7 @@ document.write(`
 <a class="reference external" href="https://github.com/marketplace/actions/markdown-link-check"><img alt="GitHub Super-Linter" src="https://github.com/interTwin-eu/dask-flood-mapper/actions/workflows/check-links.yml/badge.svg" /></a>
 <a class="reference external" href="https://sqaaas.eosc-synergy.eu/#/full-assessment/report/https://raw.githubusercontent.com/eosc-synergy/dask-flood-mapper.assess.sqaaas/main/.report/assessment_output.json"><img alt="SQAaaS source code" src="https://github.com/EOSC-synergy/dask-flood-mapper.assess.sqaaas/raw/main/.badge/status_shields.svg" /></a></p>
 <p>Map floods with Sentinel-1 radar images. We replicate in this package the work
-of Bauer-Marschallinger et al. (2022)<span class="math notranslate nohighlight">\(^1\)</span> on the TU Wien Bayesian-based
+of Bauer-Marschallinger et al. (2022)<a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> on the TU Wien Bayesian-based
 flood mapping algorithm. This implementation is entirely based on
 <a class="reference external" href="https://www.dask.org/"><code class="docutils literal notranslate"><span class="pre">dask</span></code></a> and data access via
 <a class="reference external" href="https://stacspec.org/en">STAC</a> with
@@ -531,9 +531,11 @@ about remote processing.</p>
 </pre></div>
 </div>
 <p>Create a cluster.</p>
-<p>[!CAUTION]
+<blockquote>
+<div><p>[!CAUTION]
 Per default no worker is spawned, therefore please use the widget to add/scale
 Dask workers in order to enable computations on the cluster.</p>
+</div></blockquote>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cluster_options</span> <span class="o">=</span> <span class="n">gateway</span><span class="o">.</span><span class="n">cluster_options</span><span class="p">()</span>
 <span class="n">cluster_options</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="s2">&quot;ghcr.io/eodcgmbh/cluster_image:2025.4.1&quot;</span>
 <span class="n">cluster</span> <span class="o">=</span> <span class="n">gateway</span><span class="o">.</span><span class="n">new_cluster</span><span class="p">(</span><span class="n">cluster_options</span><span class="p">)</span>
@@ -597,19 +599,23 @@ necessarily reflect those of the European Union Horizon Europe/Horizon 2020
 Programmes. Neither the European Union nor the granting authorities can be held
 responsible for them.</p>
 </section>
-<section id="literature">
-<h2>Literature<a class="headerlink" href="#literature" title="Link to this heading">#</a></h2>
-<ol class="arabic simple">
-<li><p>Bauer-Marschallinger, Bernhard, Senmao Cao, Mark Edwin Tupas, Florian Roth,
-Claudio Navacchi, Thomas Melzer, Vahid Freeman, and Wolfgang Wagner.
-Satellite-Based Flood Mapping through Bayesian Inference from a Sentinel-1 SAR
-Datacube. Remote Sensing 14, no. 15 (January 2022): 3673.
-<a class="reference external" href="https://doi.org/10.3390/rs14153673">https://doi.org/10.3390/rs14153673</a>.</p></li>
-</ol>
-</section>
 <section id="license">
 <h2>License<a class="headerlink" href="#license" title="Link to this heading">#</a></h2>
 <p>This repository is covered under the <a class="reference download internal" download="" href="_downloads/61e0bdf7e1b43c5c93d9488b22e04170/LICENSE.txt"><span class="xref download myst">MIT License</span></a>.</p>
+</section>
+<section id="literature">
+<h2>Literature<a class="headerlink" href="#literature" title="Link to this heading">#</a></h2>
+<hr class="footnotes docutils" />
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id2" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Bauer-Marschallinger, Bernhard, Senmao Cao, Mark Edwin Tupas, Florian
+Roth, Claudio Navacchi, Thomas Melzer, Vahid Freeman, and Wolfgang Wagner.
+Satellite-Based Flood Mapping through Bayesian Inference from a Sentinel-1
+SAR Datacube. Remote Sensing 14, no. 15 (January 2022): 3673.
+<a class="reference external" href="https://doi.org/10.3390/rs14153673">https://doi.org/10.3390/rs14153673</a>.</p>
+</aside>
+</aside>
 </section>
 <div class="toctree-wrapper compound">
 </div>
@@ -688,8 +694,8 @@ Datacube. Remote Sensing 14, no. 15 (January 2022): 3673.
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributing-guidelines">Contributing Guidelines</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#automated-delivery">Automated Delivery</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#credits">Credits</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#literature">Literature</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#license">License</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#literature">Literature</a></li>
 </ul>
   </nav></div>
 

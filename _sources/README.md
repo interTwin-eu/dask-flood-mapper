@@ -8,7 +8,7 @@
 [![SQAaaS source code](https://github.com/EOSC-synergy/dask-flood-mapper.assess.sqaaas/raw/main/.badge/status_shields.svg)](https://sqaaas.eosc-synergy.eu/#/full-assessment/report/https://raw.githubusercontent.com/eosc-synergy/dask-flood-mapper.assess.sqaaas/main/.report/assessment_output.json)
 
 Map floods with Sentinel-1 radar images. We replicate in this package the work
-of Bauer-Marschallinger et al. (2022)$^1$ on the TU Wien Bayesian-based
+of Bauer-Marschallinger et al. (2022)[^1] on the TU Wien Bayesian-based
 flood mapping algorithm. This implementation is entirely based on
 [`dask`](https://www.dask.org/) and data access via
 [STAC](https://stacspec.org/en) with
@@ -112,9 +112,9 @@ gateway = EODCDaskGateway(username=your_username)
 
 Create a cluster.
 
-[!CAUTION]
-Per default no worker is spawned, therefore please use the widget to add/scale
-Dask workers in order to enable computations on the cluster.
+> [!CAUTION]
+> Per default no worker is spawned, therefore please use the widget to add/scale
+> Dask workers in order to enable computations on the cluster.
 
 ```python
 cluster_options = gateway.cluster_options()
@@ -188,14 +188,15 @@ necessarily reflect those of the European Union Horizon Europe/Horizon 2020
 Programmes. Neither the European Union nor the granting authorities can be held
 responsible for them.
 
-## Literature
-
-1. Bauer-Marschallinger, Bernhard, Senmao Cao, Mark Edwin Tupas, Florian Roth,
-   Claudio Navacchi, Thomas Melzer, Vahid Freeman, and Wolfgang Wagner.
-   Satellite-Based Flood Mapping through Bayesian Inference from a Sentinel-1 SAR
-   Datacube. Remote Sensing 14, no. 15 (January 2022): 3673.
-   [https://doi.org/10.3390/rs14153673](https://doi.org/10.3390/rs14153673).
-
 ## License
 
 This repository is covered under the [MIT License](LICENSE.txt).
+
+## Literature
+
+[^1]:
+    Bauer-Marschallinger, Bernhard, Senmao Cao, Mark Edwin Tupas, Florian
+    Roth, Claudio Navacchi, Thomas Melzer, Vahid Freeman, and Wolfgang Wagner.
+    Satellite-Based Flood Mapping through Bayesian Inference from a Sentinel-1
+    SAR Datacube. Remote Sensing 14, no. 15 (January 2022): 3673.
+    [https://doi.org/10.3390/rs14153673](https://doi.org/10.3390/rs14153673).
