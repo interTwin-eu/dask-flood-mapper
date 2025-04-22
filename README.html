@@ -453,7 +453,7 @@ Observation Data Centre For Water Resources Monitoring (EODC). It is foreseen
 that future implementations can also use data from other STAC catalogues. This
 notebook explains how microwave backscattering can be used to map the extent of
 a flood. The workflow detailed in this
-<a class="reference external" href="https://tuw-geo.github.io/dask-flood-mapper/notebooks/03_flood_map.html">notebook</a>
+<a class="reference external" href="https://intertwin-eu.github.io/dask-flood-mapper/notebooks/03_flood_map.html">notebook</a>
 forms the backbone of this package. For a short overview of the Bayesian decision
 method for flood mapping see this
 <a class="reference external" href="https://projectpythia.org/eo-datascience-cookbook/notebooks/tutorials/floodmapping.html">ProjectPythia book</a>.</p>
@@ -499,7 +499,7 @@ package. Also, see the
 <a class="reference external" href="https://github.com/eodcgmbh/eodc-examples/blob/main/demos/dask.ipynb">EODC documentation</a>.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>dask-gateway<span class="w"> </span>eodc
 <span class="c1"># or use pipenv</span>
-<span class="c1"># git clone https://github.com/TUW-GEO/dask-flood-mapper.git</span>
+<span class="c1"># git clone https://github.com/interTwin-eu/dask-flood-mapper.git</span>
 <span class="c1"># cd dask-flood-mapper</span>
 <span class="c1"># pipenv sync -d</span>
 </pre></div>
@@ -507,14 +507,14 @@ package. Also, see the
 <p>However differences in versions client- and server-side can cause problems.
 Hence, the most convenient way to successively use the EODC Dask Gateway is
 Docker. To do this clone the GitHub repository and use the docker-compose.yml.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/TUW-GEO/dask-flood-mapper.git
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/interTwin-eu/dask-flood-mapper.git
 <span class="nb">cd</span><span class="w"> </span>dask-flood-mapper
 docker<span class="w"> </span>compose<span class="w"> </span>up
 </pre></div>
 </div>
 <p>Copy and paste the generated URL to launch Jupyter Lab in your browser. Here one
 can run the below code snippets or execute the
-<a class="reference external" href="https://tuw-geo.github.io/dask-flood-mapper/notebooks/02_remote_dask.html">notebook</a>
+<a class="reference external" href="https://intertwin-eu.github.io/dask-flood-mapper/notebooks/02_remote_dask.html">notebook</a>
 about remote processing.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">eodc.dask</span><span class="w"> </span><span class="kn">import</span> <span class="n">EODCDaskGateway</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">eodc</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
@@ -554,7 +554,7 @@ Dask workers in order to enable computations on the cluster.</p>
 below:</p>
 <p><img alt="screenshot" src="_images/screenshot_floodmap_gui.png" /></p>
 <p>Firstly, install the extra packages with:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="err">&#39;</span>dask-flood-mapper<span class="o">[</span>app<span class="o">]</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>dask-flood-mapper<span class="o">[</span>app<span class="o">]</span>
 </pre></div>
 </div>
 <p>Then, to access it, simplify run the in terminal the command:</p>
