@@ -1,9 +1,8 @@
-  base:
-    crs: "EPSG:4326"
-    chunks:
-      time: 1
-      latitude: 1300
-      longitude: 1300
-    groupby: Null
-  api: "https://stac.eodc.eu/api/v1"
-
+base:
+  crs: "EPSG:4326"
+  chunks:
+    time: 1
+    latitude: 1300
+    longitude: 1300
+  groupby: Null
+api: "https://stac.eodc.eu/api/v1"

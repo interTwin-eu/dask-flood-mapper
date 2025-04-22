@@ -3,13 +3,12 @@ message: "If you use the Dask flood mapper, please cite it as below."
 authors:
   - family-names: Beham
     given-names: Thais
-    orcid: https://orcid.org/0000-0001-8560-0037
-    website: https://github.com/martinschobben
+    website: https://github.com/thaisbeham
     affiliation: Technische Universität Wien, Vienna, Austria
   - family-names: Schobben
     given-names: Martin
     orcid: https://orcid.org/0000-0001-8560-0037
-    website: https://github.com/thaisbeham
+    website: https://github.com/martinschobben
     affiliation: Technische Universität Wien, Vienna, Austria
 title: "Dask Flood Mapper"
 abstract: "Map floods with Sentinel-1 radar images. We replicate in this \

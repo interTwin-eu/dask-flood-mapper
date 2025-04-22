@@ -1,10 +1,9 @@
-import xarray as xr
 import numpy as np
-from odc import stac as odc_stac
 import rioxarray  # noqa
-from dask.distributed import wait
+import xarray as xr
 from dask_flood_mapper.catalog import config
-
+from odc import stac as odc_stac
+from odc.geo.xr import ODCExtensionDa
 
 # import parameters from config.yaml file
 crs = config["base"]["crs"]
@@ -43,19 +42,12 @@ def process_sig0_dc(sig0_dc, items_sig0, bands):
         .dropna(dim="time", how="all")
         .sortby("time")
     )
-
     __, indices = np.unique(sig0_dc.time, return_index=True)
     indices.sort()
-
     orbit_sig0 = sig0_dc.orbit[indices].data
-
     sig0_dc = sig0_dc.groupby("time").mean(skipna=True)
-
     sig0_dc = sig0_dc.assign_coords(orbit=("time", orbit_sig0))
-
     sig0_dc = sig0_dc.persist()
-    wait(sig0_dc)
-
     return sig0_dc, orbit_sig0
 
 
@@ -63,15 +55,10 @@ def process_datacube(datacube, items_dc, orbit_sig0, bands):
     datacube = post_process_eodc_cube(datacube, items_dc, bands).rename(
         {"time": "orbit"}
     )
-
     datacube["orbit"] = extract_orbit_names(items_dc)
-
     datacube = datacube.groupby("orbit").mean(skipna=True)
-
     datacube = datacube.sel(orbit=orbit_sig0)
-
     datacube = datacube.persist()
-    wait(datacube)
     return datacube
 
 
@@ -115,5 +102,5 @@ def post_processing(dc):
     return (dc * (dc.f_post_prob > 0.8)).decision
 
 
-def reproject_equi7grid(dc, bbox, target_epsg="EPSG:4326"):
-    return dc.rio.reproject(target_epsg).rio.clip_box(*bbox)
+def reproject_equi7grid(dc, bbox, target_epsg=crs):
+    return ODCExtensionDa(dc).reproject(target_epsg).rio.clip_box(*bbox)

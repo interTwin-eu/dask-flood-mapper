@@ -1,36 +1,32 @@
-import xarray as xr
 import numpy as np
-from dask.distributed import wait
+import xarray as xr
 
 
 def calculate_flood_dc(sig0_dc, plia_dc, hpar_dc):
-    """Merge four data cubes and apply processing steps to clean and filter the dataset.
-    wcover_dc is optional."""
-
+    """
+    Merge four data cubes and apply processing steps to clean and filter the dataset.
+    wcover_dc is optional.
+    """
     flood_dc = xr.merge([sig0_dc, plia_dc, hpar_dc])
     flood_dc = (
         flood_dc.reset_index("orbit", drop=True)
         .rename({"orbit": "time"})
         .dropna(dim="time", how="all", subset=["sig0"])
     )
-
     flood_dc = flood_dc.persist()
-    wait(flood_dc)
-
     return flood_dc
 
 
 def remove_speckles(flood_output, window_size=5):
-    """Apply a rolling median filter to smooth the dataset spatially over longitude and latitude."""
-
+    """
+    Apply a rolling median filter to smooth the dataset spatially over longitude
+    and latitude.
+    """
     flood_output = (
         flood_output.rolling({"x": window_size, "y": window_size}, center=True)
         .median(skipna=True)
         .persist()
     )
-
-    wait(flood_output)
-
     return flood_output
 
 
@@ -79,12 +75,10 @@ def calc_prior_probability(dc):
     std = dc.STD
     wbsc = dc.wbsc
     hbsc = dc.hbsc
-
     f_prob = (1.0 / (std * np.sqrt(2 * np.pi))) * np.exp(
         -0.5 * (((sig0 - wbsc) / nf_std) ** 2)
     )
     nf_prob = (1.0 / (nf_std * np.sqrt(2 * np.pi))) * np.exp(
         -0.5 * (((sig0 - hbsc) / nf_std) ** 2)
     )
-
     return f_prob, nf_prob

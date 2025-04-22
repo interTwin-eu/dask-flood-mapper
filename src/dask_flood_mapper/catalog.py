@@ -1,20 +1,7 @@
-import yaml
-import dask
-from dask.distributed import Client
 import pystac_client
-from importlib.resources import files
+from dask_flood_mapper.stac_config import load_config
 
-dask.config.set(temporary_directory="/tmp")
-client = Client(processes=False, threads_per_worker=2, n_workers=3, memory_limit="28GB")
-
-
-def load_config(yaml_file):
-    with open(yaml_file, "r") as file:
-        return yaml.safe_load(file)
-
-
-CONFIG_PATH = files("dask_flood_mapper").joinpath("config.yaml")
-config = load_config(CONFIG_PATH)
+config = load_config()
 
 
 def initialize_catalog():

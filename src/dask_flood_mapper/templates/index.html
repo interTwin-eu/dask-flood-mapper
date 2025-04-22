@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flood Detection</title>
+  </head>
+  <body>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <style>
+      #map {
+        height: 500px;
+        width: 100%;
+      }
+    </style>
+    <h1>Flood Detection Map</h1>
+    <p>Click once to select the first point, then again to complete the box.</p>
+    <div id="map"></div>
+    <label>
+      Start Date:
+      <input type="date" id="startdate" />
+    </label>
+    <label>
+      End Date:
+      <input type="date" id="enddate" />
+    </label>
+    <button onclick="checkFlood()" style="margin-top: 10px">Check Flood</button>
+    <h3>Selected Parameters:</h3>
+    <pre id="debuginfo"></pre>
+    <!-- 🔹 Debugging section -->
+    <h3>Flood Map Result:</h3>
+    <pre id="result"></pre>
+    <iframe
+      id="floodiframe"
+      style="display: none; width: 100%; height: 600px; border: none"
+    ></iframe>
+    <script>
+      let map = L.map("map").setView([0, 0], 2);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(
+        map
+      );
+
+      let firstClick = null;
+      let rectangle = null;
+
+      map.on("click", function (e) {
+        if (!firstClick) {
+          firstClick = e.latlng;
+        } else {
+          let secondClick = e.latlng;
+          let bounds = [
+            [firstClick.lat, firstClick.lng],
+            [secondClick.lat, secondClick.lng],
+          ];
+
+          if (rectangle) map.removeLayer(rectangle);
+          rectangle = L.rectangle(bounds, { color: "red" }).addTo(map);
+
+          firstClick = null; // Reset for next selection
+        }
+      });
+
+      async function checkFlood() {
+        if (!rectangle) {
+          alert("Please select a bounding box first.");
+          return;
+        }
+
+        let startdate = document.getElementById("startdate").value;
+        let enddate = document.getElementById("enddate").value;
+        if (!startdate || !enddate) {
+          alert("Please select a valid time range.");
+          return;
+        }
+
+        let timeRange = `${startdate}/${enddate}`;
+        let bounds = rectangle.getBounds();
+        let bbox = [
+          bounds.getWest(),
+          bounds.getSouth(),
+          bounds.getEast(),
+          bounds.getNorth(),
+        ];
+
+        // 🔹 Display debug info before sending the request
+        document.getElementById(
+          "debuginfo"
+        ).textContent = `Bounding Box: ${JSON.stringify(
+          bbox
+        )}\nTime Range: ${timeRange}`;
+
+        let response = await fetch("http://127.0.0.1:5000/check_flood", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ bbox, time_range: timeRange }),
+        });
+
+        const data = await response.json();
+        console.log("Response received:", data);
+
+        document.addEventListener("DOMContentLoaded", () => {
+          const iframe = document.getElementById("floodiframe");
+          if (!iframe) {
+            console.error(
+              "Iframe not found. Make sure the HTML has rendered fully before accessing it."
+            );
+          }
+        });
+
+        if (data.image_url) {
+          console.log("Image URL:", data.image_url); // Debug log
+          const iframe = document.getElementById("floodiframe");
+          iframe.src = data.image_url + "?" + new Date().getTime(); // Prevent caching
+          iframe.style.display = "block";
+        } else {
+          console.error("Failed to load image URL.");
+        }
+      }
+    </script>
+  </body>
+</html>

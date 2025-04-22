@@ -9,10 +9,10 @@ execute:
 
 sphinx:
   extra_extensions:
-  - 'sphinx.ext.duration'
-  - 'sphinx.ext.doctest'
-  - 'sphinx.ext.autodoc'
-  - 'sphinx.ext.autosummary'
+    - "sphinx.ext.duration"
+    - "sphinx.ext.doctest"
+    - "sphinx.ext.autodoc"
+    - "sphinx.ext.autosummary"
   config:
     html_theme_options:
       home_page_in_toc: true
