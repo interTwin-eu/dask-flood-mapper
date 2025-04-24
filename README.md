@@ -18,7 +18,7 @@ Observation Data Centre For Water Resources Monitoring (EODC). It is foreseen
 that future implementations can also use data from other STAC catalogues. This
 notebook explains how microwave backscattering can be used to map the extent of
 a flood. The workflow detailed in this
-[notebook](https://tuw-geo.github.io/dask-flood-mapper/notebooks/03_flood_map.html)
+[notebook](https://intertwin-eu.github.io/dask-flood-mapper/notebooks/03_flood_map.html)
 forms the backbone of this package. For a short overview of the Bayesian decision
 method for flood mapping see this
 [ProjectPythia book](https://projectpythia.org/eo-datascience-cookbook/notebooks/tutorials/floodmapping.html).
@@ -73,7 +73,7 @@ package. Also, see the
 ```bash
 pip install dask-gateway eodc
 # or use pipenv
-# git clone https://github.com/TUW-GEO/dask-flood-mapper.git
+# git clone https://github.com/interTwin-eu/dask-flood-mapper.git
 # cd dask-flood-mapper
 # pipenv sync -d
 ```
@@ -83,14 +83,14 @@ Hence, the most convenient way to successively use the EODC Dask Gateway is
 Docker. To do this clone the GitHub repository and use the docker-compose.yml.
 
 ```bash
-git clone https://github.com/TUW-GEO/dask-flood-mapper.git
+git clone https://github.com/interTwin-eu/dask-flood-mapper.git
 cd dask-flood-mapper
 docker compose up
 ```
 
 Copy and paste the generated URL to launch Jupyter Lab in your browser. Here one
 can run the below code snippets or execute the
-[notebook](https://tuw-geo.github.io/dask-flood-mapper/notebooks/02_remote_dask.html)
+[notebook](https://intertwin-eu.github.io/dask-flood-mapper/notebooks/02_remote_dask.html)
 about remote processing.
 
 ```python
@@ -140,7 +140,7 @@ below:
 Firstly, install the extra packages with:
 
 ```bash
-pip install 'dask-flood-mapper[app]
+pip install dask-flood-mapper[app]
 ```
 
 Then, to access it, simplify run the in terminal the command:
