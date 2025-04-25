@@ -1,0 +1,292 @@
+import numpy as np
+import pytest
+import xarray as xr
+from dask_flood_mapper.harmonic_params import (harmonic_regression, model_coords,
+                                               reduce_to_harmonic_parameters)
+
+
+def generate_harmonic_timeseries(times, mean, sin_amplitudes, cos_amplitudes):
+    """Generate a time series from harmonic parameters."""
+    w = 2 * np.pi / 365
+    result = mean * np.ones_like(times)
+
+    for k, (sin_amp, cos_amp) in enumerate(zip(sin_amplitudes, cos_amplitudes), 1):
+        result += sin_amp * np.sin(k * w * times) + \
+            cos_amp * np.cos(k * w * times)
+
+    return result
+
+
+@pytest.fixture(params=[
+    # test some different Ks
+    {
+        "mean": 0.0,
+        "sin_amplitudes": [0.5],
+        "cos_amplitudes": [0.5]
+    },
+    {
+        "mean": 0.5,
+        "sin_amplitudes": [0.3, 0.1],
+        "cos_amplitudes": [0.2, 0.05]
+    },
+    {
+        "mean": -0.5,
+        "sin_amplitudes": [0.6, 0.2, 0.1],
+        "cos_amplitudes": [0.3, 0.1, 0.2]
+    },
+    # typical case
+    {
+        "mean": -10,
+        "sin_amplitudes": [-0.1, 0.05, 0.06],
+        "cos_amplitudes": [0.1, 2, -0.3]
+    },
+    # test values at edges of realistic range
+    {
+        "mean": -30,
+        "sin_amplitudes": [-5, -4, -1.5],
+        "cos_amplitudes": [-9, -2, -1.5]
+    },
+    {
+        "mean": 5,
+        "sin_amplitudes": [5, 4, 1.5],
+        "cos_amplitudes": [9, 4, 1.1]
+    },
+    {
+        "mean": 5,
+        "sin_amplitudes": [-5, -4, -1.5],
+        "cos_amplitudes": [-9, -2, -1.5]
+    },
+    {
+        "mean": -30,
+        "sin_amplitudes": [5, 4, 1.5],
+        "cos_amplitudes": [9, 4, 1.1]
+    },
+    {
+        "mean": -30,
+        "sin_amplitudes": [5, 4, 1.5],
+        "cos_amplitudes": [-9, -2, -1.5]
+    },
+    {
+        "mean": 5,
+        "sin_amplitudes": [-5, -4, -1.5],
+        "cos_amplitudes": [9, 4, 1.1]
+    },
+    {
+        "mean": -30,
+        "sin_amplitudes": [-5, -4, -1.5],
+        "cos_amplitudes": [9, 4, 1.1]
+    },
+    {
+        "mean": 5,
+        "sin_amplitudes": [5, 4, 1.5],
+        "cos_amplitudes": [-9, -2, -1.5]
+    },
+    {
+        "mean": -30,
+        "sin_amplitudes": [-5, 4, 1.5],
+        "cos_amplitudes": [9, 4, -1.5]
+    },
+    {
+        "mean": 5,
+        "sin_amplitudes": [5, -4, -1.5],
+        "cos_amplitudes": [-9, -2, 1.1]
+    },
+])
+def synthetic_data(request):
+    # Extract parameters
+    mean = request.param["mean"]
+    sin_amplitudes = request.param["sin_amplitudes"]
+    cos_amplitudes = request.param["cos_amplitudes"]
+
+    # Create time series
+    times = np.array(
+        [1, 32, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335], dtype=np.float32
+    )
+    rows, cols = 2, 2
+
+    # Generate perfect harmonic signal
+    ts = generate_harmonic_timeseries(
+        times, mean, sin_amplitudes, cos_amplitudes)
+    ts_data = ts.reshape(-1, 1, 1).astype(np.float32)
+    ts_data = np.broadcast_to(ts_data, (12, rows, cols)).copy()
+
+    expected_params = np.array(
+        [mean]
+        + [val for pair in zip(sin_amplitudes, cos_amplitudes) for val in pair]
+        + [0.0, len(times)]
+    )  # std=0 since no noise, nobs=len(times)
+
+    return {
+        "times": times,
+        "data": ts_data,
+        "expected_params": expected_params,
+        "k": len(sin_amplitudes),
+    }
+
+
+def test_harmonic_regression_returns_accurate_params(synthetic_data):
+    # Run harmonic regression
+    params = harmonic_regression(
+        synthetic_data["data"], synthetic_data["times"], k=synthetic_data["k"]
+    )
+
+    # Check output shape
+    # mean + 2*harmonics + std + nobs
+    expected_params = 2 * synthetic_data["k"] + 1 + 2
+    assert params.shape == (expected_params, 2, 2)
+
+    # Check if parameters match expected values (within numerical precision)
+    for i in range(2):
+        for j in range(2):
+            np.testing.assert_allclose(
+                params[:, i, j], synthetic_data["expected_params"], rtol=1e-4, atol=1e-4
+            )
+
+
+def test_harmonic_regression_handles_nan_values(synthetic_data):
+    # Insert some NaN values into the data
+    data_with_nans = synthetic_data["data"].copy()
+    # Make 2 observations NaN in first pixel
+    data_with_nans[3:5, 0, 0] = np.nan
+
+    # Run harmonic regression
+    params = harmonic_regression(
+        data_with_nans, synthetic_data["times"], k=synthetic_data["k"]
+    )
+
+    # Check that parameters are still reasonable
+    assert not np.isnan(params[:, 0, 0]).any(), "Parameters should not be NaN"
+    assert (
+        params[-1, 0, 0] == len(synthetic_data["times"]) - 2
+    ), "nobs should reflect missing values"
+    assert params[-1, 0, 1] == len(
+        synthetic_data["times"]
+    ), "Other pixels should have full observations"
+
+
+def test_harmonic_regression_handles_insufficient_data(synthetic_data):
+    # Make most data NaN to trigger insufficient data condition
+    data_with_many_nans = synthetic_data["data"].copy()
+    synthetic_k = synthetic_data["k"]
+    data_with_many_nans[
+        :(synthetic_data["data"].shape[0] - 2*synthetic_k),
+        0,
+        0
+    ] = np.nan  # Leave only 2*k observations
+
+    # Run harmonic regression which requires at least 2k+1 observations
+    params = harmonic_regression(
+        data_with_many_nans, synthetic_data["times"], k=synthetic_k
+    )
+
+    assert np.isnan(
+        params[:-1, 0, 0]
+    ).all(), "Parameters should be NaN with insufficient data"
+    assert params[-1, 0, 0] == 2 * synthetic_k, f"NOBS should be {2*synthetic_k}"
+    assert not np.isnan(
+        params[:, 0, 1]
+    ).any(), "Other pixels should have valid parameters"
+
+
+def test_harmonic_regression_respects_redundancy(synthetic_data):
+    # Make some data NaN but keep enough for default redundancy
+    data_with_nans = synthetic_data["data"].copy()
+    k = synthetic_data["k"]
+    data_with_nans[:data_with_nans.shape[0] - (2*k+2), 0, 0] = np.nan  # Leave 6 observations
+
+    # Should work with redundancy=1
+    params_red1 = harmonic_regression(
+        data_with_nans, synthetic_data["times"], k=synthetic_data["k"], redundancy=1
+    )
+    assert not np.isnan(params_red1[:-1, 0, 0]
+                        ).any(), "Should work with redundancy=1"
+
+    # Should fail with redundancy=2
+    params_red2 = harmonic_regression(
+        data_with_nans, synthetic_data["times"], k=synthetic_data["k"], redundancy=2
+    )
+    assert np.isnan(params_red2[:-1, 0, 0]
+                    ).all(), "Should fail with redundancy=2"
+
+
+def test_harmonic_regression_handles_no_data(synthetic_data):
+    # Make all data NaN to trigger insufficient data condition
+    data_with_many_nans = synthetic_data["data"].copy()
+    data_with_many_nans[:, 0, 0] = np.nan  # Leave only 4 observations
+
+    # Run harmonic regression with k=2 (requires at least 5 observations)
+    params = harmonic_regression(
+        data_with_many_nans, synthetic_data["times"], k=synthetic_data["k"]
+    )
+
+    assert np.isnan(
+        params[:, 0, 0]
+    ).all(), "Parameters including NOBS should be NaN with no data"
+    assert not np.isnan(
+        params[:, 0, 1]
+    ).any(), "Other pixels should have valid parameters"
+
+
+@pytest.fixture
+def synthetic_xarray_data(synthetic_data):
+    # Create synthetic xarray DataArray
+    times = synthetic_data["times"]
+    data = synthetic_data["data"]
+
+    return xr.DataArray(
+        data=data,
+        coords={
+            "time": times,
+            "y": np.arange(data.shape[1]),
+            "x": np.arange(data.shape[2]),
+        },
+        dims=["time", "y", "x"],
+    )
+
+
+def test_reduce_to_harmonic_parameters_basic(synthetic_xarray_data, synthetic_data):
+    # Run reduction
+    result = reduce_to_harmonic_parameters(
+        synthetic_xarray_data, dtimes=synthetic_data["times"], k=synthetic_data["k"]
+    )
+
+    # Check basic properties
+    assert isinstance(result, xr.DataArray)
+    assert set(result.dims) == {"param", "y", "x"}
+    assert result.shape[1:] == synthetic_xarray_data.shape[1:]
+
+    # Check parameter values match direct regression
+    direct_params = harmonic_regression(
+        synthetic_xarray_data.values, synthetic_data["times"], k=synthetic_data["k"]
+    )
+    np.testing.assert_allclose(result.values, direct_params)
+
+
+def test_reduce_to_harmonic_parameters_coordinates(synthetic_xarray_data):
+    k = 2
+    result = reduce_to_harmonic_parameters(
+        synthetic_xarray_data, dtimes=synthetic_xarray_data.time.values, k=k
+    )
+
+    # Check coordinates are properly set
+    expected_params = model_coords(k)
+    assert list(result.param.values) == expected_params
+    np.testing.assert_array_equal(
+        result.x.values, synthetic_xarray_data.x.values)
+    np.testing.assert_array_equal(
+        result.y.values, synthetic_xarray_data.y.values)
+
+
+def test_reduce_to_harmonic_parameters_with_nans(synthetic_xarray_data):
+    # Add some NaN values
+    data_with_nans = synthetic_xarray_data.copy()
+    data_with_nans[3:5, 0, 0] = np.nan
+
+    result = reduce_to_harmonic_parameters(
+        data_with_nans, dtimes=synthetic_xarray_data.time.values, k=2
+    )
+
+    # Check that parameters are computed correctly despite NaNs
+    assert not np.isnan(result.sel(x=0, y=0)).all()
+    assert result.sel(param="NOBS", x=0, y=0) == len(
+        synthetic_xarray_data.time) - 2
