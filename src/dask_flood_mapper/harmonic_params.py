@@ -2,33 +2,51 @@ import numpy as np
 import xarray as xr
 from numba import njit, prange
 
+
+def create_harmonic_parameters(sig0_dc, orbit_sig0):
+    harm_pars_list = []
+    for orbit, orbit_ds in sig0_dc.groupby("orbit"):
+        orbit_ds = orbit_ds.chunk({"time": -1}).persist()
+        dtimes = orbit_ds["time.dayofyear"].compute()
+        harm_pars = xr.map_blocks(
+            func=reduce_to_harmonic_parameters,
+            obj=orbit_ds["sig0"],
+            kwargs={
+                "dtimes": dtimes,
+                "k": 3,
+                "x_var_name": "longitude",
+                "y_var_name": "latitude",
+            },
+        ).persist()
+        harm_pars_list.append((orbit, harm_pars))
+    hpar_dc = xr.concat([harm_pars[1] for harm_pars in harm_pars_list], dim="orbit")
+    hpar_dc["orbit"] = [harm_pars[0] for harm_pars in harm_pars_list]
+    hpar_dc = hpar_dc.where(hpar_dc.sel(param="NOBS") >= 32).drop_sel(param="NOBS")
+    hpar_dc = hpar_dc.to_dataset(dim="param").sel(orbit=orbit_sig0)
+    hpar_dc = hpar_dc.persist()
+    return hpar_dc
+
+
 def reduce_to_harmonic_parameters(
-        ts_xr: xr.DataArray,
-        x_var_name = 'x',
-        y_var_name = 'y',
-        **kwargs
+    ts_xr: xr.DataArray, x_var_name="x", y_var_name="y", **kwargs
 ):
     params_arr = harmonic_regression(ts_xr.data, **kwargs)
-    k = kwargs.get('k', 3)
-    out_dims = ['param', y_var_name, x_var_name]
+    k = kwargs.get("k", 3)
+    out_dims = ["param", y_var_name, x_var_name]
     out_dataarray = xr.DataArray(
         data=params_arr,
         coords={
-            'param': model_coords(k),
+            "param": model_coords(k),
             x_var_name: ts_xr[x_var_name],
-            y_var_name: ts_xr[y_var_name]
+            y_var_name: ts_xr[y_var_name],
         },
-        dims=out_dims
+        dims=out_dims,
     )
     return out_dataarray
 
 
 def harmonic_regression(
-        arr: np.ndarray,
-        dtimes: np.ndarray,
-        k: int = 3,
-        redundancy: int = 1,
-        axis: int = 0
+    arr: np.ndarray, dtimes: np.ndarray, k: int = 3, redundancy: int = 1, axis: int = 0
 ) -> np.ndarray:
     # define constants
     w = np.pi * 2 / 365
@@ -46,8 +64,7 @@ def harmonic_regression(
 
     # run regression
     param = np.full((nx + 2, rows, cols), np.nan, dtype=np.float32)
-    _fast_harmonic_regression(arr=arr, a_matrix=a, k=k,
-                              red=redundancy, param=param)
+    _fast_harmonic_regression(arr=arr, a_matrix=a, k=k, red=redundancy, param=param)
 
     return param
 
@@ -62,7 +79,7 @@ def _fast_harmonic_regression(arr, a_matrix, red, param, k=3):
             # remove NaN values
             l_unfiltered = arr[:, row, col]
             valid_obs = ~np.isnan(l_unfiltered)
-            A, l = a_matrix[valid_obs, :], l_unfiltered[valid_obs]
+            A, l = a_matrix[valid_obs, :], l_unfiltered[valid_obs]  # noqa
 
             # N should be nan if no observations, otherwise sum of valid observations
             # even if there aren't enough to calculate a good solution
@@ -79,7 +96,7 @@ def _fast_harmonic_regression(arr, a_matrix, red, param, k=3):
                 if denom == 0:
                     px_std = np.nan
                 else:
-                    px_std = np.sqrt(np.sum(v ** 2) / (N - (2 * k + 1)))
+                    px_std = np.sqrt(np.sum(v**2) / (N - (2 * k + 1)))
 
                 # add pixel result to return array
                 param[:-2, row, col] = px_x
