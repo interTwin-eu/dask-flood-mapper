@@ -15,6 +15,7 @@ from dask_flood_mapper.calculation import (
     harmonic_expected_backscatter,
     remove_speckles,
 )
+from dask_flood_mapper.catalog import extent_range, initialize_catalog
 from dask_flood_mapper.processing import (
     extract_orbit_names,
     post_process_eodc_cube,
@@ -45,6 +46,19 @@ USER_CONFIG_DIR = Path(temp_dir.name)
 @pytest.fixture
 def load_config_test():
     return load_config()
+
+
+def test_that_time_range_extension_for_harmonic_parameters():
+    time_range = "2022-10-11T05:25:26"
+    assert (
+        extent_range(initialize_catalog(), time_range)
+        == "2019-10-11T05:25:27Z/2022-10-11T05:25:26Z"
+    )
+    time_range = "2023-10-11/2023-10-25"
+    assert (
+        extent_range(initialize_catalog(), time_range)
+        == "2020-10-11T00:00:01Z/2023-10-25T23:59:59Z"
+    )
 
 
 def test_that_config_can_be_loaded(load_config_test):
