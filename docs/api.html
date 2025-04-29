@@ -421,7 +421,7 @@ document.write(`
 <span id="api-reference"></span><h1>API Reference<a class="headerlink" href="#module-dask_flood_mapper.flood" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="dask_flood_mapper.flood.decision">
-<span class="sig-prename descclassname"><span class="pre">dask_flood_mapper.flood.</span></span><span class="sig-name descname"><span class="pre">decision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bbox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datetime</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dask_flood_mapper.flood.decision" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">dask_flood_mapper.flood.</span></span><span class="sig-name descname"><span class="pre">decision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bbox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dynamic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dask_flood_mapper.flood.decision" title="Link to this definition">#</a></dt>
 <dd><p>Bayesian Flood Decision</p>
 <p>Classify Sentinel-1 radar images by simple Bayes inference into flood (1)
 and non-flood (0). Besides radar images, this algorithm relies on two other
@@ -524,7 +524,7 @@ latitude, maximum longitude, maximum latitude</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="dask_flood_mapper.flood.probability">
-<span class="sig-prename descclassname"><span class="pre">dask_flood_mapper.flood.</span></span><span class="sig-name descname"><span class="pre">probability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bbox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datetime</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dask_flood_mapper.flood.probability" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">dask_flood_mapper.flood.</span></span><span class="sig-name descname"><span class="pre">probability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bbox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dynamic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dask_flood_mapper.flood.probability" title="Link to this definition">#</a></dt>
 <dd><p>Bayesian Flood Probability</p>
 <p>Classify Sentinel-1 radar images by simple Bayes inference into a
 probability of flood,ranging from 0 (minimum probability of flood) to 1
