@@ -1,9 +1,10 @@
 import numpy as np
 import xarray as xr
+from dask_flood_mapper.processing import order_orbits
 from numba import njit, prange
 
 
-def create_harmonic_parameters(sig0_dc, orbit_sig0):
+def create_harmonic_parameters(sig0_dc):
     harm_pars_list = []
     for orbit, orbit_ds in sig0_dc.groupby("orbit"):
         orbit_ds = orbit_ds.chunk({"time": -1}).persist()
@@ -14,17 +15,31 @@ def create_harmonic_parameters(sig0_dc, orbit_sig0):
             kwargs={
                 "dtimes": dtimes,
                 "k": 3,
-                "x_var_name": "longitude",
-                "y_var_name": "latitude",
+                "x_var_name": "x",
+                "y_var_name": "y",
             },
         ).persist()
         harm_pars_list.append((orbit, harm_pars))
+    return harm_pars_list
+
+
+def process_harmonic_parameters_datacube(sig0_dc, time_range, harm_pars_list):
     hpar_dc = xr.concat([harm_pars[1] for harm_pars in harm_pars_list], dim="orbit")
-    hpar_dc["orbit"] = [harm_pars[0] for harm_pars in harm_pars_list]
     hpar_dc = hpar_dc.where(hpar_dc.sel(param="NOBS") >= 32).drop_sel(param="NOBS")
-    hpar_dc = hpar_dc.to_dataset(dim="param").sel(orbit=orbit_sig0)
+    hpar_dc = hpar_dc.to_dataset(dim="param")
+    hpar_dc = hpar_dc.assign_coords(
+        orbit=np.array([harm_pars[0] for harm_pars in harm_pars_list])
+    )
+
+    # time range of flood map
+    if len(time_range) == 1:
+        sig0_dc = sig0_dc.sel(time=[time_range[0]], method="nearest")
+    else:
+        sig0_dc = sig0_dc.sel(time=slice(time_range[0], time_range[1]))
+    orbit_sig0 = order_orbits(sig0_dc)
+    hpar_dc = hpar_dc.sel(orbit=orbit_sig0)
     hpar_dc = hpar_dc.persist()
-    return hpar_dc
+    return sig0_dc, hpar_dc, orbit_sig0
 
 
 def reduce_to_harmonic_parameters(

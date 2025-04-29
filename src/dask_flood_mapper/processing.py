@@ -42,13 +42,20 @@ def process_sig0_dc(sig0_dc, items_sig0, bands):
         .dropna(dim="time", how="all")
         .sortby("time")
     )
-    __, indices = np.unique(sig0_dc.time, return_index=True)
-    indices.sort()
-    orbit_sig0 = sig0_dc.orbit[indices].data
+    orbit_sig0 = order_orbits(sig0_dc)
     sig0_dc = sig0_dc.groupby("time").mean(skipna=True)
     sig0_dc = sig0_dc.assign_coords(orbit=("time", orbit_sig0))
     sig0_dc = sig0_dc.persist()
     return sig0_dc, orbit_sig0
+
+
+def order_orbits(sig0_dc):
+    if sig0_dc.time.shape != ():
+        __, indices = np.unique(sig0_dc.time, return_index=True)
+        indices.sort()
+        return sig0_dc.orbit[indices].data
+    else:
+        return np.array([sig0_dc.orbit.data])
 
 
 def process_datacube(datacube, items_dc, orbit_sig0, bands):

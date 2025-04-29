@@ -45,3 +45,8 @@ def extent_range(eodc_catalog, time_range, years=3):
     else:
         end = split_time_range[0]
     return start + "/" + end
+
+
+def format_datetime_for_xarray_selection(search, time_range):
+    split_time_range = search._format_datetime(time_range).split("/")
+    return [parser.parse(i, ignoretz=True) for i in split_time_range]
