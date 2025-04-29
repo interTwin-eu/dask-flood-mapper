@@ -23,9 +23,14 @@ def create_harmonic_parameters(sig0_dc):
     return harm_pars_list
 
 
-def process_harmonic_parameters_datacube(sig0_dc, time_range, harm_pars_list):
+def process_harmonic_parameters_datacube(
+    sig0_dc: xr.Dataset,
+    time_range: tuple[np.datetime64, np.datetime64],
+    harm_pars_list: list[tuple[int, xr.DataArray]],
+    min_nobs: int = 32,
+):
     hpar_dc = xr.concat([harm_pars[1] for harm_pars in harm_pars_list], dim="orbit")
-    hpar_dc = hpar_dc.where(hpar_dc.sel(param="NOBS") >= 32).drop_sel(param="NOBS")
+    hpar_dc = hpar_dc.where(hpar_dc.sel(param="NOBS") >= min_nobs).drop_sel(param="NOBS")
     hpar_dc = hpar_dc.to_dataset(dim="param")
     hpar_dc = hpar_dc.assign_coords(
         orbit=np.array([harm_pars[0] for harm_pars in harm_pars_list])
