@@ -61,10 +61,8 @@ def synthetic_data(request):
     cos_amplitudes = request.param["cos_amplitudes"]
 
     # Create time series
-    times = np.array(
-        [1, 32, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335], dtype=np.float32
-    )
-    times = np.hstack([times, times + 1])
+    times = np.sort(np.random.randint(1, 366, size=400)).astype(np.float32)  # Random day of the year
+    # times = np.sort(np.hstack([times, times + 1]))
     rows, cols = 2, 2
 
     orbit = np.array([["A1", "B1"][int(time % 2)] for time in times])
@@ -96,8 +94,8 @@ def test_harmonic_regression_returns_accurate_params(synthetic_data):
 
     # Check output shape
     # mean + 2*harmonics + std + nobs
-    expected_params = 2 * synthetic_data["k"] + 1 + 2
-    assert params.shape == (expected_params, 2, 2)
+    expected_n_params = 2 * synthetic_data["k"] + 1 + 2
+    assert params.shape == (expected_n_params, 2, 2)
 
     # Check if parameters match expected values (within numerical precision)
     for i in range(2):
@@ -209,7 +207,7 @@ def synthetic_xarray_data(synthetic_data):
 @pytest.fixture
 def synthetic_xarray_dataset(synthetic_data):
     # Create synthetic xarray DataArray
-    times = pd.to_timedelta(synthetic_data["times"], "D") + np.datetime64("2020-01-01")
+    times = pd.to_timedelta(synthetic_data["times"], "D") + np.datetime64("2018-12-31")
     data = synthetic_data["data"]
     orbit = synthetic_data["orbit"]
 
@@ -233,6 +231,17 @@ def synthetic_xarray_dataset(synthetic_data):
     )
     return xr.merge([sig_da, orbit_da])
 
+def test_synthetic_array_dataset_contains_original_synthetic_data(synthetic_xarray_dataset, synthetic_data):
+    # Check that the synthetic dataset contains the original synthetic data
+    np.testing.assert_array_equal(
+        synthetic_xarray_dataset["sig0"].values, synthetic_data["data"]
+    ), "Synthetic dataset does not contain the original synthetic data"
+    np.testing.assert_array_equal(
+        synthetic_xarray_dataset["orbit"].values, synthetic_data["orbit"]
+    ), "Synthetic dataset does not contain the original orbit data"
+    np.testing.assert_array_equal(
+        synthetic_xarray_dataset["time.dayofyear"].values, synthetic_data["times"]
+    ), "Synthetic dataset does not contain the original time data"
 
 def test_reduce_to_harmonic_parameters_basic(synthetic_xarray_data, synthetic_data):
     # Run reduction
@@ -291,8 +300,35 @@ def make_pars_list(synthetic_xarray_dataset, synthetic_data):
     return harm_pars_list
 
 
-def test_make_process(make_pars_list, synthetic_xarray_dataset):
+def assert_both_orbits_have_approx_the_same_parameters(hpar_dc):
+    assert np.all(np.abs(hpar_dc.diff(dim="orbit")) < 1e-6), "Orbits differ too much"
+
+def assert_retrieved_harmpars_are_approx_the_same_as_synthetic_data(synthetic_data, hpar_dc):
+    retrieved_params = hpar_dc.to_dataarray(dim="param")
+    expected_params = xr.DataArray(data=synthetic_data["expected_params"],
+                                   dims=["param"],
+                                   coords={"param": model_coords(synthetic_data["k"])})
+    diffs = retrieved_params - expected_params
+    assert np.all(np.abs(diffs) < 1e-4), f"Retrieved parameters differ from expected: {diffs}"
+
+def assert_sig0_only_has_valid_times(sig0_dc, time_range):
+    assert sig0_dc.time.min() >= time_range[0], "sig0_dc contains times before the start of the range"
+    assert sig0_dc.time.max() <= time_range[1], "sig0_dc contains times after the end of the range"
+
+def assert_we_have_hpars_for_all_sig0_orbits(sig0_dc, hpar_dc, orbit_sig0):
+    sig0_orbits = sig0_dc.orbit.values
+    assert np.all(np.isin(sig0_orbits, hpar_dc.orbit.values)), "Not all sig0 orbits have harmonic parameters"
+
+def test_make_process(make_pars_list, synthetic_data, synthetic_xarray_dataset):
     pars_list = make_pars_list.copy()
     sig0_dc = synthetic_xarray_dataset.copy().sortby("time")
-    time_range = [sig0_dc.time[-2].data, sig0_dc.time[-1].data]
-    process_harmonic_parameters_datacube(sig0_dc, time_range, pars_list)
+    time_range = (sig0_dc.time[-4].data, sig0_dc.time[-1].data)
+    sig0_dc, hpar_dc, orbit_sig0 = process_harmonic_parameters_datacube(sig0_dc,
+                                                                        time_range,
+                                                                        pars_list,
+                                                                        min_nobs=32)
+    assert_both_orbits_have_approx_the_same_parameters(hpar_dc)
+    assert_retrieved_harmpars_are_approx_the_same_as_synthetic_data(synthetic_data, hpar_dc)
+    assert_sig0_only_has_valid_times(sig0_dc, time_range)
+    assert_we_have_hpars_for_all_sig0_orbits(sig0_dc, hpar_dc, orbit_sig0)
+    np.testing.assert_array_equal(orbit_sig0, hpar_dc.orbit)
