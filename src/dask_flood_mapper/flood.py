@@ -8,9 +8,14 @@ from dask_flood_mapper.calculation import (
 )
 from dask_flood_mapper.catalog import (
     config,
+    format_datetime_for_xarray_selection,
     initialize_catalog,
     initialize_search,
     search_parameters,
+)
+from dask_flood_mapper.harmonic_params import (
+    create_harmonic_parameters,
+    process_harmonic_parameters_datacube,
 )
 from dask_flood_mapper.processing import (
     BANDS_HPAR,
@@ -29,7 +34,7 @@ BANDS_SIG0 = "VV"
 BANDS_PLIA = "MPLIA"
 
 
-def decision(bbox, datetime):
+def decision(bbox, datetime, dynamic=False):
     """
     Bayesian Flood Decision
 
@@ -123,7 +128,7 @@ def decision(bbox, datetime):
     >>>
     """
 
-    sig0_dc, hpar_dc, plia_dc = preprocess(bbox, datetime)
+    sig0_dc, hpar_dc, plia_dc = preprocess(bbox, datetime, dynamic)
     flood_dc = calculate_flood_dc(sig0_dc, plia_dc, hpar_dc)
     flood_dc["wbsc"] = calc_water_likelihood(flood_dc)  # Water
     flood_dc["hbsc"] = harmonic_expected_backscatter(flood_dc)  # Land
@@ -134,7 +139,7 @@ def decision(bbox, datetime):
     return reproject_equi7grid(remove_speckles(flood_output), bbox=bbox)
 
 
-def probability(bbox, datetime):
+def probability(bbox, datetime, dynamic=False):
     """
     Bayesian Flood Probability
 
@@ -231,26 +236,35 @@ def probability(bbox, datetime):
         _FillValue:  nan
     >>>
     """
-    sig0_dc, hpar_dc, plia_dc = preprocess(bbox, datetime)
+    sig0_dc, hpar_dc, plia_dc = preprocess(bbox, datetime, dynamic)
     flood_dc = calculate_flood_dc(sig0_dc, plia_dc, hpar_dc)
     flood_dc["wbsc"] = calc_water_likelihood(flood_dc)  # Water
     flood_dc["hbsc"] = harmonic_expected_backscatter(flood_dc)  # Land
     return reproject_equi7grid(bayesian_flood_probability(flood_dc), bbox=bbox)
 
 
-def preprocess(bbox, datetime):
+def preprocess(bbox, datetime, dynamic):
     eodc_catalog = initialize_catalog()
-    search = initialize_search(eodc_catalog, bbox, datetime)
+    search = initialize_search(eodc_catalog, bbox, datetime, dynamic)
 
     items_sig0 = search.item_collection()
     sig0_dc = prepare_dc(items_sig0, bbox, bands="VV")
     sig0_dc, orbit_sig0 = process_sig0_dc(sig0_dc, items_sig0, bands="VV")
     print("sigma naught datacube processed")
 
-    search_hpar = search_parameters(eodc_catalog, bbox, collections="SENTINEL1_HPAR")
-    items_hpar = search_hpar.item_collection()
-    hpar_dc = prepare_dc(items_hpar, bbox, bands=BANDS_HPAR)
-    hpar_dc = process_datacube(hpar_dc, items_hpar, orbit_sig0, BANDS_HPAR)
+    if dynamic:
+        datetime_xr = format_datetime_for_xarray_selection(search, datetime)
+        hpar_list = create_harmonic_parameters(sig0_dc)
+        sig0_dc, hpar_dc, orbit_sig0 = process_harmonic_parameters_datacube(
+            sig0_dc, datetime_xr, hpar_list
+        )
+    else:
+        search_hpar = search_parameters(
+            eodc_catalog, bbox, collections="SENTINEL1_HPAR"
+        )
+        items_hpar = search_hpar.item_collection()
+        hpar_dc = prepare_dc(items_hpar, bbox, bands=BANDS_HPAR)
+        hpar_dc = process_datacube(hpar_dc, items_hpar, orbit_sig0, BANDS_HPAR)
     print("harmonic parameter datacube processed")
 
     search_plia = search_parameters(eodc_catalog, bbox, collections="SENTINEL1_MPLIA")

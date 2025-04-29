@@ -1,8 +1,13 @@
 import numpy as np
+import pandas as pd
 import pytest
 import xarray as xr
-from dask_flood_mapper.harmonic_params import (harmonic_regression, model_coords,
-                                               reduce_to_harmonic_parameters)
+from dask_flood_mapper.harmonic_params import (
+    harmonic_regression,
+    model_coords,
+    process_harmonic_parameters_datacube,
+    reduce_to_harmonic_parameters,
+)
 
 
 def generate_harmonic_timeseries(times, mean, sin_amplitudes, cos_amplitudes):
@@ -11,87 +16,44 @@ def generate_harmonic_timeseries(times, mean, sin_amplitudes, cos_amplitudes):
     result = mean * np.ones_like(times)
 
     for k, (sin_amp, cos_amp) in enumerate(zip(sin_amplitudes, cos_amplitudes), 1):
-        result += sin_amp * np.sin(k * w * times) + \
-            cos_amp * np.cos(k * w * times)
+        result += sin_amp * np.sin(k * w * times) + cos_amp * np.cos(k * w * times)
 
     return result
 
 
-@pytest.fixture(params=[
-    # test some different Ks
-    {
-        "mean": 0.0,
-        "sin_amplitudes": [0.5],
-        "cos_amplitudes": [0.5]
-    },
-    {
-        "mean": 0.5,
-        "sin_amplitudes": [0.3, 0.1],
-        "cos_amplitudes": [0.2, 0.05]
-    },
-    {
-        "mean": -0.5,
-        "sin_amplitudes": [0.6, 0.2, 0.1],
-        "cos_amplitudes": [0.3, 0.1, 0.2]
-    },
-    # typical case
-    {
-        "mean": -10,
-        "sin_amplitudes": [-0.1, 0.05, 0.06],
-        "cos_amplitudes": [0.1, 2, -0.3]
-    },
-    # test values at edges of realistic range
-    {
-        "mean": -30,
-        "sin_amplitudes": [-5, -4, -1.5],
-        "cos_amplitudes": [-9, -2, -1.5]
-    },
-    {
-        "mean": 5,
-        "sin_amplitudes": [5, 4, 1.5],
-        "cos_amplitudes": [9, 4, 1.1]
-    },
-    {
-        "mean": 5,
-        "sin_amplitudes": [-5, -4, -1.5],
-        "cos_amplitudes": [-9, -2, -1.5]
-    },
-    {
-        "mean": -30,
-        "sin_amplitudes": [5, 4, 1.5],
-        "cos_amplitudes": [9, 4, 1.1]
-    },
-    {
-        "mean": -30,
-        "sin_amplitudes": [5, 4, 1.5],
-        "cos_amplitudes": [-9, -2, -1.5]
-    },
-    {
-        "mean": 5,
-        "sin_amplitudes": [-5, -4, -1.5],
-        "cos_amplitudes": [9, 4, 1.1]
-    },
-    {
-        "mean": -30,
-        "sin_amplitudes": [-5, -4, -1.5],
-        "cos_amplitudes": [9, 4, 1.1]
-    },
-    {
-        "mean": 5,
-        "sin_amplitudes": [5, 4, 1.5],
-        "cos_amplitudes": [-9, -2, -1.5]
-    },
-    {
-        "mean": -30,
-        "sin_amplitudes": [-5, 4, 1.5],
-        "cos_amplitudes": [9, 4, -1.5]
-    },
-    {
-        "mean": 5,
-        "sin_amplitudes": [5, -4, -1.5],
-        "cos_amplitudes": [-9, -2, 1.1]
-    },
-])
+@pytest.fixture(
+    params=[
+        # test some different Ks
+        {"mean": 0.0, "sin_amplitudes": [0.5], "cos_amplitudes": [0.5]},
+        {"mean": 0.5, "sin_amplitudes": [0.3, 0.1], "cos_amplitudes": [0.2, 0.05]},
+        {
+            "mean": -0.5,
+            "sin_amplitudes": [0.6, 0.2, 0.1],
+            "cos_amplitudes": [0.3, 0.1, 0.2],
+        },
+        # typical case
+        {
+            "mean": -10,
+            "sin_amplitudes": [-0.1, 0.05, 0.06],
+            "cos_amplitudes": [0.1, 2, -0.3],
+        },
+        # test values at edges of realistic range
+        {
+            "mean": -30,
+            "sin_amplitudes": [-5, -4, -1.5],
+            "cos_amplitudes": [-9, -2, -1.5],
+        },
+        {"mean": 5, "sin_amplitudes": [5, 4, 1.5], "cos_amplitudes": [9, 4, 1.1]},
+        {"mean": 5, "sin_amplitudes": [-5, -4, -1.5], "cos_amplitudes": [-9, -2, -1.5]},
+        {"mean": -30, "sin_amplitudes": [5, 4, 1.5], "cos_amplitudes": [9, 4, 1.1]},
+        {"mean": -30, "sin_amplitudes": [5, 4, 1.5], "cos_amplitudes": [-9, -2, -1.5]},
+        {"mean": 5, "sin_amplitudes": [-5, -4, -1.5], "cos_amplitudes": [9, 4, 1.1]},
+        {"mean": -30, "sin_amplitudes": [-5, -4, -1.5], "cos_amplitudes": [9, 4, 1.1]},
+        {"mean": 5, "sin_amplitudes": [5, 4, 1.5], "cos_amplitudes": [-9, -2, -1.5]},
+        {"mean": -30, "sin_amplitudes": [-5, 4, 1.5], "cos_amplitudes": [9, 4, -1.5]},
+        {"mean": 5, "sin_amplitudes": [5, -4, -1.5], "cos_amplitudes": [-9, -2, 1.1]},
+    ]
+)
 def synthetic_data(request):
     # Extract parameters
     mean = request.param["mean"]
@@ -102,13 +64,14 @@ def synthetic_data(request):
     times = np.array(
         [1, 32, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335], dtype=np.float32
     )
+    times = np.hstack([times, times + 1])
     rows, cols = 2, 2
 
+    orbit = np.array([["A1", "B1"][int(time % 2)] for time in times])
     # Generate perfect harmonic signal
-    ts = generate_harmonic_timeseries(
-        times, mean, sin_amplitudes, cos_amplitudes)
+    ts = generate_harmonic_timeseries(times, mean, sin_amplitudes, cos_amplitudes)
     ts_data = ts.reshape(-1, 1, 1).astype(np.float32)
-    ts_data = np.broadcast_to(ts_data, (12, rows, cols)).copy()
+    ts_data = np.broadcast_to(ts_data, (len(times), rows, cols)).copy()
 
     expected_params = np.array(
         [mean]
@@ -119,6 +82,7 @@ def synthetic_data(request):
     return {
         "times": times,
         "data": ts_data,
+        "orbit": orbit,
         "expected_params": expected_params,
         "k": len(sin_amplitudes),
     }
@@ -169,9 +133,7 @@ def test_harmonic_regression_handles_insufficient_data(synthetic_data):
     data_with_many_nans = synthetic_data["data"].copy()
     synthetic_k = synthetic_data["k"]
     data_with_many_nans[
-        :(synthetic_data["data"].shape[0] - 2*synthetic_k),
-        0,
-        0
+        : (synthetic_data["data"].shape[0] - 2 * synthetic_k), 0, 0
     ] = np.nan  # Leave only 2*k observations
 
     # Run harmonic regression which requires at least 2k+1 observations
@@ -182,7 +144,7 @@ def test_harmonic_regression_handles_insufficient_data(synthetic_data):
     assert np.isnan(
         params[:-1, 0, 0]
     ).all(), "Parameters should be NaN with insufficient data"
-    assert params[-1, 0, 0] == 2 * synthetic_k, f"NOBS should be {2*synthetic_k}"
+    assert params[-1, 0, 0] == 2 * synthetic_k, f"NOBS should be {2 * synthetic_k}"
     assert not np.isnan(
         params[:, 0, 1]
     ).any(), "Other pixels should have valid parameters"
@@ -192,21 +154,21 @@ def test_harmonic_regression_respects_redundancy(synthetic_data):
     # Make some data NaN but keep enough for default redundancy
     data_with_nans = synthetic_data["data"].copy()
     k = synthetic_data["k"]
-    data_with_nans[:data_with_nans.shape[0] - (2*k+2), 0, 0] = np.nan  # Leave 6 observations
+    data_with_nans[
+        : data_with_nans.shape[0] - (2 * k + 2), 0, 0
+    ] = np.nan  # Leave 6 observations
 
     # Should work with redundancy=1
     params_red1 = harmonic_regression(
         data_with_nans, synthetic_data["times"], k=synthetic_data["k"], redundancy=1
     )
-    assert not np.isnan(params_red1[:-1, 0, 0]
-                        ).any(), "Should work with redundancy=1"
+    assert not np.isnan(params_red1[:-1, 0, 0]).any(), "Should work with redundancy=1"
 
     # Should fail with redundancy=2
     params_red2 = harmonic_regression(
         data_with_nans, synthetic_data["times"], k=synthetic_data["k"], redundancy=2
     )
-    assert np.isnan(params_red2[:-1, 0, 0]
-                    ).all(), "Should fail with redundancy=2"
+    assert np.isnan(params_red2[:-1, 0, 0]).all(), "Should fail with redundancy=2"
 
 
 def test_harmonic_regression_handles_no_data(synthetic_data):
@@ -244,6 +206,34 @@ def synthetic_xarray_data(synthetic_data):
     )
 
 
+@pytest.fixture
+def synthetic_xarray_dataset(synthetic_data):
+    # Create synthetic xarray DataArray
+    times = pd.to_timedelta(synthetic_data["times"], "D") + np.datetime64("2020-01-01")
+    data = synthetic_data["data"]
+    orbit = synthetic_data["orbit"]
+
+    sig_da = xr.DataArray(
+        name="sig0",
+        data=data,
+        coords={
+            "time": times,
+            "y": np.arange(data.shape[1]),
+            "x": np.arange(data.shape[2]),
+        },
+        dims=["time", "y", "x"],
+    )
+    orbit_da = xr.DataArray(
+        name="orbit",
+        data=orbit,
+        coords={
+            "time": times,
+        },
+        dims=["time"],
+    )
+    return xr.merge([sig_da, orbit_da])
+
+
 def test_reduce_to_harmonic_parameters_basic(synthetic_xarray_data, synthetic_data):
     # Run reduction
     result = reduce_to_harmonic_parameters(
@@ -271,10 +261,8 @@ def test_reduce_to_harmonic_parameters_coordinates(synthetic_xarray_data):
     # Check coordinates are properly set
     expected_params = model_coords(k)
     assert list(result.param.values) == expected_params
-    np.testing.assert_array_equal(
-        result.x.values, synthetic_xarray_data.x.values)
-    np.testing.assert_array_equal(
-        result.y.values, synthetic_xarray_data.y.values)
+    np.testing.assert_array_equal(result.x.values, synthetic_xarray_data.x.values)
+    np.testing.assert_array_equal(result.y.values, synthetic_xarray_data.y.values)
 
 
 def test_reduce_to_harmonic_parameters_with_nans(synthetic_xarray_data):
@@ -288,5 +276,23 @@ def test_reduce_to_harmonic_parameters_with_nans(synthetic_xarray_data):
 
     # Check that parameters are computed correctly despite NaNs
     assert not np.isnan(result.sel(x=0, y=0)).all()
-    assert result.sel(param="NOBS", x=0, y=0) == len(
-        synthetic_xarray_data.time) - 2
+    assert result.sel(param="NOBS", x=0, y=0) == len(synthetic_xarray_data.time) - 2
+
+
+@pytest.fixture
+def make_pars_list(synthetic_xarray_dataset, synthetic_data):
+    harm_pars_list = []
+    for orbit, orbit_ds in synthetic_xarray_dataset.groupby("orbit"):
+        dtimes = orbit_ds["time.dayofyear"]
+        harm_pars = reduce_to_harmonic_parameters(
+            orbit_ds["sig0"], dtimes=dtimes, k=synthetic_data["k"]
+        )
+        harm_pars_list.append((orbit, harm_pars))
+    return harm_pars_list
+
+
+def test_make_process(make_pars_list, synthetic_xarray_dataset):
+    pars_list = make_pars_list.copy()
+    sig0_dc = synthetic_xarray_dataset.copy().sortby("time")
+    time_range = [sig0_dc.time[-2].data, sig0_dc.time[-1].data]
+    process_harmonic_parameters_datacube(sig0_dc, time_range, pars_list)
