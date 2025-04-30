@@ -19,6 +19,8 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.x"
+      - name: Bump version
+        run: make version
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -27,3 +29,10 @@ jobs:
         run: python -m build
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
+      - name: Commit new version
+        run: |
+          PATH=($(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep "_version\.py$"))
+          git config --local user.name "$GITHUB_ACTOR"
+          git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git commit ${PATH} -m 'Bump version' || echo "No changes to commit"
+          git push origin || echo "No changes to commit"
