@@ -58,6 +58,11 @@ def decision(bbox, datetime, dynamic=False):
           - Whole month, year or day: "2022-01"
           - Open range with current date: "2022-01-01/.."
           - Specific time instance: "2022-01-01T05:34:46"
+    dynamic: bool, default=False
+        Calculate harmonic parameters dynamically for the selected bbox by
+        fitting a harmonic function per pixel to a three year span of sigma
+        nought before the lower limit of the datetime provided. This operation
+        is computationally demanding.
 
     Returns
     -------
@@ -164,6 +169,11 @@ def probability(bbox, datetime, dynamic=False):
           - Whole month, year or day: "2022-01"
           - Open range with current date: "2022-01-01/.."
           - Specific time instance: "2022-01-01T05:34:46"
+    dynamic: bool, default=False
+        Calculate harmonic parameters dynamically for the selected bbox by
+        fitting a harmonic function per pixel to a three year span of sigma
+        nought before the lower limit of the datetime provided. This operation
+        is computationally demanding.
 
     Returns
     -------

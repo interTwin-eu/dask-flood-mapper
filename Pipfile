@@ -8,6 +8,8 @@ odc-stac = "==0.3.*"
 dask = {version = "<=2024.5.2", extras = ["distributed"]}
 rioxarray = "==0.17.*"
 appdirs = "*"
+numba = "*"
+scipy = "*"
 
 [dev-packages]
 eodc = ">=2025.3.2"
