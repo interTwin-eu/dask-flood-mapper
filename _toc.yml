@@ -7,8 +7,8 @@ parts:
       - file: notebooks/02_remote_dask
       - file: notebooks/03_flood_map
       - file: notebooks/04_harmonic_parameters
-      - file: notebooks/05_validation
-      - file: notebooks/06_configuration
+      - file: notebooks/05_configuration
+      - file: notebooks/06_validation
   - caption: API Reference
     chapters:
       - file: docs/api
