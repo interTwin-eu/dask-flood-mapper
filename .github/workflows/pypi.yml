@@ -31,8 +31,7 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
       - name: Commit new version
         run: |
-          PATH=($(git diff --name-only ${{ github.event.before }} ${{ github.sha }}))
           git config --local user.name "$GITHUB_ACTOR"
           git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
-          git commit ${PATH} -m 'Bump version' || echo "No changes to commit"
+          git commit $(git diff --name-only | grep '_version') -m 'Bump version' || echo "No changes to commit"
           git push origin || echo "No changes to commit"
