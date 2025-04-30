@@ -154,7 +154,8 @@ It will open the GUI in the web browser.
 ## Authors
 
 [Martin Schobben](https://github.com/martinschobben),
-[Thais Beham](https://github.com/thaisbeham)
+[Thais Beham](https://github.com/thaisbeham),
+[Clay Harrison](https://github.com/claytharrison)
 
 ### Contributors
 

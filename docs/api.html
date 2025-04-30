@@ -61,7 +61,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Contributing" href="../CONTRIBUTING.html" />
-    <link rel="prev" title="Configuration" href="../notebooks/05_configuration.html" />
+    <link rel="prev" title="Calculate Harmonic Parameters" href="../notebooks/04_harmonic_parameters.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -199,8 +199,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../notebooks/01_local_dask.html">Local Flood Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../notebooks/02_remote_dask.html">Remote Flood Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../notebooks/03_flood_map.html">Flood Mapping Explained</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../notebooks/04_validation.html">Validation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../notebooks/05_configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/04_harmonic_parameters.html">Calculate Harmonic Parameters</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul class="current nav bd-sidenav">
@@ -446,6 +445,11 @@ latitude, maximum longitude, maximum latitude</p>
 </ul>
 </div></blockquote>
 </dd>
+<dt>dynamic: bool, default=False</dt><dd><p>Calculate harmonic parameters dynamically for the selected bbox by
+fitting a harmonic function per pixel to a three year span of sigma
+nought before the lower limit of the datetime provided. This operation
+is computationally demanding.</p>
+</dd>
 </dl>
 </section>
 <section id="returns">
@@ -549,6 +553,11 @@ latitude, maximum longitude, maximum latitude</p>
 <li><p>Specific time instance: “2022-01-01T05:34:46”</p></li>
 </ul>
 </div></blockquote>
+</dd>
+<dt>dynamic: bool, default=False</dt><dd><p>Calculate harmonic parameters dynamically for the selected bbox by
+fitting a harmonic function per pixel to a three year span of sigma
+nought before the lower limit of the datetime provided. This operation
+is computationally demanding.</p>
 </dd>
 </dl>
 </section>
@@ -662,12 +671,12 @@ flood) to 1 (100% estimation of flood)</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../notebooks/05_configuration.html"
+       href="../notebooks/04_harmonic_parameters.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Configuration</p>
+        <p class="prev-next-title">Calculate Harmonic Parameters</p>
       </div>
     </a>
     <a class="right-next"
