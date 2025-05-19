@@ -31,7 +31,7 @@ def search_parameters(eodc_catalog, bbox, collections):
     return search
 
 
-def extent_range(eodc_catalog, time_range, years=3):
+def extent_range(eodc_catalog, time_range, years=1):
     search = eodc_catalog.search()
     split_time_range = time_range.split("/")
     if len(split_time_range) == 1:
