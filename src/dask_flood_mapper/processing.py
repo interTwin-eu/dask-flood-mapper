@@ -95,24 +95,35 @@ def extract_orbit_names(items):
     )
 
 
-def post_processing(dc):
+def post_processing(dc, keep_masks=False):
     dc["mask_exceeding_PLIA"] = mask_exceeding_PLIA(dc)
     dc["mask_conflicting_distributions"] = mask_conflicting_distributions(dc)
     dc["mask_outliers"] = mask_outliers(dc)
     dc["mask_denial_high_uncertainty"] = mask_denial_high_uncertainty(dc)
-    dc["decision"] = (
+    dc["extent"] = (
         dc.decision
         * dc["mask_exceeding_PLIA"]
         * dc["mask_conflicting_distributions"]
         * dc["mask_outliers"]
         * dc["mask_denial_high_uncertainty"]
     )
-    dc["decision"] = remove_speckles(dc.decision)
-    return dc.decision
+    dc["extent"] = remove_speckles(dc.extent)
+    if keep_masks:
+        return dc[
+            [
+                "extent",
+                "mask_exceeding_PLIA",
+                "mask_conflicting_distributions",
+                "mask_outliers",
+                "mask_denial_high_uncertainty",
+            ]
+        ]
+    else:
+        return dc.extent
 
 
 def mask_denial_high_uncertainty(dc):
-    return np.minimum(dc.nf_post_prob, dc.f_post_prob) > 0.2
+    return np.minimum(dc.nf_post_prob, dc.f_post_prob) < 0.2
 
 
 def mask_conflicting_distributions(dc):

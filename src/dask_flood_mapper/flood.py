@@ -33,7 +33,7 @@ BANDS_SIG0 = "VV"
 BANDS_PLIA = "MPLIA"
 
 
-def decision(bbox, datetime, dynamic=False):
+def decision(bbox, datetime, dynamic=False, keep_masks=False):
     """
     Bayesian Flood Decision
 
@@ -139,7 +139,7 @@ def decision(bbox, datetime, dynamic=False):
     flood_dc["decision"] = bayesian_flood_decision(flood_dc)
     flood_dc["f_post_prob"] = bayesian_flood_probability(flood_dc)
     flood_dc["nf_post_prob"] = 1 - flood_dc["f_post_prob"]
-    flood_output = post_processing(flood_dc)
+    flood_output = post_processing(flood_dc, keep_masks)
     return reproject_equi7grid(flood_output, bbox=bbox)
 
 
