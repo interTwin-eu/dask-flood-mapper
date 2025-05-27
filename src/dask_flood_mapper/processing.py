@@ -107,7 +107,7 @@ def post_processing(dc):
         * dc["mask_outliers"]
         * dc["mask_denial_high_uncertainty"]
     )
-    dc["decision"] = remove_speckles(dc.flood_extent)
+    dc["decision"] = remove_speckles(dc.decision)
     return dc.decision
 
 
