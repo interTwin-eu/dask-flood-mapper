@@ -4,7 +4,6 @@ from dask_flood_mapper.calculation import (
     calc_water_likelihood,
     calculate_flood_dc,
     harmonic_expected_backscatter,
-    remove_speckles,
 )
 from dask_flood_mapper.catalog import (
     config,
@@ -141,7 +140,7 @@ def decision(bbox, datetime, dynamic=False):
     flood_dc["f_post_prob"] = bayesian_flood_probability(flood_dc)
     flood_dc["nf_post_prob"] = 1 - flood_dc["f_post_prob"]
     flood_output = post_processing(flood_dc)
-    return reproject_equi7grid(remove_speckles(flood_output), bbox=bbox)
+    return reproject_equi7grid(flood_output, bbox=bbox)
 
 
 def probability(bbox, datetime, dynamic=False):

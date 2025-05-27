@@ -17,19 +17,6 @@ def calculate_flood_dc(sig0_dc, plia_dc, hpar_dc):
     return flood_dc
 
 
-def remove_speckles(flood_output, window_size=5):
-    """
-    Apply a rolling median filter to smooth the dataset spatially over longitude
-    and latitude.
-    """
-    flood_output = (
-        flood_output.rolling({"x": window_size, "y": window_size}, center=True)
-        .median(skipna=True)
-        .persist()
-    )
-    return flood_output
-
-
 def calc_water_likelihood(dc):
     return dc.MPLIA * -0.394181 + -4.142015
 

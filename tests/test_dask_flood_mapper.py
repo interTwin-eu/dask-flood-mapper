@@ -13,7 +13,6 @@ from dask_flood_mapper.calculation import (
     calc_water_likelihood,
     calculate_flood_dc,
     harmonic_expected_backscatter,
-    remove_speckles,
 )
 from dask_flood_mapper.catalog import extent_range, initialize_catalog
 from dask_flood_mapper.processing import (
@@ -23,6 +22,7 @@ from dask_flood_mapper.processing import (
     post_processing,
     process_datacube,
     process_sig0_dc,
+    remove_speckles,
     reproject_equi7grid,
 )
 from dask_flood_mapper.stac_config import load_config, set_user_config
