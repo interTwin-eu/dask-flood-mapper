@@ -95,9 +95,48 @@ def extract_orbit_names(items):
     )
 
 
-def post_processing(dc):
-    dc = dc * np.logical_and(dc.MPLIA >= 27, dc.MPLIA <= 48)
-    dc = dc * (dc.hbsc > (dc.wbsc + 0.5 * 2.754041))
+def post_processing(dc, keep_masks=False):
+    dc["mask_exceeding_PLIA"] = mask_exceeding_PLIA(dc)
+    dc["mask_conflicting_distributions"] = mask_conflicting_distributions(dc)
+    dc["mask_outliers"] = mask_outliers(dc)
+    dc["mask_denial_high_uncertainty"] = mask_denial_high_uncertainty(dc)
+    dc["extent"] = (
+        dc.decision
+        * dc["mask_exceeding_PLIA"]
+        * dc["mask_conflicting_distributions"]
+        * dc["mask_outliers"]
+        * dc["mask_denial_high_uncertainty"]
+    )
+    dc["extent"] = remove_speckles(dc.extent)
+    if keep_masks:
+        dc["extent"] = reduce_masks(dc)
+    return dc.extent
+
+
+def reduce_masks(dc):
+    return (
+        ("time", "latitude", "longitude"),
+        np.maximum.reduce(
+            [
+                dc.extent,
+                ~dc.mask_denial_high_uncertainty * 2,
+                ~dc.mask_conflicting_distributions * 3,
+                ~dc.mask_exceeding_PLIA * 4,
+                ~dc.mask_outliers * 5,
+            ]
+        ),
+    )
+
+
+def mask_denial_high_uncertainty(dc):
+    return np.minimum(dc.nf_post_prob, dc.f_post_prob) < 0.2
+
+
+def mask_conflicting_distributions(dc):
+    return dc.hbsc > (dc.wbsc + 0.5 * 2.754041)
+
+
+def mask_outliers(dc):
     land_bsc_lower = dc.hbsc - 3 * dc.STD
     land_bsc_upper = dc.hbsc + 3 * dc.STD
     water_bsc_upper = dc.wbsc + 3 * 2.754041
@@ -105,8 +144,24 @@ def post_processing(dc):
         dc.sig0 > land_bsc_lower, dc.sig0 < land_bsc_upper
     )
     mask_water_outliers = dc.sig0 < water_bsc_upper
-    dc = dc * (mask_land_outliers | mask_water_outliers)
-    return (dc * (dc.f_post_prob > 0.8)).decision
+    return mask_land_outliers | mask_water_outliers
+
+
+def mask_exceeding_PLIA(dc):
+    return np.logical_and(dc.MPLIA >= 27, dc.MPLIA <= 48)
+
+
+def remove_speckles(flood_output, window_size=5):
+    """
+    Apply a rolling median filter to smooth the dataset spatially over longitude
+    and latitude.
+    """
+    flood_output = (
+        flood_output.rolling({"x": window_size, "y": window_size}, center=True)
+        .median(skipna=True)
+        .persist()
+    )
+    return flood_output
 
 
 def reproject_equi7grid(dc, bbox, target_epsg=crs):
