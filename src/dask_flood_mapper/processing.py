@@ -109,17 +109,23 @@ def post_processing(dc, keep_masks=False):
     )
     dc["extent"] = remove_speckles(dc.extent)
     if keep_masks:
-        return dc[
+        dc["extent"] = reduce_masks(dc)
+    return dc.extent
+
+
+def reduce_masks(dc):
+    return (
+        ("time", "latitude", "longitude"),
+        np.maximum.reduce(
             [
-                "extent",
-                "mask_exceeding_PLIA",
-                "mask_conflicting_distributions",
-                "mask_outliers",
-                "mask_denial_high_uncertainty",
+                dc.extent,
+                ~dc.mask_denial_high_uncertainty * 2,
+                ~dc.mask_conflicting_distributions * 3,
+                ~dc.mask_exceeding_PLIA * 4,
+                ~dc.mask_outliers * 5,
             ]
-        ]
-    else:
-        return dc.extent
+        ),
+    )
 
 
 def mask_denial_high_uncertainty(dc):
