@@ -46,6 +46,20 @@ def process_harmonic_parameters_datacube(
     hpar_dc = hpar_dc.persist()
     return sig0_dc, hpar_dc, orbit_sig0
 
+def reduce_ds_to_harmonic_parameters(
+        ts_ds: xr.Dataset,
+        fit_var_name: str,
+        **kwargs
+):
+    extra_dims = [dim for dim in ts_ds.dims if dim not in ts_ds.squeeze().dims]
+    ts_xr = ts_ds[fit_var_name]
+    out_dataarray = reduce_to_harmonic_parameters(ts_xr,
+                                                  dtimes=ts_ds['time.dayofyear'],
+                                                  **kwargs)
+    print(out_dataarray)
+    assert None
+
+    # dtimes = kwargs.pop('dtimes')#, ts_xr["time.dayofyear"])
 
 def reduce_to_harmonic_parameters(
     ts_xr: xr.DataArray, x_var_name="x", y_var_name="y", **kwargs
@@ -68,6 +82,8 @@ def reduce_to_harmonic_parameters(
 def harmonic_regression(
     arr: np.ndarray, dtimes: np.ndarray, k: int = 3, redundancy: int = 1, axis: int = 0
 ) -> np.ndarray:
+    print(arr.shape)
+    assert None
     # define constants
     w = np.pi * 2 / 365
 
