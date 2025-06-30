@@ -378,7 +378,7 @@ def test_reduce_to_harmonic_parameters_with_nans(synthetic_xarray_data):
     data_with_nans[3:5, 0, 0] = np.nan
 
     result = reduce_to_harmonic_parameters(
-        data_with_nans, "sig0", dtimes=synthetic_xarray_data.time.values, k=2
+        data_with_nans, dtimes=synthetic_xarray_data.time.values, k=2
     )
 
     # Check that parameters are computed correctly despite NaNs
