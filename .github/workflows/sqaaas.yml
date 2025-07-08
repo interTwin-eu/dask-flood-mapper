@@ -21,7 +21,7 @@ jobs:
       - name: Install pipenv and convert to requirements.txt
         run: |
           pip install pipenv
-          pipenv lock --requirements --dev > requirements.txt
+          pipenv lock -r -d > requirements.txt
 
       - name: Install dependencies
         run: pip install -r requirements.txt
