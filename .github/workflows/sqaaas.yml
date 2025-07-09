@@ -5,25 +5,26 @@
 name: SQAaaS
 
 on: [push]
+
 jobs:
   sqaaas_job:
     runs-on: ubuntu-latest
     name: Job that triggers SQAaaS platform
     steps:
-      - name: SQAaaS pytest step
+      - name: Step definition for validating the workflow
         uses: eosc-synergy/sqaaas-step-action@v1
         with:
-          name: pytest-step
-          container: pytorch/pytorch
+          name: workflow_validation_step
           tool: commands
           commands: |
-            pip install pytest
-            pytest -sv
-
+            python -m venv .venv &&
+            source .venv/bin/activate &&
+            .venv/bin/pip install &&
+            .venv/bin/pytest -v tests/
+          container: eoscsynergy/sqaaas-micromamba:1.5.3-1-rc.8
       - name: Print out payload
-        run: cat pytest-step.json
-
+        run: cat workflow_validation_step.json
       - name: SQAaaS assessment with unit testing (QC.Uni) step
         uses: eosc-synergy/sqaaas-assessment-action@v2
         with:
-          qc_uni_steps: pytest-step
+          qc_uni_steps: workflow_validation_step
