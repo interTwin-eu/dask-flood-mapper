@@ -80,7 +80,9 @@ def post_process_eodc_cube(dc: xr.Dataset, items, bands):
 
 def post_process_eodc_cube_(dc: xr.DataArray, items, band):
     scale = items[0].assets[band].extra_fields.get("raster:bands")[0]["scale"]
-    nodata = items[0].assets[band].extra_fields.get("raster:bands")[0]["nodata"]
+    nodata = (
+        items[0].assets[band].extra_fields.get("raster:bands")[0]["nodata"]
+    )
     # Apply the scaling and nodata masking logic
     return dc.where(dc != nodata) / scale
 
@@ -153,7 +155,8 @@ def mask_exceeding_PLIA(dc):
 
 def remove_speckles(flood_output, window_size=5):
     """
-    Apply a rolling median filter to smooth the dataset spatially over longitude
+    Apply a rolling median filter to smooth the
+    dataset spatially over longitude
     and latitude.
     """
     flood_output = (

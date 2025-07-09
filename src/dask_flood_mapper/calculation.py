@@ -4,8 +4,8 @@ import xarray as xr
 
 def calculate_flood_dc(sig0_dc, plia_dc, hpar_dc):
     """
-    Merge four data cubes and apply processing steps to clean and filter the dataset.
-    wcover_dc is optional.
+    Merge four data cubes and apply processing steps to clean
+    and filter the dataset. wcover_dc is optional.
     """
     flood_dc = xr.merge([sig0_dc, plia_dc, hpar_dc])
     flood_dc = (
