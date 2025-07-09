@@ -31,3 +31,4 @@ jobs:
           VALIDATE_ALL_CODEBASE: false
           # Fail on errors
           DISABLE_ERRORS: false
+          PYTHON_BLACK_LINE_LENGTH: 79
