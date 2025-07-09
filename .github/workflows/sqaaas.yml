@@ -4,36 +4,21 @@
 ---
 name: SQAaaS
 
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
+on: [push]
 jobs:
   sqaaas_job:
     runs-on: ubuntu-latest
     name: Job that triggers SQAaaS platform
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Install pipenv and convert to requirements.txt
-        run: |
-          pip install pipenv
-          pipenv requirements > requirements.txt
-
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      - name: Step definition for validating the workflow
+      - name: SQAaaS pytest step
         uses: eosc-synergy/sqaaas-step-action@v1
         with:
           name: pytest-step
-          tool: pytest
-          test_path: ./tests
-          # Optional: uncomment if using a specific container
-          # container: ghcr.io/intertwin-eu/dask-flood-mapper:latest
+          container: pytorch/pytorch
+          tool: commands
+          commands: |
+            pip install pytest
+            pytest -sv
 
       - name: Print out payload
         run: cat pytest-step.json
