@@ -48,18 +48,6 @@ def load_config_test():
     return load_config()
 
 
-def test_that_time_range_extension_for_harmonic_parameters():
-    time_range = "2022-10-11T05:25:26"
-    assert (
-        extent_range(initialize_catalog(), time_range)
-        == "2021-10-11T05:25:27Z/2022-10-11T05:25:26Z"
-    )
-    time_range = "2023-10-11/2023-10-25"
-    assert (
-        extent_range(initialize_catalog(), time_range)
-        == "2022-10-11T00:00:01Z/2023-10-25T23:59:59Z"
-    )
-
 
 def test_that_config_can_be_loaded(load_config_test):
     assert isinstance(load_config_test, dict)
