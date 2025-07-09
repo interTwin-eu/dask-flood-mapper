@@ -257,7 +257,7 @@ def synthetic_xarray_data(synthetic_data):
     data = synthetic_data["data"]
 
     return xr.DataArray(
-    # jscpd:ignore-start
+        # jscpd:ignore-start
         data=data,
         coords={
             "time": times,
@@ -267,6 +267,7 @@ def synthetic_xarray_data(synthetic_data):
         dims=["time", "y", "x"],
     )
     # jscpd:ignore-end
+
 
 @pytest.fixture
 def synthetic_xarray_dataset(synthetic_data):
