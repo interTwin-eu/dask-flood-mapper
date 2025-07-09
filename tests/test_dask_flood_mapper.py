@@ -14,8 +14,6 @@ from dask_flood_mapper.calculation import (
     calculate_flood_dc,
     harmonic_expected_backscatter,
 )
-
-
 from dask_flood_mapper.processing import (
     extract_orbit_names,
     post_process_eodc_cube,
