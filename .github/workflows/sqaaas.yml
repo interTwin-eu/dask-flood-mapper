@@ -30,7 +30,7 @@ jobs:
           tool: pytest
           test_path: ./tests
           # Optional: uncomment if using a specific container
-          # container: ghcr.io/intertwin-eu/dask-flood-mapper:latest
+          container: ghcr.io/intertwin-eu/dask-flood-mapper:latest
 
       - name: Print out payload
         run: cat pytest-step.json
@@ -39,3 +39,4 @@ jobs:
         uses: eosc-synergy/sqaaas-assessment-action@v2
         with:
           qc_uni_steps: pytest-step
+
