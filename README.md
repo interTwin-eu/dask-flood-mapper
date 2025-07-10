@@ -7,7 +7,6 @@
 [![GitHub Super-Linter](https://github.com/interTwin-eu/dask-flood-mapper/actions/workflows/check-links.yml/badge.svg)](https://github.com/marketplace/actions/markdown-link-check)
 [![SQAaaS source code](https://github.com/EOSC-synergy/dask-flood-mapper.assess.sqaaas/raw/main/.badge/status_shields.svg)](https://sqaaas.eosc-synergy.eu/#/full-assessment/report/https://raw.githubusercontent.com/eosc-synergy/dask-flood-mapper.assess.sqaaas/main/.report/assessment_output.json)
 
-
 Map floods with Sentinel-1 radar images. We replicate in this package the work
 of Bauer-Marschallinger et al. (2022)[^1] on the TU Wien Bayesian-based
 flood mapping algorithm. This implementation is entirely based on
