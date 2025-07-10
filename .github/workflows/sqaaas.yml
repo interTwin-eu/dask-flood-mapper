@@ -15,14 +15,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install pipenv and convert to requirements.txt
-        run: |
-          pip install pipenv
-          pipenv requirements > requirements.txt
-
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-
       - name: Step definition for validating the workflow
         uses: eosc-synergy/sqaaas-step-action@v1
         with:
