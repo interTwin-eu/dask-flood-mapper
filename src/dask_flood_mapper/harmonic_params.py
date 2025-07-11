@@ -29,8 +29,12 @@ def process_harmonic_parameters_datacube(
     harm_pars_list: list[tuple[int, xr.DataArray]],
     min_nobs: int = 32,
 ):
-    hpar_dc = xr.concat([harm_pars[1] for harm_pars in harm_pars_list], dim="orbit")
-    hpar_dc = hpar_dc.where(hpar_dc.sel(param="NOBS") >= min_nobs).drop_sel(param="NOBS")
+    hpar_dc = xr.concat(
+        [harm_pars[1] for harm_pars in harm_pars_list], dim="orbit"
+    )
+    hpar_dc = hpar_dc.where(hpar_dc.sel(param="NOBS") >= min_nobs).drop_sel(
+        param="NOBS"
+    )
     hpar_dc = hpar_dc.to_dataset(dim="param")
     hpar_dc = hpar_dc.assign_coords(
         orbit=np.array([harm_pars[0] for harm_pars in harm_pars_list])
@@ -66,7 +70,11 @@ def reduce_to_harmonic_parameters(
 
 
 def harmonic_regression(
-    arr: np.ndarray, dtimes: np.ndarray, k: int = 3, redundancy: int = 1, axis: int = 0
+    arr: np.ndarray,
+    dtimes: np.ndarray,
+    k: int = 3,
+    redundancy: int = 1,
+    axis: int = 0,
 ) -> np.ndarray:
     # define constants
     w = np.pi * 2 / 365
@@ -84,7 +92,9 @@ def harmonic_regression(
 
     # run regression
     param = np.full((nx + 2, rows, cols), np.nan, dtype=np.float32)
-    _fast_harmonic_regression(arr=arr, a_matrix=a, k=k, red=redundancy, param=param)
+    _fast_harmonic_regression(
+        arr=arr, a_matrix=a, k=k, red=redundancy, param=param
+    )
 
     return param
 
@@ -101,13 +111,15 @@ def _fast_harmonic_regression(arr, a_matrix, red, param, k=3):
             valid_obs = ~np.isnan(l_unfiltered)
             A, l = a_matrix[valid_obs, :], l_unfiltered[valid_obs]  # noqa
 
-            # N should be nan if no observations, otherwise sum of valid observations
+            # N should be nan if no observations,
+            # otherwise sum of valid observations
             # even if there aren't enough to calculate a good solution
             N = np.sum(valid_obs)
             param[-1, row, col] = N or np.nan
 
             if (red * nx) <= l.shape[0]:
-                # calculate least-squares solution, residuals and valid observations
+                # calculate least-squares solution, residuals and valid
+                # observations
                 px_x = np.linalg.lstsq(A, l)[0]
                 v = np.dot(A, px_x) - l
 

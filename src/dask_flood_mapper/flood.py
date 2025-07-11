@@ -125,7 +125,7 @@ def decision(bbox, datetime, dynamic=False, keep_masks=False):
     Coordinates:
     * x            (x) float64 22kB 12.3 12.3 12.3 12.3 ... 13.1 13.1 13.1 13.1
     * y            (y) float64 8kB 54.6 54.6 54.6 54.6 ... 54.3 54.3 54.3 54.3
-    * time         (time) datetime64[ns] 64B 2022-10-11T05:25:01 ... 2022-10-23...
+    * time         (time) datetime64[ns] 64B 2022-10-11T05:25:01 ... 2022-10-23... # noqa: E501
         spatial_ref  int64 8B 0
     Attributes:
         _FillValue:  nan
@@ -239,7 +239,7 @@ def probability(bbox, datetime, dynamic=False):
     Coordinates:
     * x            (x) float64 22kB 12.3 12.3 12.3 12.3 ... 13.1 13.1 13.1 13.1
     * y            (y) float64 8kB 54.6 54.6 54.6 54.6 ... 54.3 54.3 54.3 54.3
-    * time         (time) datetime64[ns] 64B 2022-10-11T05:25:01 ... 2022-10-23...
+    * time         (time) datetime64[ns] 64B 2022-10-11T05:25:01 ... 2022-10-23... # noqa: E501
         spatial_ref  int64 8B 0
     Attributes:
         _FillValue:  nan
@@ -276,7 +276,9 @@ def preprocess(bbox, datetime, dynamic):
         hpar_dc = process_datacube(hpar_dc, items_hpar, orbit_sig0, BANDS_HPAR)
     print("harmonic parameter datacube processed")
 
-    search_plia = search_parameters(eodc_catalog, bbox, collections="SENTINEL1_MPLIA")
+    search_plia = search_parameters(
+        eodc_catalog, bbox, collections="SENTINEL1_MPLIA"
+    )
     items_plia = search_plia.item_collection()
     plia_dc = prepare_dc(items_plia, bbox, bands=BANDS_PLIA)
     plia_dc = process_datacube(plia_dc, items_plia, orbit_sig0, bands="MPLIA")

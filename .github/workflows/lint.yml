@@ -22,12 +22,35 @@ jobs:
 
       # Runs the Super-Linter action
       - name: Run Super-Linter on new changes
-        uses: docker://ghcr.io/github/super-linter:slim-v4
+        uses: github/super-linter/slim@v7
         env:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MARKDOWN_CONFIG_FILE: .markdownlint.json
+          JSCPD_CONFIG_FILE: .jscpd.json
+          PYTHON_RUFF_CONFIG_FILE: .ruff.toml
+
+          VALIDATE_PYTHON: true
+          VALIDATE_PYTHON_BLACK: false
+          VALIDATE_ISORT: false
+          VALIDATE_PYTHON_MYPY: false
+          VALIDATE_PYTHON_PYLINT: false
+          VALIDATE_HTML: false
+          VALIDATE_GITLEAKS: false
+          VALIDATE_BASH_EXEC: false
+          VALIDATE_CHECKOV: false # activate to lint k8s pods
+          VALIDATE_SHELL_SHFMT: false
+          VALIDATE_JSCPD: false
+          VALIDATE_MARKDOWN_PRETTIER: false
+          VALIDATE_YAML_PRETTIER: false
+          VALIDATE_PYTHON_PYINK: false
+          VALIDATE_JSON_PRETTIER: false
+          VALIDATE_CSS_PRETTIER: false
+          VALIDATE_KUBERNETES_KUBECONFORM: false
+          # Both options below should be already covered by ruff
+          VALIDATE_PYTHON_ISORT: false
+          VALIDATE_PYTHON_FLAKE8: false
+
           # Only check new or edited files
           VALIDATE_ALL_CODEBASE: false
           # Fail on errors
-          DISABLE_ERRORS: false
