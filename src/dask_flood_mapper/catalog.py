@@ -74,7 +74,7 @@ def format_datetime_for_xarray_selection(
     time_range: str,
 ) -> tuple[dt.datetime, ...]:
     """Format the datetime for xarray selection."""
-    fmt_datetime: str | None = search._format_datetime(time_range)  # noqa: SLF001
+    fmt_datetime: str | None = search._format_datetime(time_range)  # noqa
     if fmt_datetime is None:
         msg: str = "The provided time range is not in the correct format."
         raise ValueError(msg)
