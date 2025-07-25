@@ -152,7 +152,7 @@ def decision(
         _FillValue:  nan
     >>>
 
-    """
+    """  # noqa: E501
     sig0_dc, hpar_dc, plia_dc = preprocess(bbox, datetime, dynamic=dynamic)
     flood_dc: xr.Dataset = calculate_flood_dc(sig0_dc, plia_dc, hpar_dc)
     flood_dc["wbsc"] = calc_water_likelihood(flood_dc)  # Water
@@ -270,7 +270,7 @@ def probability(
         _FillValue:  nan
     >>>
 
-    """
+    """  # noqa: E501
     sig0_dc, hpar_dc, plia_dc = preprocess(bbox, datetime, dynamic=dynamic)
     flood_dc = calculate_flood_dc(sig0_dc, plia_dc, hpar_dc)
     flood_dc["wbsc"] = calc_water_likelihood(flood_dc)  # Water
@@ -299,11 +299,15 @@ def preprocess(
     print("sigma naught datacube processed")  # noqa: T201
 
     if dynamic:
-        datetime_xr: tuple[dt.datetime] = format_datetime_for_xarray_selection(
-            search,
-            datetime,
+        datetime_xr: tuple[dt.datetime, ...] = (
+            format_datetime_for_xarray_selection(
+                search,
+                datetime,
+            )
         )
-        hpar_list: list[tuple[int, xr.DataArray]] = create_harmonic_parameters(sig0_dc)
+        hpar_list: list[tuple[int, xr.DataArray]] = create_harmonic_parameters(
+            sig0_dc,
+        )
         sig0_dc, hpar_dc, orbit_sig0 = process_harmonic_parameters_datacube(
             sig0_dc,
             datetime_xr,

@@ -38,7 +38,7 @@ def search_parameters(
     bbox: tuple[float, float, float, float],
     collections: list[str] | str,
 ) -> ItemSearch:
-    """Search for Sentinel-1 data in the EODC catalog with specified parameters."""
+    """Search for Sentinel-1 data in the EODC catalog."""
     return eodc_catalog.search(
         collections=collections,  # "SENTINEL1_HPAR" or "SENTINEL1_MPLIA"
         bbox=bbox,
@@ -52,18 +52,17 @@ def extent_range(
 ) -> str:
     """Adjust the time range."""
     search: ItemSearch = eodc_catalog.search()
-    split_time_range: list[str] = time_range.split("/")
+    split_time_range: list[str] = time_range.split("/")  # type: ignore
     if len(split_time_range) == 1:
-        split_time_range: tuple[str, str | None] = search._to_isoformat_range(  # noqa: SLF001
+        split_time_range: tuple[str, str | None] = search._to_isoformat_range(  # noqa
             time_range,
         )
-    delta_time: dt.datetime = parser.parse(split_time_range[0]) - relativedelta(
-        years=years,
-        seconds=-1,
-    )
+    delta_time: dt.datetime = parser.parse(
+        split_time_range[0],
+    ) - relativedelta(years=years, seconds=-1)
     start = search._to_utc_isoformat(delta_time)  # noqa: SLF001
     if split_time_range[1] is not None:
-        fmt_datetime: str | None = search._format_datetime(split_time_range)  # noqa: SLF001
+        fmt_datetime: str | None = search._format_datetime(split_time_range)  # noqa
         end: str = fmt_datetime.split("/")[1] if fmt_datetime else ""
     else:
         end: str = split_time_range[0]
@@ -73,11 +72,11 @@ def extent_range(
 def format_datetime_for_xarray_selection(
     search: ItemSearch,
     time_range: str,
-) -> tuple[dt.datetime]:
+) -> tuple[dt.datetime, ...]:
     """Format the datetime for xarray selection."""
     fmt_datetime: str | None = search._format_datetime(time_range)  # noqa: SLF001
     if fmt_datetime is None:
         msg: str = "The provided time range is not in the correct format."
         raise ValueError(msg)
     split_time_range: list[str] = fmt_datetime.split("/")
-    return (parser.parse(i, ignoretz=True) for i in split_time_range)
+    return tuple(parser.parse(i, ignoretz=True) for i in split_time_range)

@@ -16,7 +16,7 @@ def calculate_flood_dc(
     """
     # TODO: Add wcover_dc to the calculation  # noqa: FIX002
     flood_dc: xr.Dataset = xr.merge([sig0_dc, plia_dc, hpar_dc])
-    flood_dc: xr.Dataset = (
+    flood_dc: xr.Dataset = (  # type: ignore
         flood_dc.reset_index("orbit", drop=True)
         .rename({"orbit": "time"})
         .dropna(dim="time", how="all", subset=["sig0"])
@@ -35,10 +35,12 @@ def harmonic_expected_backscatter(dc: xr.Dataset) -> xr.DataArray:
 
     t: xr.DataArray = dc.time.dt.dayofyear
     wt: xr.DataArray = w * t
+    wt2: xr.DataArray = wt * 2
+    wt3: xr.DataArray = wt * 3
 
     hm_c1: xr.DataArray = (dc.M0 + dc.S1 * np.sin(wt)) + (dc.C1 * np.cos(wt))
-    hm_c2: xr.DataArray = (hm_c1 + dc.S2 * np.sin(2 * wt)) + dc.C2 * np.cos(2 * wt)
-    return (hm_c2 + dc.S3 * np.sin(3 * wt)) + dc.C3 * np.cos(3 * wt)
+    hm_c2: xr.DataArray = (hm_c1 + dc.S2 * np.sin(wt2)) + dc.C2 * np.cos(wt2)
+    return (hm_c2 + dc.S3 * np.sin(wt3)) + dc.C3 * np.cos(wt3)
 
 
 def bayesian_flood_decision(dc: xr.Dataset) -> xr.DataArray:
@@ -58,7 +60,9 @@ def bayesian_flood_probability(dc: xr.Dataset) -> xr.DataArray:
     return (flood_prob * 0.5) / evidence
 
 
-def calc_prior_probability(dc: xr.Dataset) -> tuple[xr.DataArray, xr.DataArray]:
+def calc_prior_probability(
+    dc: xr.Dataset,
+) -> tuple[xr.DataArray, xr.DataArray]:
     """Calculate the prior probabilities for flood and non-flood."""
     nf_std: float = 2.754041
     sig0: xr.DataArray = dc.sig0
@@ -68,7 +72,9 @@ def calc_prior_probability(dc: xr.Dataset) -> tuple[xr.DataArray, xr.DataArray]:
     flood_prob: xr.DataArray = (1.0 / (std * np.sqrt(2 * np.pi))) * np.exp(
         -0.5 * (((sig0 - wbsc) / nf_std) ** 2),
     )
-    nonflood_prob: xr.DataArray = (1.0 / (nf_std * np.sqrt(2 * np.pi))) * np.exp(
+    nonflood_prob: xr.DataArray = (
+        1.0 / (nf_std * np.sqrt(2 * np.pi))
+    ) * np.exp(
         -0.5 * (((sig0 - hbsc) / nf_std) ** 2),
     )
     return flood_prob, nonflood_prob

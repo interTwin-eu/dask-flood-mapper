@@ -94,5 +94,5 @@ def serve_cache_file(filename):  # noqa: ANN001
 
 if __name__ == "__main__":
     # TODO: default debug mode allows running arbitrary Python code from the browser.  # noqa: E501, FIX002
-    # This could leak sensitive information, or allow an attacker to run arbitrary code.
+    # This could leak sensitive information, or allow an attacker to run arbitrary code. # noqa: E501
     app.run(debug=True, port=5000)  # noqa: S201

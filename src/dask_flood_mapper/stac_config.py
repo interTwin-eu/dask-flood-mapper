@@ -37,7 +37,7 @@ def set_user_config(user_config_dir: Path = USER_CONFIG_DIR) -> Path:
         user_config_dir.mkdir(parents=True)
     user_config_path: Path = make_user_config_path(user_config_dir)
     if not user_config_path.exists():
-        shutil.copy(CONFIG_PATH, user_config_path)
+        shutil.copy(CONFIG_PATH, user_config_path)  # type: ignore
     return user_config_path
 
 

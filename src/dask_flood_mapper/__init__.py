@@ -1,4 +1,4 @@
-"""Dask Flood Mapper: A library for flood mapping using Dask and Sentinel-1 data."""
+"""Dask Flood Mapper: A library for flood mapping with Dask and S1 data."""
 
 from dask_flood_mapper._version import __commit__, __version__
 

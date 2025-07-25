@@ -1,4 +1,4 @@
-"""Preprocessing, processing, and post-processing functions for Dask Flood Mapper."""
+"""Processing, and post-processing functions for Dask Flood Mapper."""
 
 from typing import Literal
 
@@ -81,7 +81,11 @@ def process_datacube(
     bands: str | list[str],
 ) -> xr.Dataset:
     """Process the datacube."""
-    datacube: xr.Dataset = post_process_eodc_cube(datacube, items_dc, bands).rename(
+    datacube: xr.Dataset = post_process_eodc_cube(
+        datacube,
+        items_dc,
+        bands,
+    ).rename(
         {"time": "orbit"},
     )
     datacube["orbit"] = extract_orbit_names(items_dc)
@@ -128,7 +132,11 @@ def extract_orbit_names(items: ItemCollection) -> np.ndarray:
     )
 
 
-def post_processing(dc: xr.Dataset, *, keep_masks: bool = False) -> xr.DataArray:
+def post_processing(
+    dc: xr.Dataset,
+    *,
+    keep_masks: bool = False,
+) -> xr.DataArray:
     """Post-process the datacube to create the flood extent."""
     dc["mask_exceeding_PLIA"] = mask_exceeding_PLIA(dc)
     dc["mask_conflicting_distributions"] = mask_conflicting_distributions(dc)
@@ -194,7 +202,10 @@ def mask_exceeding_PLIA(dc: xr.Dataset) -> xr.DataArray:  # noqa: N802
     return np.logical_and(upper >= dc.MPLIA, lower <= dc.MPLIA)
 
 
-def remove_speckles(flood_output: xr.Dataset, window_size: int = 5) -> xr.Dataset:
+def remove_speckles(
+    flood_output: xr.Dataset,
+    window_size: int = 5,
+) -> xr.Dataset:
     """Apply a rolling median filter.
 
     Apply a rolling median filter to smooth the
@@ -214,5 +225,5 @@ def reproject_equi7grid(
     bbox: tuple[float, float, float, float],
     target_epsg: str = CRS,
 ) -> xr.DataArray:
-    """Reproject the datacube to the target EPSG and clip to the bounding box."""
-    return ODCExtensionDa(dc).reproject(target_epsg).rio.clip_box(*bbox)  # type: ignore
+    """Reproject the datacube to target EPSG and clip to the bounding box."""
+    return ODCExtensionDa(dc).reproject(target_epsg).rio.clip_box(*bbox)

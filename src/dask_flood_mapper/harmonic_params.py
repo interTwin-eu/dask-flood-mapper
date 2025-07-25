@@ -9,12 +9,13 @@ from numba import njit, prange
 from dask_flood_mapper.processing import order_orbits
 
 
-def create_harmonic_parameters(sig0_dc: xr.Dataset) -> list[tuple[int, xr.DataArray]]:
+def create_harmonic_parameters(
+    sig0_dc: xr.Dataset,
+) -> list[tuple[int, xr.DataArray]]:
     """Create harmonic parameters for each orbit in the sig0 datacube."""
     harm_pars_list: list = []
     for orbit, orbit_ds in sig0_dc.groupby("orbit"):
-        # TODO: check if loop variable `orbit_ds` overwritten by assignment target is correct  # noqa: E501, FIX002
-        orbit_ds: xr.Dataset = orbit_ds.chunk({"time": -1}).persist()  # noqa: PLW2901
+        orbit_ds: xr.Dataset = orbit_ds.chunk({"time": -1}).persist()  # noqa
         dtimes: xr.DataArray = orbit_ds["time.dayofyear"].compute()
         harm_pars: xr.DataArray = xr.map_blocks(
             func=reduce_to_harmonic_parameters,
@@ -31,17 +32,17 @@ def create_harmonic_parameters(sig0_dc: xr.Dataset) -> list[tuple[int, xr.DataAr
 
 
 def process_harmonic_parameters_datacube(
-    sig0_dc: xr.Dataset,
+    sig0_dc: xr.Dataset,  # type: ignore
     time_range: tuple[dt.datetime, ...],
     harm_pars_list: list[tuple[int, xr.DataArray]],
     min_nobs: int = 32,
 ) -> tuple[xr.Dataset, xr.Dataset, np.ndarray]:
     """Process the harmonic parameters datacube."""
-    hpar_dc: xr.DataArray = xr.concat(
+    hpar_dc: xr.DataArray = xr.concat(  # type: ignore
         [harm_pars[1] for harm_pars in harm_pars_list],
         dim="orbit",
     )
-    hpar_dc: xr.DataArray = hpar_dc.where(
+    hpar_dc: xr.DataArray = hpar_dc.where(  # type: ignore
         hpar_dc.sel(param="NOBS") >= min_nobs,
     ).drop_sel(
         param="NOBS",
@@ -55,7 +56,9 @@ def process_harmonic_parameters_datacube(
     if len(time_range) == 1:
         sig0_dc: xr.Dataset = sig0_dc.sel(time=time_range, method="nearest")
     else:
-        sig0_dc: xr.Dataset = sig0_dc.sel(time=slice(time_range[0], time_range[1]))
+        sig0_dc: xr.Dataset = sig0_dc.sel(
+            time=slice(time_range[0], time_range[1]),
+        )
     orbit_sig0: np.ndarray = order_orbits(sig0_dc)
     hpar_dc: xr.Dataset = hpar_dc.sel(orbit=orbit_sig0)
     hpar_dc: xr.Dataset = hpar_dc.persist()
