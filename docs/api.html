@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -406,6 +406,7 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dask_flood_mapper.flood.decision"><code class="docutils literal notranslate"><span class="pre">decision()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dask_flood_mapper.flood.preprocess"><code class="docutils literal notranslate"><span class="pre">preprocess()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dask_flood_mapper.flood.probability"><code class="docutils literal notranslate"><span class="pre">probability()</span></code></a></li>
 </ul>
             </nav>
@@ -420,10 +421,11 @@ document.write(`
                   
   <section id="module-dask_flood_mapper.flood">
 <span id="api-reference"></span><h1>API Reference<a class="headerlink" href="#module-dask_flood_mapper.flood" title="Link to this heading">#</a></h1>
+<p>Compute the flood decision and probability using Sentinel-1 data.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="dask_flood_mapper.flood.decision">
-<span class="sig-prename descclassname"><span class="pre">dask_flood_mapper.flood.</span></span><span class="sig-name descname"><span class="pre">decision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bbox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dynamic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_masks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dask_flood_mapper.flood.decision" title="Link to this definition">#</a></dt>
-<dd><p>Bayesian Flood Decision</p>
+<span class="sig-prename descclassname"><span class="pre">dask_flood_mapper.flood.</span></span><span class="sig-name descname"><span class="pre">decision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bbox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datetime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dynamic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_masks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataArray</span></span></span><a class="headerlink" href="#dask_flood_mapper.flood.decision" title="Link to this definition">#</a></dt>
+<dd><p>Bayesian Flood Decision.</p>
 <p>Classify Sentinel-1 radar images by simple Bayes inference into flood (1)
 and non-flood (0). Besides radar images, this algorithm relies on two other
 datasets stored at the Earth Observation Data Centre For Water Resources
@@ -452,6 +454,9 @@ fitting a harmonic function per pixel to a three year span of sigma
 nought before the lower limit of the datetime provided. This operation
 is computationally demanding.</p>
 </dd>
+<dt>keep_masks: bool, default=False</dt><dd><p>If True, the masks for water and land likelihood are kept in the output
+datacube. If False, only the flood decision and probabilities are kept.</p>
+</dd>
 </dl>
 </section>
 <section id="returns">
@@ -461,7 +466,7 @@ is computationally demanding.</p>
 </div></blockquote>
 </section>
 <section id="see-also">
-<h2>See also<a class="headerlink" href="#see-also" title="Link to this heading">#</a></h2>
+<h2>See Also<a class="headerlink" href="#see-also" title="Link to this heading">#</a></h2>
 <p>probability</p>
 </section>
 <section id="examples">
@@ -518,7 +523,7 @@ is computationally demanding.</p>
 <span class="go">Coordinates:</span>
 <span class="go">* x            (x) float64 22kB 12.3 12.3 12.3 12.3 ... 13.1 13.1 13.1 13.1</span>
 <span class="go">* y            (y) float64 8kB 54.6 54.6 54.6 54.6 ... 54.3 54.3 54.3 54.3</span>
-<span class="go">* time         (time) datetime64[ns] 64B 2022-10-11T05:25:01 ... 2022-10-23... # noqa: E501</span>
+<span class="go">* time         (time) datetime64[ns] 64B 2022-10-11T05:25:01 ... 2022-10-23...</span>
 <span class="go">    spatial_ref  int64 8B 0</span>
 <span class="go">Attributes:</span>
 <span class="go">    _FillValue:  nan</span>
@@ -529,9 +534,15 @@ is computationally demanding.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="dask_flood_mapper.flood.preprocess">
+<span class="sig-prename descclassname"><span class="pre">dask_flood_mapper.flood.</span></span><span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bbox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datetime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dynamic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Dataset</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dataset</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dataset</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#dask_flood_mapper.flood.preprocess" title="Link to this definition">#</a></dt>
+<dd><p>Preprocess the data for flood decision and probability calculation.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="dask_flood_mapper.flood.probability">
-<span class="sig-prename descclassname"><span class="pre">dask_flood_mapper.flood.</span></span><span class="sig-name descname"><span class="pre">probability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bbox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dynamic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dask_flood_mapper.flood.probability" title="Link to this definition">#</a></dt>
-<dd><p>Bayesian Flood Probability</p>
+<span class="sig-prename descclassname"><span class="pre">dask_flood_mapper.flood.</span></span><span class="sig-name descname"><span class="pre">probability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bbox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datetime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dynamic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataArray</span></span></span><a class="headerlink" href="#dask_flood_mapper.flood.probability" title="Link to this definition">#</a></dt>
+<dd><p>Bayesian Flood Probability.</p>
 <p>Classify Sentinel-1 radar images by simple Bayes inference into a
 probability of flood,ranging from 0 (minimum probability of flood) to 1
 (maximum probability of flood).Besides radar images, this algorithm relies
@@ -571,7 +582,7 @@ flood) to 1 (100% estimation of flood)</p>
 </div></blockquote>
 </section>
 <section id="id3">
-<h2>See also<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<h2>See Also<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
 <p>decision</p>
 </section>
 <section id="id4">
@@ -630,7 +641,7 @@ flood) to 1 (100% estimation of flood)</p>
 <span class="go">Coordinates:</span>
 <span class="go">* x            (x) float64 22kB 12.3 12.3 12.3 12.3 ... 13.1 13.1 13.1 13.1</span>
 <span class="go">* y            (y) float64 8kB 54.6 54.6 54.6 54.6 ... 54.3 54.3 54.3 54.3</span>
-<span class="go">* time         (time) datetime64[ns] 64B 2022-10-11T05:25:01 ... 2022-10-23... # noqa: E501</span>
+<span class="go">* time         (time) datetime64[ns] 64B 2022-10-11T05:25:01 ... 2022-10-23...</span>
 <span class="go">    spatial_ref  int64 8B 0</span>
 <span class="go">Attributes:</span>
 <span class="go">    _FillValue:  nan</span>
@@ -707,6 +718,7 @@ flood) to 1 (100% estimation of flood)</p>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dask_flood_mapper.flood.decision"><code class="docutils literal notranslate"><span class="pre">decision()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dask_flood_mapper.flood.preprocess"><code class="docutils literal notranslate"><span class="pre">preprocess()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dask_flood_mapper.flood.probability"><code class="docutils literal notranslate"><span class="pre">probability()</span></code></a></li>
 </ul>
   </nav></div>

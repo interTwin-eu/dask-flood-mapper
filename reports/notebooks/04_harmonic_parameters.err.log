@@ -39,17 +39,17 @@ Cell [0;32mIn[4], line 5[0m
 [0;32m----> 5[0m sig0_dc, orbit_sig0 [38;5;241m=[39m [43mprocess_sig0_dc[49m[43m([49m[43msig0_dc[49m[43m,[49m[43m [49m[43mitems_sig0[49m[43m,[49m[43m [49m[43mbands[49m[38;5;241;43m=[39;49m[38;5;124;43m"[39;49m[38;5;124;43mVV[39;49m[38;5;124;43m"[39;49m[43m)[49m
 [1;32m      6[0m sig0_dc
 
-File [0;32m/opt/hostedtoolcache/Python/3.10.18/x64/lib/python3.10/site-packages/dask_flood_mapper/processing.py:46[0m, in [0;36mprocess_sig0_dc[0;34m(sig0_dc, items_sig0, bands)[0m
-[1;32m     38[0m sig0_dc [38;5;241m=[39m (
-[1;32m     39[0m     post_process_eodc_cube(sig0_dc, items_sig0, bands)
-[1;32m     40[0m     [38;5;241m.[39mrename_vars({[38;5;124m"[39m[38;5;124mVV[39m[38;5;124m"[39m: [38;5;124m"[39m[38;5;124msig0[39m[38;5;124m"[39m})
+File [0;32m/opt/hostedtoolcache/Python/3.10.18/x64/lib/python3.10/site-packages/dask_flood_mapper/processing.py:62[0m, in [0;36mprocess_sig0_dc[0;34m(sig0_dc, items_sig0, bands)[0m
+[1;32m     54[0m sig0_dc: xr[38;5;241m.[39mDataset [38;5;241m=[39m (
+[1;32m     55[0m     post_process_eodc_cube(sig0_dc, items_sig0, bands)
+[1;32m     56[0m     [38;5;241m.[39mrename_vars({[38;5;124m"[39m[38;5;124mVV[39m[38;5;124m"[39m: [38;5;124m"[39m[38;5;124msig0[39m[38;5;124m"[39m})
 [0;32m   (...)[0m
-[1;32m     43[0m     [38;5;241m.[39msortby([38;5;124m"[39m[38;5;124mtime[39m[38;5;124m"[39m)
-[1;32m     44[0m )
-[1;32m     45[0m orbit_sig0 [38;5;241m=[39m order_orbits(sig0_dc)
-[0;32m---> 46[0m sig0_dc [38;5;241m=[39m [43msig0_dc[49m[38;5;241;43m.[39;49m[43mgroupby[49m[43m([49m[38;5;124;43m"[39;49m[38;5;124;43mtime[39;49m[38;5;124;43m"[39;49m[43m)[49m[38;5;241;43m.[39;49m[43mmean[49m[43m([49m[43mskipna[49m[38;5;241;43m=[39;49m[38;5;28;43;01mTrue[39;49;00m[43m)[49m
-[1;32m     47[0m sig0_dc [38;5;241m=[39m sig0_dc[38;5;241m.[39massign_coords(orbit[38;5;241m=[39m([38;5;124m"[39m[38;5;124mtime[39m[38;5;124m"[39m, orbit_sig0))
-[1;32m     48[0m sig0_dc [38;5;241m=[39m sig0_dc[38;5;241m.[39mpersist()
+[1;32m     59[0m     [38;5;241m.[39msortby([38;5;124m"[39m[38;5;124mtime[39m[38;5;124m"[39m)
+[1;32m     60[0m )
+[1;32m     61[0m orbit_sig0: np[38;5;241m.[39mndarray [38;5;241m=[39m order_orbits(sig0_dc)
+[0;32m---> 62[0m sig0_dc: xr[38;5;241m.[39mDataset [38;5;241m=[39m [43msig0_dc[49m[38;5;241;43m.[39;49m[43mgroupby[49m[43m([49m[38;5;124;43m"[39;49m[38;5;124;43mtime[39;49m[38;5;124;43m"[39;49m[43m)[49m[38;5;241;43m.[39;49m[43mmean[49m[43m([49m[43mskipna[49m[38;5;241;43m=[39;49m[38;5;28;43;01mTrue[39;49;00m[43m)[49m
+[1;32m     63[0m sig0_dc: xr[38;5;241m.[39mDataset [38;5;241m=[39m sig0_dc[38;5;241m.[39massign_coords(orbit[38;5;241m=[39m([38;5;124m"[39m[38;5;124mtime[39m[38;5;124m"[39m, orbit_sig0))
+[1;32m     64[0m sig0_dc: xr[38;5;241m.[39mDataset [38;5;241m=[39m sig0_dc[38;5;241m.[39mpersist()
 
 File [0;32m/opt/hostedtoolcache/Python/3.10.18/x64/lib/python3.10/site-packages/xarray/core/_aggregations.py:2974[0m, in [0;36mDatasetGroupByAggregations.mean[0;34m(self, dim, skipna, keep_attrs, **kwargs)[0m
 [1;32m   2964[0m     [38;5;28;01mreturn[39;00m [38;5;28mself[39m[38;5;241m.[39m_flox_reduce(
