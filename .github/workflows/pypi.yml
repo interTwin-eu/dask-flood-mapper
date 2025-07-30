@@ -10,9 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/itwinai
+      url: https://pypi.org/p/dask-flood-mapper
     permissions:
       id-token: write
+      contents: write
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
