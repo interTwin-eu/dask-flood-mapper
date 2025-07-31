@@ -22,12 +22,13 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-eodc_catalog = initialize_catalog()
-search = initialize_search(eodc_catalog, bounding_box, time_range, dynamic=True)
-items_sig0 = search.item_collection()
-sig0_dc = prepare_dc(items_sig0, bounding_box, bands="VV")
-sig0_dc, orbit_sig0 = process_sig0_dc(sig0_dc, items_sig0, bands="VV")
-sig0_dc
+sig0_dc = (
+    post_process_eodc_cube(sig0_dc, items_sig0, bands)
+    .rename_vars({"VV": "sig0"})
+    .assign_coords(orbit=("time", extract_orbit_names(items_sig0)))
+    .dropna(dim="time", how="all")
+    .sortby("time")
+)
 ------------------
 
 
@@ -39,33 +40,19 @@ File [0;32mrasterio/_base.pyx:221[0m, in [0;36mrasterio._base.open_dataset[0
 
 File [0;32mrasterio/_err.pyx:359[0m, in [0;36mrasterio._err.exc_wrap_pointer[0;34m()[0m
 
-[0;31mCPLE_HttpResponseError[0m: CURL error: Failed to connect to data.eodc.eu port 443 after 159 ms: Couldn't connect to server
+[0;31mCPLE_HttpResponseError[0m: CURL error: Failed to connect to data.eodc.eu port 443 after 163 ms: Couldn't connect to server
 
 During handling of the above exception, another exception occurred:
 
 [0;31mRasterioIOError[0m                           Traceback (most recent call last)
-Cell [0;32mIn[4], line 5[0m
-[1;32m      3[0m items_sig0 [38;5;241m=[39m search[38;5;241m.[39mitem_collection()
-[1;32m      4[0m sig0_dc [38;5;241m=[39m prepare_dc(items_sig0, bounding_box, bands[38;5;241m=[39m[38;5;124m"[39m[38;5;124mVV[39m[38;5;124m"[39m)
-[0;32m----> 5[0m sig0_dc, orbit_sig0 [38;5;241m=[39m [43mprocess_sig0_dc[49m[43m([49m[43msig0_dc[49m[43m,[49m[43m [49m[43mitems_sig0[49m[43m,[49m[43m [49m[43mbands[49m[38;5;241;43m=[39;49m[38;5;124;43m"[39;49m[38;5;124;43mVV[39;49m[38;5;124;43m"[39;49m[43m)[49m
-[1;32m      6[0m sig0_dc
-
-File [0;32m/opt/hostedtoolcache/Python/3.10.18/x64/lib/python3.10/site-packages/dask_flood_mapper/processing.py:55[0m, in [0;36mprocess_sig0_dc[0;34m(sig0_dc, items_sig0, bands)[0m
-[1;32m     48[0m [38;5;28;01mdef[39;00m[38;5;250m [39m[38;5;21mprocess_sig0_dc[39m(
-[1;32m     49[0m     sig0_dc: xr[38;5;241m.[39mDataset,
-[1;32m     50[0m     items_sig0: ItemCollection,
-[1;32m     51[0m     bands: [38;5;28mstr[39m [38;5;241m|[39m [38;5;28mlist[39m[[38;5;28mstr[39m],
-[1;32m     52[0m ) [38;5;241m-[39m[38;5;241m>[39m [38;5;28mtuple[39m[xr[38;5;241m.[39mDataset, np[38;5;241m.[39mndarray]:
-[1;32m     53[0m [38;5;250m    [39m[38;5;124;03m"""Process the sig0 datacube."""[39;00m
-[1;32m     54[0m     sig0_dc: xr[38;5;241m.[39mDataset [38;5;241m=[39m (
-[0;32m---> 55[0m         [43mpost_process_eodc_cube[49m[43m([49m[43msig0_dc[49m[43m,[49m[43m [49m[43mitems_sig0[49m[43m,[49m[43m [49m[43mbands[49m[43m)[49m
-[1;32m     56[0m [43m        [49m[38;5;241;43m.[39;49m[43mrename_vars[49m[43m([49m[43m{[49m[38;5;124;43m"[39;49m[38;5;124;43mVV[39;49m[38;5;124;43m"[39;49m[43m:[49m[43m [49m[38;5;124;43m"[39;49m[38;5;124;43msig0[39;49m[38;5;124;43m"[39;49m[43m}[49m[43m)[49m
-[1;32m     57[0m [43m        [49m[38;5;241;43m.[39;49m[43massign_coords[49m[43m([49m[43morbit[49m[38;5;241;43m=[39;49m[43m([49m[38;5;124;43m"[39;49m[38;5;124;43mtime[39;49m[38;5;124;43m"[39;49m[43m,[49m[43m [49m[43mextract_orbit_names[49m[43m([49m[43mitems_sig0[49m[43m)[49m[43m)[49m[43m)[49m
-[1;32m     58[0m [43m        [49m[38;5;241;43m.[39;49m[43mdropna[49m[43m([49m[43mdim[49m[38;5;241;43m=[39;49m[38;5;124;43m"[39;49m[38;5;124;43mtime[39;49m[38;5;124;43m"[39;49m[43m,[49m[43m [49m[43mhow[49m[38;5;241;43m=[39;49m[38;5;124;43m"[39;49m[38;5;124;43mall[39;49m[38;5;124;43m"[39;49m[43m)[49m
-[1;32m     59[0m         [38;5;241m.[39msortby([38;5;124m"[39m[38;5;124mtime[39m[38;5;124m"[39m)
-[1;32m     60[0m     )
-[1;32m     61[0m     orbit_sig0: np[38;5;241m.[39mndarray [38;5;241m=[39m order_orbits(sig0_dc)
-[1;32m     62[0m     sig0_dc: xr[38;5;241m.[39mDataset [38;5;241m=[39m sig0_dc[38;5;241m.[39mgroupby([38;5;124m"[39m[38;5;124mtime[39m[38;5;124m"[39m)[38;5;241m.[39mmean(skipna[38;5;241m=[39m[38;5;28;01mTrue[39;00m)
+Cell [0;32mIn[11], line 2[0m
+[1;32m      1[0m sig0_dc [38;5;241m=[39m (
+[0;32m----> 2[0m     [43mpost_process_eodc_cube[49m[43m([49m[43msig0_dc[49m[43m,[49m[43m [49m[43mitems_sig0[49m[43m,[49m[43m [49m[43mbands[49m[43m)[49m
+[1;32m      3[0m [43m    [49m[38;5;241;43m.[39;49m[43mrename_vars[49m[43m([49m[43m{[49m[38;5;124;43m"[39;49m[38;5;124;43mVV[39;49m[38;5;124;43m"[39;49m[43m:[49m[43m [49m[38;5;124;43m"[39;49m[38;5;124;43msig0[39;49m[38;5;124;43m"[39;49m[43m}[49m[43m)[49m
+[1;32m      4[0m [43m    [49m[38;5;241;43m.[39;49m[43massign_coords[49m[43m([49m[43morbit[49m[38;5;241;43m=[39;49m[43m([49m[38;5;124;43m"[39;49m[38;5;124;43mtime[39;49m[38;5;124;43m"[39;49m[43m,[49m[43m [49m[43mextract_orbit_names[49m[43m([49m[43mitems_sig0[49m[43m)[49m[43m)[49m[43m)[49m
+[1;32m      5[0m [43m    [49m[38;5;241;43m.[39;49m[43mdropna[49m[43m([49m[43mdim[49m[38;5;241;43m=[39;49m[38;5;124;43m"[39;49m[38;5;124;43mtime[39;49m[38;5;124;43m"[39;49m[43m,[49m[43m [49m[43mhow[49m[38;5;241;43m=[39;49m[38;5;124;43m"[39;49m[38;5;124;43mall[39;49m[38;5;124;43m"[39;49m[43m)[49m
+[1;32m      6[0m     [38;5;241m.[39msortby([38;5;124m"[39m[38;5;124mtime[39m[38;5;124m"[39m)
+[1;32m      7[0m )
 
 File [0;32m/opt/hostedtoolcache/Python/3.10.18/x64/lib/python3.10/site-packages/xarray/util/deprecation_helpers.py:115[0m, in [0;36m_deprecate_positional_args.<locals>._decorator.<locals>.inner[0;34m(*args, **kwargs)[0m
 [1;32m    111[0m     kwargs[38;5;241m.[39mupdate({name: arg [38;5;28;01mfor[39;00m name, arg [38;5;129;01min[39;00m zip_args})
@@ -201,5 +188,5 @@ File [0;32m/opt/hostedtoolcache/Python/3.10.18/x64/lib/python3.10/site-packages
 
 File [0;32mrasterio/_base.pyx:312[0m, in [0;36mrasterio._base.DatasetBase.__init__[0;34m()[0m
 
-[0;31mRasterioIOError[0m: CURL error: Failed to connect to data.eodc.eu port 443 after 159 ms: Couldn't connect to server
+[0;31mRasterioIOError[0m: CURL error: Failed to connect to data.eodc.eu port 443 after 163 ms: Couldn't connect to server
 

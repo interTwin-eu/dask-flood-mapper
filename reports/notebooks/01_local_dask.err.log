@@ -22,12 +22,10 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-eodc_catalog = initialize_catalog()
-search = initialize_search(eodc_catalog, bounding_box, time_range, dynamic=True)
-items_sig0 = search.item_collection()
-sig0_dc = prepare_dc(items_sig0, bounding_box, bands="VV")
-sig0_dc, orbit_sig0 = process_sig0_dc(sig0_dc, items_sig0, bands="VV")
-sig0_dc
+time_range = "2023-10-11/2023-10-25"
+bbox = [12.3, 54.3, 13.1, 54.6]
+fd = flood.decision(bbox=bbox, datetime=time_range).compute()
+fd
 ------------------
 
 
@@ -39,16 +37,40 @@ File [0;32mrasterio/_base.pyx:221[0m, in [0;36mrasterio._base.open_dataset[0
 
 File [0;32mrasterio/_err.pyx:359[0m, in [0;36mrasterio._err.exc_wrap_pointer[0;34m()[0m
 
-[0;31mCPLE_HttpResponseError[0m: CURL error: Failed to connect to data.eodc.eu port 443 after 159 ms: Couldn't connect to server
+[0;31mCPLE_HttpResponseError[0m: CURL error: Failed to connect to data.eodc.eu port 443 after 191 ms: Couldn't connect to server
 
 During handling of the above exception, another exception occurred:
 
 [0;31mRasterioIOError[0m                           Traceback (most recent call last)
-Cell [0;32mIn[4], line 5[0m
-[1;32m      3[0m items_sig0 [38;5;241m=[39m search[38;5;241m.[39mitem_collection()
-[1;32m      4[0m sig0_dc [38;5;241m=[39m prepare_dc(items_sig0, bounding_box, bands[38;5;241m=[39m[38;5;124m"[39m[38;5;124mVV[39m[38;5;124m"[39m)
-[0;32m----> 5[0m sig0_dc, orbit_sig0 [38;5;241m=[39m [43mprocess_sig0_dc[49m[43m([49m[43msig0_dc[49m[43m,[49m[43m [49m[43mitems_sig0[49m[43m,[49m[43m [49m[43mbands[49m[38;5;241;43m=[39;49m[38;5;124;43m"[39;49m[38;5;124;43mVV[39;49m[38;5;124;43m"[39;49m[43m)[49m
-[1;32m      6[0m sig0_dc
+Cell [0;32mIn[3], line 3[0m
+[1;32m      1[0m time_range [38;5;241m=[39m [38;5;124m"[39m[38;5;124m2023-10-11/2023-10-25[39m[38;5;124m"[39m
+[1;32m      2[0m bbox [38;5;241m=[39m [[38;5;241m12.3[39m, [38;5;241m54.3[39m, [38;5;241m13.1[39m, [38;5;241m54.6[39m]
+[0;32m----> 3[0m fd [38;5;241m=[39m [43mflood[49m[38;5;241;43m.[39;49m[43mdecision[49m[43m([49m[43mbbox[49m[38;5;241;43m=[39;49m[43mbbox[49m[43m,[49m[43m [49m[43mdatetime[49m[38;5;241;43m=[39;49m[43mtime_range[49m[43m)[49m[38;5;241m.[39mcompute()
+[1;32m      4[0m fd
+
+File [0;32m/opt/hostedtoolcache/Python/3.10.18/x64/lib/python3.10/site-packages/dask_flood_mapper/flood.py:156[0m, in [0;36mdecision[0;34m(bbox, datetime, dynamic, keep_masks)[0m
+[1;32m     48[0m [38;5;28;01mdef[39;00m[38;5;250m [39m[38;5;21mdecision[39m(
+[1;32m     49[0m     bbox: [38;5;28mtuple[39m[[38;5;28mfloat[39m, [38;5;28mfloat[39m, [38;5;28mfloat[39m, [38;5;28mfloat[39m],
+[1;32m     50[0m     datetime: [38;5;28mstr[39m,
+[0;32m   (...)[0m
+[1;32m     53[0m     keep_masks: [38;5;28mbool[39m [38;5;241m=[39m [38;5;28;01mFalse[39;00m,
+[1;32m     54[0m ) [38;5;241m-[39m[38;5;241m>[39m xr[38;5;241m.[39mDataArray:
+[1;32m     55[0m [38;5;250m    [39m[38;5;124;03m"""Bayesian Flood Decision.[39;00m
+[1;32m     56[0m 
+[1;32m     57[0m [38;5;124;03m    Classify Sentinel-1 radar images by simple Bayes inference into flood (1)[39;00m
+[0;32m   (...)[0m
+[1;32m    154[0m 
+[1;32m    155[0m [38;5;124;03m    """[39;00m  [38;5;66;03m# noqa: E501[39;00m
+[0;32m--> 156[0m     sig0_dc, hpar_dc, plia_dc [38;5;241m=[39m [43mpreprocess[49m[43m([49m[43mbbox[49m[43m,[49m[43m [49m[43mdatetime[49m[43m,[49m[43m [49m[43mdynamic[49m[38;5;241;43m=[39;49m[43mdynamic[49m[43m)[49m
+[1;32m    157[0m     flood_dc: xr[38;5;241m.[39mDataset [38;5;241m=[39m calculate_flood_dc(sig0_dc, plia_dc, hpar_dc)
+[1;32m    158[0m     flood_dc[[38;5;124m"[39m[38;5;124mwbsc[39m[38;5;124m"[39m] [38;5;241m=[39m calc_water_likelihood(flood_dc)  [38;5;66;03m# Water[39;00m
+
+File [0;32m/opt/hostedtoolcache/Python/3.10.18/x64/lib/python3.10/site-packages/dask_flood_mapper/flood.py:298[0m, in [0;36mpreprocess[0;34m(bbox, datetime, dynamic)[0m
+[1;32m    296[0m items_sig0: ItemCollection [38;5;241m=[39m search[38;5;241m.[39mitem_collection()
+[1;32m    297[0m sig0_dc: xr[38;5;241m.[39mDataset [38;5;241m=[39m prepare_dc(items_sig0, bbox, bands[38;5;241m=[39m[38;5;124m"[39m[38;5;124mVV[39m[38;5;124m"[39m)
+[0;32m--> 298[0m sig0_dc, orbit_sig0 [38;5;241m=[39m [43mprocess_sig0_dc[49m[43m([49m[43msig0_dc[49m[43m,[49m[43m [49m[43mitems_sig0[49m[43m,[49m[43m [49m[43mbands[49m[38;5;241;43m=[39;49m[38;5;124;43m"[39;49m[38;5;124;43mVV[39;49m[38;5;124;43m"[39;49m[43m)[49m
+[1;32m    299[0m [38;5;28mprint[39m([38;5;124m"[39m[38;5;124msigma naught datacube processed[39m[38;5;124m"[39m)  [38;5;66;03m# noqa: T201[39;00m
+[1;32m    301[0m [38;5;28;01mif[39;00m dynamic:
 
 File [0;32m/opt/hostedtoolcache/Python/3.10.18/x64/lib/python3.10/site-packages/dask_flood_mapper/processing.py:55[0m, in [0;36mprocess_sig0_dc[0;34m(sig0_dc, items_sig0, bands)[0m
 [1;32m     48[0m [38;5;28;01mdef[39;00m[38;5;250m [39m[38;5;21mprocess_sig0_dc[39m(
@@ -201,5 +223,5 @@ File [0;32m/opt/hostedtoolcache/Python/3.10.18/x64/lib/python3.10/site-packages
 
 File [0;32mrasterio/_base.pyx:312[0m, in [0;36mrasterio._base.DatasetBase.__init__[0;34m()[0m
 
-[0;31mRasterioIOError[0m: CURL error: Failed to connect to data.eodc.eu port 443 after 159 ms: Couldn't connect to server
+[0;31mRasterioIOError[0m: CURL error: Failed to connect to data.eodc.eu port 443 after 191 ms: Couldn't connect to server
 
