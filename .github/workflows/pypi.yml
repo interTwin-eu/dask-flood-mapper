@@ -37,5 +37,7 @@ jobs:
         run: |
           git config --local user.name "$GITHUB_ACTOR"
           git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
-          git commit $(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '_version') -m 'Bump version' || echo "No changes to commit"
+          git commit "$(git diff --name-only ${{ github.event.before }} \
+            ${{ github.sha }} | grep '_version')" -m 'Bump version' || \
+            echo "No changes to commit"
           git push origin || echo "No changes to commit"
