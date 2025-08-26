@@ -13,7 +13,7 @@ jobs:
     name: Job that triggers SQAaaS platform
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Step definition for validating the workflow
         uses: eosc-synergy/sqaaas-step-action@v1
