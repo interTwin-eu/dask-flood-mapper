@@ -100,6 +100,7 @@ def harmonic_regression(
 
     # run regression
     param = np.full((nx + 2, rows, cols), np.nan, dtype=np.float32)
+    arr = arr.astype(np.float32)
     _fast_harmonic_regression(arr=arr, a_matrix=a, k=k, red=redundancy, param=param)
 
     return param
