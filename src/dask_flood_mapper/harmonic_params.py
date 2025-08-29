@@ -4,16 +4,22 @@ import datetime as dt
 
 import numpy as np
 import xarray as xr
+from dask_flood_mapper.processing import order_orbits
 from numba import njit, prange
 
+
 def create_harmonic_parameters_zarr(
-        sig0_dc: xr.Dataset,
-        min_nobs: int = 32,
-        k: int = 3,
+    sig0_dc: xr.Dataset,
+    min_nobs: int = 32,
+    k: int = 3,
 ):
     param_names = model_coords(k)
-    template = sig0_dc.isel(obs=slice(len(param_names))).rename({"obs": "param"}).drop_vars("time")
-    template['param'] = param_names
+    template = (
+        sig0_dc.isel(obs=slice(len(param_names)))
+        .rename({"obs": "param"})
+        .drop_vars("time")
+    )
+    template["param"] = param_names
     hpar_dc = xr.map_blocks(
         reduce_ds_to_harmonic_parameters,
         obj=sig0_dc,
@@ -27,11 +33,12 @@ def create_harmonic_parameters_zarr(
         template=template,
     )
     hpar_dc = hpar_dc.rename({"sig0": "harmonic_parameters"})
-    hpar_dc = hpar_dc.where(hpar_dc.sel(param="NOBS") >= min_nobs).drop_sel(param="NOBS")
+    hpar_dc = hpar_dc.where(hpar_dc.sel(param="NOBS") >= min_nobs).drop_sel(
+        param="NOBS"
+    )
     hpar_dc = hpar_dc.harmonic_parameters.to_dataset(dim="param")
 
     return hpar_dc
-from dask_flood_mapper.processing import order_orbits
 
 
 def create_harmonic_parameters(
@@ -89,28 +96,35 @@ def process_harmonic_parameters_datacube(
     hpar_dc: xr.Dataset = hpar_dc.persist()
     return sig0_dc, hpar_dc, orbit_sig0
 
+
 def reduce_ds_to_harmonic_parameters(
-        ts_ds: xr.Dataset,
-        fit_var_name: str,
-        min_nobs: int = 0,
-        **kwargs
+    ts_ds: xr.Dataset, fit_var_name: str, min_nobs: int = 0, **kwargs
 ):
     extra_dims = [dim for dim in ts_ds.dims if dim not in ts_ds.squeeze().dims]
     ts_xr = ts_ds[fit_var_name]
 
     # if all pixels have too few observations, skip the regression and return all NaNs
     too_few_obs_short_circuit = ts_xr.count(dim="obs").max().values < min_nobs
-    ts_dtimes = ts_ds['time.dayofyear'].squeeze(drop=True).values
+    ts_dtimes = ts_ds["time.dayofyear"].squeeze(drop=True).values
     if too_few_obs_short_circuit:
         ts_xr = ts_xr * np.nan
-    out_dataarray = reduce_to_harmonic_parameters(ts_xr.squeeze(drop=True),
-                                                  dtimes=ts_dtimes,
-                                                  **kwargs)
+    out_dataarray = reduce_to_harmonic_parameters(
+        ts_xr.squeeze(drop=True), dtimes=ts_dtimes, **kwargs
+    )
     out_dataset = xr.Dataset(
-        {fit_var_name: out_dataarray.expand_dims(dim=extra_dims).transpose(*ts_xr.rename({"obs": "param"}).dims)},
-        coords={dim: ts_ds[dim] for dim in ts_ds.dims if (dim in extra_dims or dim in out_dataarray.dims) and dim in ts_ds.coords},
+        {
+            fit_var_name: out_dataarray.expand_dims(dim=extra_dims).transpose(
+                *ts_xr.rename({"obs": "param"}).dims
+            )
+        },
+        coords={
+            dim: ts_ds[dim]
+            for dim in ts_ds.dims
+            if (dim in extra_dims or dim in out_dataarray.dims) and dim in ts_ds.coords
+        },
     )
     return out_dataset
+
 
 def reduce_to_harmonic_parameters(
     ts_xr: xr.DataArray,
@@ -170,13 +184,7 @@ def harmonic_regression(
     if np.all(np.isnan(arr)):
         # All NaN array, return NaN params
         return param
-    _fast_harmonic_regression(
-        arr=arr,
-        a_matrix=a,
-        k=k,
-        red=redundancy,
-        param=param
-    )
+    _fast_harmonic_regression(arr=arr, a_matrix=a, k=k, red=redundancy, param=param)
     return param
 
 
