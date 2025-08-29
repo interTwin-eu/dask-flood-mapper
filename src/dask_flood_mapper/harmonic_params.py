@@ -170,7 +170,13 @@ def harmonic_regression(
     if np.all(np.isnan(arr)):
         # All NaN array, return NaN params
         return param
-    _fast_harmonic_regression(arr=arr, a_matrix=a, k=k, red=redundancy, param=param)
+    _fast_harmonic_regression(
+        arr=arr,
+        a_matrix=a,
+        k=k,
+        red=redundancy,
+        param=param
+    )
     return param
 
 
