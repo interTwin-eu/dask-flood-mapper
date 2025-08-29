@@ -82,8 +82,6 @@ def reduce_to_harmonic_parameters(
 def harmonic_regression(
     arr: np.ndarray, dtimes: np.ndarray, k: int = 3, redundancy: int = 1, axis: int = 0
 ) -> np.ndarray:
-    print(arr.shape)
-    assert None
     # define constants
     w = np.pi * 2 / 365
 
