@@ -88,6 +88,11 @@ def harmonic_regression(
     # should be in dayofyear format
     t = dtimes
 
+    # drop t and arr where t is nan for efficiency in regression
+    valid_time = ~np.isnan(t)
+    t = t[valid_time]
+    arr = arr[valid_time, ...]  # type: ignore
+
     # prepare A-matrix
     ti, rows, cols = arr.shape
     nx = 2 * k + 1
@@ -99,8 +104,10 @@ def harmonic_regression(
     # run regression
     param = np.full((nx + 2, rows, cols), np.nan, dtype=np.float32)
     arr = arr.astype(np.float32)
+    if np.all(np.isnan(arr)):
+        # All NaN array, return NaN params
+        return param
     _fast_harmonic_regression(arr=arr, a_matrix=a, k=k, red=redundancy, param=param)
-
     return param
 
 
