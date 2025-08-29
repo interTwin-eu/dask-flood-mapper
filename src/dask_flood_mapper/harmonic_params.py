@@ -3,6 +3,31 @@ import xarray as xr
 from dask_flood_mapper.processing import order_orbits
 from numba import njit, prange
 
+def create_harmonic_parameters_zarr(
+        sig0_dc: xr.Dataset,
+        min_nobs: int = 32,
+        k: int = 3,
+):
+    param_names = model_coords(k)
+    template = sig0_dc.isel(obs=slice(len(param_names))).rename({"obs": "param"}).drop_vars("time")
+    template['param'] = param_names
+    hpar_dc = xr.map_blocks(
+        reduce_ds_to_harmonic_parameters,
+        obj=sig0_dc,
+        kwargs={
+            "fit_var_name": "sig0",
+            "k": k,
+            "x_var_name": "X",
+            "y_var_name": "Y",
+            "min_nobs": min_nobs,
+        },
+        template=template,
+    )
+    hpar_dc = hpar_dc.rename({"sig0": "harmonic_parameters"})
+    hpar_dc = hpar_dc.where(hpar_dc.sel(param="NOBS") >= min_nobs).drop_sel(param="NOBS")
+    hpar_dc = hpar_dc.harmonic_parameters.to_dataset(dim="param")
+
+    return hpar_dc
 
 def create_harmonic_parameters(sig0_dc):
     harm_pars_list = []
@@ -49,31 +74,40 @@ def process_harmonic_parameters_datacube(
 def reduce_ds_to_harmonic_parameters(
         ts_ds: xr.Dataset,
         fit_var_name: str,
+        min_nobs: int = 0,
         **kwargs
 ):
     extra_dims = [dim for dim in ts_ds.dims if dim not in ts_ds.squeeze().dims]
     ts_xr = ts_ds[fit_var_name]
-    out_dataarray = reduce_to_harmonic_parameters(ts_xr,
-                                                  dtimes=ts_ds['time.dayofyear'],
-                                                  **kwargs)
-    print(out_dataarray)
-    assert None
 
-    # dtimes = kwargs.pop('dtimes')#, ts_xr["time.dayofyear"])
+    # if all pixels have too few observations, skip the regression and return all NaNs
+    too_few_obs_short_circuit = ts_xr.count(dim="obs").max().values < min_nobs
+    ts_dtimes = ts_ds['time.dayofyear'].squeeze(drop=True).values
+    if too_few_obs_short_circuit:
+        ts_xr = ts_xr * np.nan
+    out_dataarray = reduce_to_harmonic_parameters(ts_xr.squeeze(drop=True),
+                                                  dtimes=ts_dtimes,
+                                                  **kwargs)
+    out_dataset = xr.Dataset(
+        {fit_var_name: out_dataarray.expand_dims(dim=extra_dims).transpose(*ts_xr.rename({"obs": "param"}).dims)},
+        coords={dim: ts_ds[dim] for dim in ts_ds.dims if (dim in extra_dims or dim in out_dataarray.dims) and dim in ts_ds.coords},
+    )
+    return out_dataset
 
 def reduce_to_harmonic_parameters(
     ts_xr: xr.DataArray, x_var_name="x", y_var_name="y", **kwargs
 ):
-    params_arr = harmonic_regression(ts_xr.data, **kwargs)
+    params_arr = harmonic_regression(ts_xr.values, **kwargs)
     k = kwargs.get("k", 3)
     out_dims = ["param", y_var_name, x_var_name]
+    coords_dict = {"param": model_coords(k)}
+    if x_var_name in ts_xr.coords:
+        coords_dict[x_var_name] = ts_xr[x_var_name]
+    if y_var_name in ts_xr.coords:
+        coords_dict[y_var_name] = ts_xr[y_var_name]
     out_dataarray = xr.DataArray(
         data=params_arr,
-        coords={
-            "param": model_coords(k),
-            x_var_name: ts_xr[x_var_name],
-            y_var_name: ts_xr[y_var_name],
-        },
+        coords=coords_dict,
         dims=out_dims,
     )
     return out_dataarray
