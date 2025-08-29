@@ -153,12 +153,8 @@ def mock_data_cubes():
 @pytest.fixture
 def mock_data():
     """Creates a mock dataset similar to real sig0_dc, using Dask arrays."""
-    times = np.array(
-        ["2022-10-11", "2022-10-11", "2022-10-12"], dtype="datetime64"
-    )
-    data_values = np.array(
-        [[[1, 2], [3, 4]], [[5, 6], [7, 8]], [[9, 10], [11, 12]]]
-    )
+    times = np.array(["2022-10-11", "2022-10-11", "2022-10-12"], dtype="datetime64")
+    data_values = np.array([[[1, 2], [3, 4]], [[5, 6], [7, 8]], [[9, 10], [11, 12]]])
 
     dask_data = da.from_array(data_values, chunks=(1, 2, 2))
 
@@ -261,9 +257,7 @@ class TestCalculations:
         evidence = (nf_prob * 0.5) + (f_prob * 0.5)
         nf_post_prob_expected = (nf_prob * 0.5) / evidence
         f_post_prob_expected = (f_prob * 0.5) / evidence
-        decision_expected = np.greater(
-            f_post_prob_expected, nf_post_prob_expected
-        )
+        decision_expected = np.greater(f_post_prob_expected, nf_post_prob_expected)
 
         assert (decision.values == decision_expected).all()
 
@@ -287,13 +281,8 @@ class PostProcessing:
         decision = post_processing(mock_hpar_dataset)
 
         expected_decision = (
-            np.logical_and(
-                mock_hpar_dataset.MPLIA >= 27, mock_hpar_dataset.MPLIA <= 48
-            )
-            * (
-                mock_hpar_dataset.hbsc
-                > (mock_hpar_dataset.wbsc + 0.5 * 2.754041)
-            )
+            np.logical_and(mock_hpar_dataset.MPLIA >= 27, mock_hpar_dataset.MPLIA <= 48)
+            * (mock_hpar_dataset.hbsc > (mock_hpar_dataset.wbsc + 0.5 * 2.754041))
             * (
                 (
                     mock_hpar_dataset.sig0
@@ -304,10 +293,7 @@ class PostProcessing:
                     < (mock_hpar_dataset.hbsc + 3 * mock_hpar_dataset.STD)
                 )
             )
-            * (
-                mock_hpar_dataset.sig0
-                < (mock_hpar_dataset.wbsc + 3 * 2.754041)
-            )
+            * (mock_hpar_dataset.sig0 < (mock_hpar_dataset.wbsc + 3 * 2.754041))
             * (mock_hpar_dataset.f_post_prob > 0.8)
         )
 
@@ -382,9 +368,7 @@ def test_process_datacube(
         orbit_sig0 in result.orbit.values
     ), f"Dataset should contain orbit '{orbit_sig0}' only"
 
-    mock_post_process.assert_called_once_with(
-        mock_data, mock_items_orbits, bands
-    )
+    mock_post_process.assert_called_once_with(mock_data, mock_items_orbits, bands)
     mock_extract_orbit_names.assert_called_once_with(mock_items_orbits)
 
 
@@ -416,12 +400,8 @@ def test_remove_speckles(mock_data_cubes):
     sig0_dc, _, _ = mock_data_cubes  # Use only sig0_dc for filtering
     result = remove_speckles(sig0_dc, window_size=3)
 
-    assert (
-        result.sizes["y"] == sig0_dc.sizes["y"]
-    ), "y size should remain the same"
-    assert (
-        result.sizes["x"] == sig0_dc.sizes["x"]
-    ), "x size should remain the same"
+    assert result.sizes["y"] == sig0_dc.sizes["y"], "y size should remain the same"
+    assert result.sizes["x"] == sig0_dc.sizes["x"], "x size should remain the same"
     assert result.chunks, "Dataset should be persisted (chunked with Dask)"
     assert any(
         isinstance(v.data, da.Array) for v in result.data_vars.values()

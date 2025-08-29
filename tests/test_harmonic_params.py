@@ -6,6 +6,7 @@ from dask_flood_mapper.harmonic_params import (
     harmonic_regression,
     model_coords,
     process_harmonic_parameters_datacube,
+    reduce_ds_to_harmonic_parameters,
     reduce_to_harmonic_parameters,
 )
 
@@ -15,12 +16,8 @@ def generate_harmonic_timeseries(times, mean, sin_amplitudes, cos_amplitudes):
     w = 2 * np.pi / 365
     result = mean * np.ones_like(times)
 
-    for k, (sin_amp, cos_amp) in enumerate(
-        zip(sin_amplitudes, cos_amplitudes), 1
-    ):
-        result += sin_amp * np.sin(k * w * times) + cos_amp * np.cos(
-            k * w * times
-        )
+    for k, (sin_amp, cos_amp) in enumerate(zip(sin_amplitudes, cos_amplitudes), 1):
+        result += sin_amp * np.sin(k * w * times) + cos_amp * np.cos(k * w * times)
 
     return result
 
@@ -113,9 +110,7 @@ def synthetic_data(request):
 
     orbit = np.array([["A1", "B1"][int(time % 2)] for time in times])
     # Generate perfect harmonic signal
-    ts = generate_harmonic_timeseries(
-        times, mean, sin_amplitudes, cos_amplitudes
-    )
+    ts = generate_harmonic_timeseries(times, mean, sin_amplitudes, cos_amplitudes)
     ts_data = ts.reshape(-1, 1, 1).astype(np.float32)
     ts_data = np.broadcast_to(ts_data, (len(times), rows, cols)).copy()
 
@@ -193,9 +188,7 @@ def test_harmonic_regression_handles_insufficient_data(synthetic_data):
     assert np.isnan(
         params[:-1, 0, 0]
     ).all(), "Parameters should be NaN with insufficient data"
-    assert (
-        params[-1, 0, 0] == 2 * synthetic_k
-    ), f"NOBS should be {2 * synthetic_k}"
+    assert params[-1, 0, 0] == 2 * synthetic_k, f"NOBS should be {2 * synthetic_k}"
     assert not np.isnan(
         params[:, 0, 1]
     ).any(), "Other pixels should have valid parameters"
@@ -205,9 +198,9 @@ def test_harmonic_regression_respects_redundancy(synthetic_data):
     # Make some data NaN but keep enough for default redundancy
     data_with_nans = synthetic_data["data"].copy()
     k = synthetic_data["k"]
-    data_with_nans[: data_with_nans.shape[0] - (2 * k + 2), 0, 0] = (
-        np.nan
-    )  # Leave 6 observations
+    data_with_nans[
+        : data_with_nans.shape[0] - (2 * k + 2), 0, 0
+    ] = np.nan  # Leave 6 observations
 
     # Should work with redundancy=1
     params_red1 = harmonic_regression(
@@ -216,9 +209,7 @@ def test_harmonic_regression_respects_redundancy(synthetic_data):
         k=synthetic_data["k"],
         redundancy=1,
     )
-    assert not np.isnan(
-        params_red1[:-1, 0, 0]
-    ).any(), "Should work with redundancy=1"
+    assert not np.isnan(params_red1[:-1, 0, 0]).any(), "Should work with redundancy=1"
 
     # Should fail with redundancy=2
     params_red2 = harmonic_regression(
@@ -227,9 +218,7 @@ def test_harmonic_regression_respects_redundancy(synthetic_data):
         k=synthetic_data["k"],
         redundancy=2,
     )
-    assert np.isnan(
-        params_red2[:-1, 0, 0]
-    ).all(), "Should fail with redundancy=2"
+    assert np.isnan(params_red2[:-1, 0, 0]).all(), "Should fail with redundancy=2"
 
 
 def test_harmonic_regression_handles_no_data(synthetic_data):
@@ -272,9 +261,7 @@ def synthetic_xarray_data(synthetic_data):
 @pytest.fixture
 def synthetic_xarray_dataset(synthetic_data):
     # Create synthetic xarray DataArray
-    times = pd.to_timedelta(synthetic_data["times"], "D") + np.datetime64(
-        "2018-12-31"
-    )
+    times = pd.to_timedelta(synthetic_data["times"], "D") + np.datetime64("2018-12-31")
     data = synthetic_data["data"]
     orbit = synthetic_data["orbit"]
 
@@ -315,9 +302,7 @@ def test_synthetic_array_dataset_contains_original_synthetic_data(
     ), "Synthetic dataset does not contain the original time data"
 
 
-def test_reduce_to_harmonic_parameters_basic(
-    synthetic_xarray_data, synthetic_data
-):
+def test_reduce_to_harmonic_parameters_basic(synthetic_xarray_data, synthetic_data):
     # Run reduction
     result = reduce_to_harmonic_parameters(
         synthetic_xarray_data,
@@ -348,12 +333,102 @@ def test_reduce_to_harmonic_parameters_coordinates(synthetic_xarray_data):
     # Check coordinates are properly set
     expected_params = model_coords(k)
     assert list(result.param.values) == expected_params
-    np.testing.assert_array_equal(
-        result.x.values, synthetic_xarray_data.x.values
+    np.testing.assert_array_equal(result.x.values, synthetic_xarray_data.x.values)
+    np.testing.assert_array_equal(result.y.values, synthetic_xarray_data.y.values)
+
+
+def test_reducing_via_map_blocks(synthetic_xarray_data):
+    k = 2
+    chunked = synthetic_xarray_data.chunk({"x": 1, "y": 1, "time": -1})
+    param_names = model_coords(k)
+    template = chunked.isel(time=slice(len(param_names))).rename({"time": "param"})
+    template["param"] = param_names
+    reduced = chunked.map_blocks(
+        reduce_to_harmonic_parameters,
+        template=template,
+        kwargs={"k": k, "dtimes": synthetic_xarray_data.time.values},
     )
-    np.testing.assert_array_equal(
-        result.y.values, synthetic_xarray_data.y.values
+    reduced.load()
+
+
+@pytest.fixture
+def synthetic_s1_dataset():
+    # Reduced dimensions for testing
+    orbits = ["A015", "A029"]
+    polarizations = ["VH", "VV"]
+    tiles = ["E042N012T3", "E042N015T3"]
+    obs = 1000
+    Y = 5
+    X = 100
+
+    # Generate random data
+    sig0_data = np.random.rand(
+        obs, len(polarizations), len(orbits), len(tiles), Y, X
+    ).astype(np.float32)
+
+    # Generate time data
+    start_date = pd.Timestamp("2021-01-01")
+    time_data = np.array([start_date + pd.Timedelta(days=i) for i in range(obs)])
+    time_data = np.broadcast_to(
+        time_data[:, np.newaxis, np.newaxis], (obs, len(orbits), len(tiles))
     )
+
+    # Create the dataset
+    ds = xr.Dataset(
+        data_vars={
+            "sig0": (("obs", "polarization", "orbit", "tile", "Y", "X"), sig0_data)
+        },
+        coords={
+            "orbit": orbits,
+            "polarization": polarizations,
+            "tile": tiles,
+            "time": (("obs", "orbit", "tile"), time_data),
+        },
+    )
+
+    return ds
+
+
+# Test to ensure the fixture is working correctly
+def test_synthetic_s1_dataset(synthetic_s1_dataset):
+    assert isinstance(synthetic_s1_dataset, xr.Dataset)
+    assert set(synthetic_s1_dataset.dims) == {
+        "obs",
+        "polarization",
+        "orbit",
+        "tile",
+        "Y",
+        "X",
+    }
+    assert set(synthetic_s1_dataset.data_vars) == {"sig0"}
+    assert set(synthetic_s1_dataset.coords) == {"orbit", "polarization", "tile", "time"}
+
+    assert synthetic_s1_dataset.sig0.shape == (1000, 2, 2, 2, 5, 100)
+    assert synthetic_s1_dataset.time.shape == (1000, 2, 2)
+
+    assert synthetic_s1_dataset.orbit.values.tolist() == ["A015", "A029"]
+    assert synthetic_s1_dataset.polarization.values.tolist() == ["VH", "VV"]
+    assert synthetic_s1_dataset.tile.values.tolist() == ["E042N012T3", "E042N015T3"]
+
+
+def test_reducing_via_map_blocks_with_nd_time(synthetic_s1_dataset):
+    k = 2
+    chunked = synthetic_s1_dataset.chunk(
+        {"tile": 1, "orbit": 1, "polarization": 1, "obs": -1}
+    )
+    param_names = model_coords(k)
+    template = (
+        chunked.isel(obs=slice(len(param_names)))
+        .rename({"obs": "param"})
+        .drop_vars("time")
+    )
+    template["param"] = param_names
+    reduced = chunked.map_blocks(
+        reduce_ds_to_harmonic_parameters,
+        template=template,
+        kwargs={"fit_var_name": "sig0", "k": k, "x_var_name": "X", "y_var_name": "Y"},
+    )
+    reduced.load()
 
 
 def test_reduce_to_harmonic_parameters_with_nans(synthetic_xarray_data):
@@ -367,10 +442,7 @@ def test_reduce_to_harmonic_parameters_with_nans(synthetic_xarray_data):
 
     # Check that parameters are computed correctly despite NaNs
     assert not np.isnan(result.sel(x=0, y=0)).all()
-    assert (
-        result.sel(param="NOBS", x=0, y=0)
-        == len(synthetic_xarray_data.time) - 2
-    )
+    assert result.sel(param="NOBS", x=0, y=0) == len(synthetic_xarray_data.time) - 2
 
 
 @pytest.fixture
@@ -386,9 +458,7 @@ def make_pars_list(synthetic_xarray_dataset, synthetic_data):
 
 
 def assert_both_orbits_have_approx_the_same_parameters(hpar_dc):
-    assert np.all(
-        np.abs(hpar_dc.diff(dim="orbit")) < 1e-6
-    ), "Orbits differ too much"
+    assert np.all(np.abs(hpar_dc.diff(dim="orbit")) < 1e-6), "Orbits differ too much"
 
 
 def assert_retrieved_harmpars_are_approx_the_same_as_synthetic_data(
@@ -422,9 +492,7 @@ def assert_we_have_hpars_for_all_sig0_orbits(sig0_dc, hpar_dc, orbit_sig0):
     ), "Not all sig0 orbits have harmonic parameters"
 
 
-def test_make_process(
-    make_pars_list, synthetic_data, synthetic_xarray_dataset
-):
+def test_make_process(make_pars_list, synthetic_data, synthetic_xarray_dataset):
     pars_list = make_pars_list.copy()
     sig0_dc = synthetic_xarray_dataset.copy().sortby("time")
     time_range = (sig0_dc.time[-4].data, sig0_dc.time[-1].data)
