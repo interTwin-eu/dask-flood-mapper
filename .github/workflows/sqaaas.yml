@@ -4,25 +4,31 @@
 ---
 name: SQAaaS
 
-on:
-  push:
-    branches: [main]
+on: [push]
+
 
 jobs:
   sqaaas_job:
     runs-on: ubuntu-latest
     name: Job that triggers SQAaaS platform
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
       - name: Step definition for validating the workflow
         uses: eosc-synergy/sqaaas-step-action@v1
         with:
           name: pytest-step
           tool: pytest
           test_path: ./tests
-          # container: ghcr.io/intertwin-eu/dask-flood-mapper:latest
+          # Optional: uncomment if using a specific container
+          container: ghcr.io/intertwin-eu/dask-flood-mapper:latest
+
       - name: Print out payload
         run: cat pytest-step.json
+
       - name: SQAaaS assessment with unit testing (QC.Uni) step
         uses: eosc-synergy/sqaaas-assessment-action@v2
         with:
           qc_uni_steps: pytest-step
+

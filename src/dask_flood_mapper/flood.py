@@ -1,10 +1,15 @@
+"""Compute the flood decision and probability using Sentinel-1 data."""
+
+from typing import TYPE_CHECKING
+
+import xarray as xr
+
 from dask_flood_mapper.calculation import (
     bayesian_flood_decision,
     bayesian_flood_probability,
     calc_water_likelihood,
     calculate_flood_dc,
     harmonic_expected_backscatter,
-    remove_speckles,
 )
 from dask_flood_mapper.catalog import (
     config,
@@ -26,17 +31,28 @@ from dask_flood_mapper.processing import (
     reproject_equi7grid,
 )
 
+if TYPE_CHECKING:
+    import datetime as dt
+
+    from pystac.item_collection import ItemCollection
+    from pystac_client import Client, ItemSearch
+
 # import parameters from config.yaml file
 crs = config["base"]["crs"]
 chunks = config["base"]["chunks"]
 groupby = config["base"]["groupby"]
-BANDS_SIG0 = "VV"
-BANDS_PLIA = "MPLIA"
+BANDS_SIG0: str = "VV"
+BANDS_PLIA: str = "MPLIA"
 
 
-def decision(bbox, datetime, dynamic=False):
-    """
-    Bayesian Flood Decision
+def decision(
+    bbox: tuple[float, float, float, float],
+    datetime: str,
+    *,
+    dynamic: bool = False,
+    keep_masks: bool = False,
+) -> xr.DataArray:
+    """Bayesian Flood Decision.
 
     Classify Sentinel-1 radar images by simple Bayes inference into flood (1)
     and non-flood (0). Besides radar images, this algorithm relies on two other
@@ -64,11 +80,15 @@ def decision(bbox, datetime, dynamic=False):
         nought before the lower limit of the datetime provided. This operation
         is computationally demanding.
 
+    keep_masks: bool, default=False
+        If True, the masks for water and land likelihood are kept in the output
+        datacube. If False, only the flood decision and probabilities are kept.
+
     Returns
     -------
         flood decision : xarray.DataArray of 0 (non-flood) and 1 (flood)
 
-    See also
+    See Also
     --------
     probability
 
@@ -131,22 +151,26 @@ def decision(bbox, datetime, dynamic=False):
     Attributes:
         _FillValue:  nan
     >>>
-    """
 
-    sig0_dc, hpar_dc, plia_dc = preprocess(bbox, datetime, dynamic)
-    flood_dc = calculate_flood_dc(sig0_dc, plia_dc, hpar_dc)
+    """  # noqa: E501
+    sig0_dc, hpar_dc, plia_dc = preprocess(bbox, datetime, dynamic=dynamic)
+    flood_dc: xr.Dataset = calculate_flood_dc(sig0_dc, plia_dc, hpar_dc)
     flood_dc["wbsc"] = calc_water_likelihood(flood_dc)  # Water
     flood_dc["hbsc"] = harmonic_expected_backscatter(flood_dc)  # Land
     flood_dc["decision"] = bayesian_flood_decision(flood_dc)
     flood_dc["f_post_prob"] = bayesian_flood_probability(flood_dc)
     flood_dc["nf_post_prob"] = 1 - flood_dc["f_post_prob"]
-    flood_output = post_processing(flood_dc)
-    return reproject_equi7grid(remove_speckles(flood_output), bbox=bbox)
+    flood_output = post_processing(flood_dc, keep_masks=keep_masks)
+    return reproject_equi7grid(flood_output, bbox=bbox)
 
 
-def probability(bbox, datetime, dynamic=False):
-    """
-    Bayesian Flood Probability
+def probability(
+    bbox: tuple[float, float, float, float],
+    datetime: str,
+    *,
+    dynamic: bool = False,
+) -> xr.DataArray:
+    """Bayesian Flood Probability.
 
     Classify Sentinel-1 radar images by simple Bayes inference into a
     probability of flood,ranging from 0 (minimum probability of flood) to 1
@@ -180,7 +204,7 @@ def probability(bbox, datetime, dynamic=False):
         flood probability : xarray.DataArray ranging from 0 (0% estimation of
         flood) to 1 (100% estimation of flood)
 
-    See also
+    See Also
     --------
     decision
 
@@ -245,42 +269,79 @@ def probability(bbox, datetime, dynamic=False):
     Attributes:
         _FillValue:  nan
     >>>
-    """
-    sig0_dc, hpar_dc, plia_dc = preprocess(bbox, datetime, dynamic)
+
+    """  # noqa: E501
+    sig0_dc, hpar_dc, plia_dc = preprocess(bbox, datetime, dynamic=dynamic)
     flood_dc = calculate_flood_dc(sig0_dc, plia_dc, hpar_dc)
     flood_dc["wbsc"] = calc_water_likelihood(flood_dc)  # Water
     flood_dc["hbsc"] = harmonic_expected_backscatter(flood_dc)  # Land
     return reproject_equi7grid(bayesian_flood_probability(flood_dc), bbox=bbox)
 
 
-def preprocess(bbox, datetime, dynamic):
-    eodc_catalog = initialize_catalog()
-    search = initialize_search(eodc_catalog, bbox, datetime, dynamic)
+def preprocess(
+    bbox: tuple[float, float, float, float],
+    datetime: str,
+    *,
+    dynamic: bool,
+) -> tuple[xr.Dataset, xr.Dataset, xr.Dataset]:
+    """Preprocess the data for flood decision and probability calculation."""
+    eodc_catalog: Client = initialize_catalog()
+    search: ItemSearch = initialize_search(
+        eodc_catalog,
+        bbox,
+        datetime,
+        dynamic=dynamic,
+    )
 
-    items_sig0 = search.item_collection()
-    sig0_dc = prepare_dc(items_sig0, bbox, bands="VV")
+    items_sig0: ItemCollection = search.item_collection()
+    sig0_dc: xr.Dataset = prepare_dc(items_sig0, bbox, bands="VV")
     sig0_dc, orbit_sig0 = process_sig0_dc(sig0_dc, items_sig0, bands="VV")
-    print("sigma naught datacube processed")
+    print("sigma naught datacube processed")  # noqa: T201
 
     if dynamic:
-        datetime_xr = format_datetime_for_xarray_selection(search, datetime)
-        hpar_list = create_harmonic_parameters(sig0_dc)
+        datetime_xr: tuple[dt.datetime, ...] = (
+            format_datetime_for_xarray_selection(
+                search,
+                datetime,
+            )
+        )
+        hpar_list: list[tuple[int, xr.DataArray]] = create_harmonic_parameters(
+            sig0_dc,
+        )
         sig0_dc, hpar_dc, orbit_sig0 = process_harmonic_parameters_datacube(
-            sig0_dc, datetime_xr, hpar_list
+            sig0_dc,
+            datetime_xr,
+            hpar_list,
         )
     else:
         search_hpar = search_parameters(
-            eodc_catalog, bbox, collections="SENTINEL1_HPAR"
+            eodc_catalog,
+            bbox,
+            collections="SENTINEL1_HPAR",
         )
-        items_hpar = search_hpar.item_collection()
-        hpar_dc = prepare_dc(items_hpar, bbox, bands=BANDS_HPAR)
-        hpar_dc = process_datacube(hpar_dc, items_hpar, orbit_sig0, BANDS_HPAR)
-    print("harmonic parameter datacube processed")
+        items_hpar: ItemCollection = search_hpar.item_collection()
+        hpar_dc: xr.Dataset = prepare_dc(items_hpar, bbox, bands=BANDS_HPAR)
+        hpar_dc: xr.Dataset = process_datacube(
+            hpar_dc,
+            items_hpar,
+            orbit_sig0,
+            BANDS_HPAR,
+        )
+    print("harmonic parameter datacube processed")  # noqa: T201
 
-    search_plia = search_parameters(eodc_catalog, bbox, collections="SENTINEL1_MPLIA")
-    items_plia = search_plia.item_collection()
-    plia_dc = prepare_dc(items_plia, bbox, bands=BANDS_PLIA)
-    plia_dc = process_datacube(plia_dc, items_plia, orbit_sig0, bands="MPLIA")
-    print("projected local incidence angle processed")
+    search_plia: ItemSearch = search_parameters(
+        eodc_catalog,
+        bbox,
+        collections="SENTINEL1_MPLIA",
+    )
+    items_plia: ItemCollection = search_plia.item_collection()
+    plia_dc: xr.Dataset = prepare_dc(items_plia, bbox, bands=BANDS_PLIA)
+    plia_dc: xr.Dataset = process_datacube(
+        plia_dc,
+        items_plia,
+        orbit_sig0,
+        bands="MPLIA",
+    )
+    print("projected local incidence angle processed")  # noqa: T201
 
     return sig0_dc, hpar_dc, plia_dc

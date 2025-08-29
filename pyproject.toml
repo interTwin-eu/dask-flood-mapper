@@ -5,3 +5,6 @@ build-backend = "setuptools.build_meta"
 
 [tool.pytest.ini_options]
 pythonpath = "src"
+
+[tool.black]
+line-length = 79
