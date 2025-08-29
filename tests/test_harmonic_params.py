@@ -362,9 +362,11 @@ def test_reducing_via_map_blocks(synthetic_xarray_data):
     param_names = model_coords(k)
     template = chunked.isel(time=slice(len(param_names))).rename({"time": "param"})
     template['param'] = param_names
-    reduced = chunked.map_blocks(reduce_to_harmonic_parameters, template=template, kwargs={'k': k})
-    # print(reduced.load())
-    # assert None
+    reduced = chunked.map_blocks(
+        reduce_to_harmonic_parameters,
+        template=template,
+        kwargs={'k': k, 'dtimes': synthetic_xarray_data.time.values})
+    reduced.load()
 
 
 @pytest.fixture
@@ -402,39 +404,18 @@ def synthetic_s1_dataset():
 
 # Test to ensure the fixture is working correctly
 def test_synthetic_s1_dataset(synthetic_s1_dataset):
-    print(synthetic_s1_dataset)
-    assert None
     assert isinstance(synthetic_s1_dataset, xr.Dataset)
     assert set(synthetic_s1_dataset.dims) == {'obs', 'polarization', 'orbit', 'tile', 'Y', 'X'}
     assert set(synthetic_s1_dataset.data_vars) == {'sig0'}
     assert set(synthetic_s1_dataset.coords) == {'orbit', 'polarization', 'tile', 'time'}
 
-    assert synthetic_s1_dataset.sig0.shape == (10, 2, 2, 2, 5, 100)
-    assert synthetic_s1_dataset.time.shape == (10, 2, 2)
+    assert synthetic_s1_dataset.sig0.shape == (1000, 2, 2, 2, 5, 100)
+    assert synthetic_s1_dataset.time.shape == (1000, 2, 2)
 
     assert synthetic_s1_dataset.orbit.values.tolist() == ['A015', 'A029']
     assert synthetic_s1_dataset.polarization.values.tolist() == ['VH', 'VV']
     assert synthetic_s1_dataset.tile.values.tolist() == ['E042N012T3', 'E042N015T3']
 
-
-def test_on_vzarr():
-    import fsspec
-    from imagecodecs.numcodecs import Zstd
-    from imagecodecs import numcodecs
-    numcodecs.register_codec(Zstd)
-    vzarr_path = "/home/cth/Data/dask_flood_s1_refs.parq/"
-    remote_options = {"skip_instance_cache": False}
-    mapper = fsspec.get_mapper(
-        'reference://',
-        fo=vzarr_path,
-        target_protocol='file',
-        remote_protocol='https',
-        # remote_protocol='https',
-        remote_options=remote_options
-    )
-    ds = xr.open_zarr(mapper, consolidated=False).isel(Y=slice(0,30), tile=slice(0,5), orbit=slice(0,5))
-    print(ds)
-    assert None
 
 
 def test_reducing_via_map_blocks_with_nd_time(synthetic_s1_dataset):
@@ -444,15 +425,14 @@ def test_reducing_via_map_blocks_with_nd_time(synthetic_s1_dataset):
                                           'polarization': 1,
                                           'obs': -1})
     param_names = model_coords(k)
-    template = chunked.isel(obs=slice(len(param_names))).rename({"obs": "param"}).sig0
+    template = chunked.isel(obs=slice(len(param_names))).rename({"obs": "param"}).drop_vars("time")
     template['param'] = param_names
     reduced = chunked.map_blocks(reduce_ds_to_harmonic_parameters,
                                  template=template, kwargs={'fit_var_name': "sig0",
                                                             'k': k,
                                                             'x_var_name': "X",
                                                             'y_var_name': "Y"})
-    # print(reduced.compute())
-    assert None
+    reduced.load()
 
 def test_reduce_to_harmonic_parameters_with_nans(synthetic_xarray_data):
     # Add some NaN values
