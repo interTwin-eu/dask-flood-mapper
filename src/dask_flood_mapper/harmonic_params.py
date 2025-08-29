@@ -113,17 +113,20 @@ def reduce_ds_to_harmonic_parameters(
     return out_dataset
 
 def reduce_to_harmonic_parameters(
-    ts_xr: xr.DataArray, x_var_name="x", y_var_name="y", **kwargs
+    ts_xr: xr.DataArray,
+    x_var_name: str = "x",
+    y_var_name: str = "y",
+    **kwargs,  # noqa: ANN003
 ):
     params_arr = harmonic_regression(ts_xr.values, **kwargs)
-    k = kwargs.get("k", 3)
-    out_dims = ["param", y_var_name, x_var_name]
+    k: int = kwargs.get("k", 3)
+    out_dims: list[str] = ["param", y_var_name, x_var_name]
     coords_dict = {"param": model_coords(k)}
     if x_var_name in ts_xr.coords:
         coords_dict[x_var_name] = ts_xr[x_var_name]
     if y_var_name in ts_xr.coords:
         coords_dict[y_var_name] = ts_xr[y_var_name]
-    out_dataarray = xr.DataArray(
+    return xr.DataArray(
         data=params_arr,
         coords=coords_dict,
         dims=out_dims,
